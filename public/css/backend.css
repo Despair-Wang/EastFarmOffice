@@ -1,0 +1,772 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 版面配置 */
+
+body {
+    font-family: "微軟正黑體";
+}
+
+#content {
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+    padding-left: 150px;
+    padding-top: 30px;
+}
+
+#container {
+    margin-bottom: -70px;
+    min-height: 100vh;
+    padding-bottom: 90px;
+}
+
+#footer {
+    height: max-content;
+    background-color: rgb(248, 255, 157);
+    padding: 15px;
+}
+
+h1 {
+    text-align: center;
+}
+
+section {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+}
+
+.curP {
+    cursor: pointer;
+}
+
+/* 選單樣式 */
+
+#menu {
+    height: 100vh;
+    width: 150px;
+    text-align: left;
+    background-color: lightblue;
+    position: fixed;
+}
+
+.welcomeBar {
+    padding: 15px 15px 5px;
+}
+
+.mainItem {
+    display: block;
+    background-color: lightblue;
+    border: 2px solid #9c9cff;
+    border-right: none;
+    border-left: none;
+    padding: 5px 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: color 0.5s;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: -2px;
+    text-align: center;
+}
+
+.mainItem:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.subItem {
+    transition: all 0.7s;
+    height: 0;
+    overflow: hidden;
+}
+
+.subItem > div > a {
+    display: block;
+    background-color: pink;
+    border: 2px solid #9c9cff;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    margin-top: -2px;
+    border-right: none;
+    border-left: none;
+    text-align: right;
+}
+
+/* 文章列表樣式 */
+
+.editPostItem {
+    padding: 5px;
+    border: 2px solid gray;
+    margin-bottom: 10px;
+}
+
+.editPostItem h2 {
+    font-size: 2rem;
+}
+.editArea {
+    text-align: right;
+    font-size: 1.5rem;
+}
+
+.multDelBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.multDelBox > input {
+    zoom: 200%;
+    cursor: pointer;
+}
+
+#postListBox {
+    margin: 10px 0px;
+    padding: 5px 20px;
+}
+
+#createNew > div:first-child {
+    background-color: crimson;
+    border-radius: 100%;
+    width: 75px;
+    height: 75px;
+    position: fixed;
+    right: 50px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.7s;
+    cursor: pointer;
+    z-index: 600;
+}
+
+#createNew > div:last-child {
+    position: fixed;
+    border-radius: 100%;
+    right: 50px;
+    bottom: 20px;
+    width: 75px;
+    height: 75px;
+    box-shadow: 4px 4px 3px #666;
+}
+
+#createNew > div:hover {
+    transform: rotate(360deg);
+}
+
+#createNew > div > div:first-child {
+    position: absolute;
+    border: 2px solid white;
+    height: 50px;
+    width: 0;
+    border-radius: 20px;
+    background-color: white;
+}
+
+#createNew > div > div:last-child {
+    border: 2px solid white;
+    height: 0;
+    width: 50px;
+    border-radius: 20px;
+    background-color: white;
+}
+
+#goBack {
+    position: fixed;
+    top: 20px;
+    left: 170px;
+    display: flex;
+    width: 75px;
+    height: 50px;
+    background-color: crimson;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 4px 4px 3px #666;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+#goBack:hover {
+    box-shadow: 4px 4px 10px #666;
+    transform: translateY(-3px);
+}
+
+#goBack > div:first-child {
+    border-top: 4px solid white;
+    border-left: 4px solid white;
+    border-radius: 2px;
+    transform: rotate(-45deg) translate(11px, 11px);
+    width: 25px;
+    height: 25px;
+}
+
+#goBack > div:last-child {
+    width: 36px;
+    height: 0;
+    border: 2px solid white;
+    background-color: white;
+    border-radius: 20px;
+    transform: translateX(-10px);
+}
+
+/* 文章編輯頁面 */
+
+.tagBox {
+    border: 2px solid lightblue;
+    border-radius: 10px;
+    padding: 7px;
+    display: inline-block;
+    margin-right: 7px;
+    margin-bottom: 7px;
+}
+
+.tagBox.show {
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.tagBox.show:hover {
+    box-shadow: 2px 2px 2px #666;
+}
+
+.tagBox > .tag {
+    display: inline-block;
+}
+
+.removeTag {
+    cursor: pointer;
+    margin-left: 6px;
+    margin-right: 2px;
+    color: rgb(120, 198, 224);
+}
+
+#addedTag {
+    padding-top: 7px;
+}
+
+#title {
+    width: 100%;
+}
+
+#indexImage {
+    width: 300px;
+    height: 100%;
+}
+
+#activeArea {
+    text-align: right;
+}
+
+.ali-r {
+    text-align: right;
+}
+
+.ali-l {
+    text-align: left;
+}
+
+/* 相簿一覽樣式 */
+
+.albumListItem {
+    padding: 7px;
+    text-align: center;
+}
+
+.albumListItem > div {
+    border: 2px solid #666;
+    /* border-radius: 20px; */
+    padding: 7px;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+.albumListItem > div:hover {
+    box-shadow: 3px 3px 3px #666;
+}
+
+.albumListItem .h4 {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.albumListItem img {
+    margin: auto;
+}
+
+.albumListItem .cover {
+    height: 189px;
+    overflow: hidden;
+}
+
+/* 相簿照片一覽樣式 */
+
+.photoBox {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.photoBox > .cover {
+    height: 205px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+.photoBox > .cover > img {
+    height: 100%;
+    width: auto;
+    max-width: max-content;
+}
+
+.photoBox > .multDelete {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+    cursor: pointer;
+}
+.photoBox > .multDelete > input {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    transform: scale(2);
+    cursor: pointer;
+}
+
+#multDelCtrl {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 150px;
+}
+
+#fullPhoto {
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
+#fullPhoto h4,
+#fullPhoto h6 {
+    color: white;
+    text-align: center;
+}
+
+#fullPhoto img {
+    margin: auto;
+    max-height: 500px;
+}
+
+/* 相簿照片上傳樣式 */
+
+#uploadArea {
+    width: 100%;
+    min-height: 300px;
+    padding: 15px 15px 75px;
+    border: 4px dashed lightblue;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 相簿建立頁面 */
+
+#showCover {
+    max-width: 400px;
+}
+
+/* 百科項目建立頁面 */
+
+.pediaEditor > div {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#contentArea hr {
+    border: 1px solid #9c9cff;
+}
+
+.contentBox {
+    margin: 15px 0;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid blueviolet;
+    background-color: rgba(240, 240, 240, 0.9);
+    border-radius: 15px;
+    overflow: auto;
+}
+
+.textarea:empty::before {
+    content: attr(placeholder);
+    color: #666;
+}
+
+#galleryUpload {
+    display: flex;
+    min-height: 200px;
+    width: 100%;
+    border: 2px dashed blueviolet;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+.c-Image {
+    border: 1px solid royalblue;
+    width: 300px;
+    height: auto;
+    padding: 15px;
+    text-align: left;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+#galleryArea > div {
+    border: 1px solid rgb(181, 169, 238);
+    border-radius: 20px;
+    min-height: 228px;
+}
+#addGallery {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#addGallery > div:first-child {
+    background-color: rgb(181, 169, 238);
+    border-radius: 100%;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.7s;
+    cursor: pointer;
+    z-index: 600;
+}
+
+#addGallery > div:hover {
+    transform: rotate(360deg);
+}
+
+#addGallery > div > div:first-child {
+    position: absolute;
+    border: 2px solid white;
+    height: 50px;
+    width: 0;
+    border-radius: 20px;
+}
+
+#addGallery > div > div:last-child {
+    border: 2px solid white;
+    height: 0;
+    width: 50px;
+    border-radius: 20px;
+}
+
+.choosePageBox {
+    height: 50px;
+    border-bottom: 1px solid royalblue;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+}
+.choosePage {
+    /* border: 1px solid royalblue; */
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+}
+.choosePage.show {
+    background-color: royalblue;
+    color: white;
+}
+
+#galleryArea > div {
+    overflow: hidden;
+}
+
+.uploadChoose {
+    position: relative;
+    min-height: 78px;
+}
+
+.page {
+    display: none;
+    background-color: white;
+    /* top: 0; */
+    /* left: 0; */
+    /* position: absolute; */
+    width: 100%;
+}
+
+.page.show {
+    display: block;
+}
+
+.addRemarkBox {
+    width: 0;
+    display: flex;
+    overflow: hidden;
+    transition: all 0.5s;
+}
+.addRemarkBox.show {
+    width: 100%;
+    transition: all 0.5s;
+}
+
+.addRemarkBox > .btn {
+    white-space: nowrap;
+}
+
+.addRemarkBox > select {
+    margin-right: 7px;
+}
+
+.remarkBtn {
+    width: 100%;
+    height: 50px;
+    background-color: aqua;
+    border-bottom: 1px solid #9c9cff;
+    padding: 5px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+}
+
+.remarkBtn > h5 {
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+.useRemark {
+    margin: 0 5px;
+    background-color: brown;
+    border-radius: 5px;
+    min-height: 30px;
+    min-width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.useRemark > div:first-child {
+    border: 1px solid white;
+    height: 25px;
+    width: 0;
+}
+
+.useRemark > div:last-child {
+    position: absolute;
+    border: 1px solid white;
+    width: 25px;
+    height: 0px;
+}
+
+.addRemarkBox,
+.addRemarkBox > input,
+.addRemarkBox > label {
+    cursor: pointer;
+}
+
+#remarkBox {
+    height: 0;
+    overflow: hidden;
+    transition: all 0.5s;
+}
+#remarkBox.show {
+    height: fit-content;
+    transition: all 0.5s;
+}
+
+#insertRemarkBtnArea {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    padding: 25px 15px;
+    /* background-color: white;
+    box-shadow: 3px 3px 5px #666; */
+}
+
+.textarea.pedia {
+    overflow: hidden;
+    padding: 0px;
+}
+
+.contents {
+    min-height: 50px;
+    border-bottom-left-radius: 15px;
+    display: block;
+    background-color: aquamarine;
+    padding: 10px;
+    border-bottom-right-radius: 15px;
+}
+
+#remarkList > ul {
+    list-style: decimal;
+    padding: 20px 40px 0px;
+}
+
+#showArea > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+#showArea > div > div {
+    border: 5px double black;
+    padding: 5px;
+    display: grid;
+    grid-template: 20px 1fr 30px/1fr;
+    height: 100%;
+    width: 100%;
+}
+
+#showArea > div > div > div:first-child {
+    grid-row-start: 1;
+    grid-column-start: 1;
+    display: grid;
+    grid-template: 1fr/1fr 30px;
+}
+
+#showArea > div > div > div:first-child > i {
+    grid-column-start: 2;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+#showArea > div > div > div:first-child > i:hover {
+    color: #9c9cff;
+}
+
+#showArea > div > div > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    grid-column-start: 1;
+    grid-row-start: 2;
+    padding: 0 7px;
+}
+
+#showArea p {
+    grid-column-start: 1;
+    grid-row-start: 3;
+    text-align: center;
+}
+
+/* 商品編輯頁面 */
+
+.type {
+    padding: 7px;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    grid-template-rows: 1fr 50px;
+}
+
+.type > div {
+    grid-column-start: 2 span;
+}
+
+.typeBox {
+    padding: 10px;
+    border: 1px solid aqua;
+    margin-bottom: 15px;
+}
+
+#addType {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+#controlArea {
+    display: grid;
+    grid-template-columns: 5px 1fr 10px 1fr 5px;
+}
+
+#controlArea button:first-child {
+    grid-column-start: 2;
+}
+
+#controlArea button:last-child {
+    grid-column-start: 4;
+}
+
+#oldImg_frame {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1053;
+}
+
+.croppie-container {
+    height: auto !important;
+}
+
+#uploadCaption {
+    transform: translateY(-70px);
+    text-align: center;
+}
+
+#uploadArea .del {
+    cursor: pointer;
+    transform: scale(1.5);
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff,
+        0 0 3px #fff;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    z-index: 300;
+}
+
+#uploadArea .img {
+    padding: 7px;
+}
+
+#uploadArea .img > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid #9c9cff;
+    overflow: hidden;
+    height: 230px;
+    width: 100%;
+    position: relative;
+}
+
+#uploadArea .img > div > img {
+    height: 230px;
+    max-width: none;
+}

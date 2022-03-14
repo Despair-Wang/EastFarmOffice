@@ -1,0 +1,73 @@
+@extends('layouts.backend')
+@section('title','相簿一覽')
+@section('h1','相簿一覽')
+@section('content')
+    <section>
+        <div class="row">
+            @forelse ($albums as $album)
+            <div class="col-12 col-lg-3 albumListItem">
+                <div data-album-id="{{ $album->id }}">
+                    <div class="cover">
+                        {!! $album->getCover() !!}
+                    </div>
+                    <h4 class="h4">{{ $album->name }}</h4>
+                    <h6 class="h6">{{ $album->getCreateDay() }}</h6>
+                    <button class="btn btn-outline-primary edit">修改資訊</button>
+                    <button class="btn btn-outline-primary upload">上傳照片</button>
+                    <button class="btn btn-outline-primary delete">刪除相簿</button>
+                </div>
+            </div>
+            @empty
+            <h3 class="h3">無相簿</h3>
+            @endforelse
+        </div>
+    </section>
+    <div id="createNew">
+    </div>
+@endsection
+@section('customJsBottom')
+    <script>
+        $(()=>{
+            var md = new MoveDom();
+            md.setNew('/album/edit');
+
+            $('.albumListItem').click(function(e){
+                let t = $(e.target);
+                if(!t.hasClass('edit') && !t.hasClass('upload') && !t.hasClass('delete')){
+                    let id = $(this).children('div').data('album-id');
+                    location.href=`/album/${id}/photos/`;
+                }
+            })
+
+            $('.edit').click(function(e){
+                e.preventDefault();
+                let id = $(this).parent('div').data('album-id');
+                location.href=`/album/${id}/edit`;
+            })
+
+            $('.upload').click(function(e){
+                e.preventDefault();
+                let id = $(this).parent('div').data('album-id');
+                location.href=`/album/${id}/photos/edit`;
+            })
+
+            $('.delete').click(function(e){
+                e.preventDefault();
+                let id = $(this).parent('div').data('album-id');
+                $.ajax({
+                    url:`/api/album/${id}/delete`,
+                    type:'GET',
+                    success(result){
+                        if(result['state'] == 1){
+                            alert('相簿刪除成功');
+                            location.href='/album/list';
+                        }else{
+                            alert('刪除失敗');
+                            console.log(result['data']);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+@endsection

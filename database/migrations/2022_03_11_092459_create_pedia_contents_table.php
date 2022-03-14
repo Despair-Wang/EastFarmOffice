@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePediaContentsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('pedia_contents', function (Blueprint $table) {
+            $table->id();
+            $table->integer('itemId');
+            $table->string('title');
+            $table->text('content');
+            $table->text('gallery')->nullable();
+            $table->integer('sort');
+            $table->text('remark')->nullable();
+            $table->integer('state')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('pedia_contents');
+    }
+}
