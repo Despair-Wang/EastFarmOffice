@@ -49,90 +49,6 @@ select {
     cursor: pointer;
 }
 
-/* 選單樣式 */
-
-#menu {
-    height: 100vh;
-    width: 150px;
-    text-align: left;
-    background-color: lightblue;
-    position: fixed;
-}
-
-.welcomeBar {
-    padding: 15px 15px 5px;
-}
-
-.mainItem {
-    display: block;
-    background-color: lightblue;
-    border: 2px solid #9c9cff;
-    border-right: none;
-    border-left: none;
-    padding: 5px 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: color 0.5s;
-    text-decoration: none;
-    cursor: pointer;
-    margin-top: -2px;
-    text-align: center;
-}
-
-.mainItem:hover {
-    color: white;
-    text-decoration: none;
-}
-
-.subItem {
-    transition: all 0.7s;
-    height: 0;
-    overflow: hidden;
-}
-
-.subItem > div > a {
-    display: block;
-    background-color: pink;
-    border: 2px solid #9c9cff;
-    padding: 5px 15px;
-    font-size: 0.9rem;
-    margin-top: -2px;
-    border-right: none;
-    border-left: none;
-    text-align: right;
-}
-
-/* 文章列表樣式 */
-
-.editPostItem {
-    padding: 5px;
-    border: 2px solid gray;
-    margin-bottom: 10px;
-}
-
-.editPostItem h2 {
-    font-size: 2rem;
-}
-.editArea {
-    text-align: right;
-    font-size: 1.5rem;
-}
-
-.multDelBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.multDelBox > input {
-    zoom: 200%;
-    cursor: pointer;
-}
-
-#postListBox {
-    margin: 10px 0px;
-    padding: 5px 20px;
-}
-
 #createNew > div:first-child {
     background-color: crimson;
     border-radius: 100%;
@@ -217,6 +133,103 @@ select {
     background-color: white;
     border-radius: 20px;
     transform: translateX(-10px);
+}
+
+/* 選單樣式 */
+
+#menu {
+    height: 100vh;
+    width: 150px;
+    text-align: left;
+    background-color: lightblue;
+    position: fixed;
+}
+
+.welcomeBar {
+    padding: 15px 15px 5px;
+}
+
+.mainItem {
+    display: block;
+    background-color: lightblue;
+    border: 2px solid #9c9cff;
+    border-right: none;
+    border-left: none;
+    padding: 5px 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: color 0.5s;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: -2px;
+    text-align: center;
+}
+
+.mainItem:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.subItem {
+    transition: all 0.7s;
+    height: 0;
+    overflow: hidden;
+}
+
+.subItem > div > a {
+    display: block;
+    background-color: pink;
+    border: 2px solid #9c9cff;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    margin-top: -2px;
+    border-right: none;
+    border-left: none;
+    text-align: right;
+}
+
+/* 文章列表樣式 */
+
+.editPostItem {
+    padding: 5px;
+    border: 2px solid gray;
+    margin-bottom: 10px;
+}
+
+.editPostItem h2 {
+    font-size: 2rem;
+}
+.editArea {
+    text-align: right;
+    font-size: 1.5rem;
+}
+
+.multDelBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.multDelBox > input {
+    zoom: 200%;
+    cursor: pointer;
+}
+
+#postListBox {
+    margin: 10px 0px;
+    padding: 5px 20px;
+}
+
+#filterBox {
+    display: grid;
+    grid-template-columns: 150px 1fr 150px;
+}
+
+#filterBox > div:first-child {
+    grid-column-start: 1;
+}
+
+#filterBox > div:last-child {
+    grid-column-start: 3;
 }
 
 /* 文章編輯頁面 */

@@ -463,14 +463,15 @@ class PostController extends Controller
     }
 
     //編輯模式用的文章一覽
-    public function postList(Request $request)
+    public function postList(Request $request, $type = null)
     {
         if ($request->has('limit')) {
             $page = $request->limit; //接收前台傳來的顯示頁面數
         } else {
             $page = 10; //預設為顯示10筆文章,後台文章篇幅小，適合多顯示
         }
-        switch ($request->type) { //依據前台要求更改顯示對象
+
+        switch ($type) { //依據前台要求更改顯示對象
             case 'done':
                 $post = Post::where('state', 1); //顯示已完成的公開文章
                 break;
@@ -484,7 +485,7 @@ class PostController extends Controller
                 $post = Post::where('state', 1)->orWhere('state', 2); //預設，全顯示
                 break;
         }
-        $posts = $post->orderBy('updated_at', 'desc')->paginate($page); //將找到的資料輸出成分頁
+        $posts = $post->orderBy('updated_at', 'desc')->paginate($page)->withPath($type); //將找到的資料輸出成分頁
         return View('post.editList', compact('posts'));
     }
 

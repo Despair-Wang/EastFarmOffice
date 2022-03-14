@@ -63,6 +63,7 @@ Route::prefix('o')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::prefix('post')->group(function () {
         Route::get('/list', [PostController::class, 'postList']); //編輯模式呼叫文章列表
+        Route::get('/list/{type}', [PostController::class, 'postList']); //編輯模式呼叫文章列表
         Route::get('/edit', [PostController::class, 'callPostEditor']); //建立新文章的頁面
         Route::get('/{post}/edit/{action}', [PostController::class, 'callPostUpdate']); //修改既有文章的頁面
         Route::get('/category/list', [PostController::class, 'postCategoryList']); //分類一覽
