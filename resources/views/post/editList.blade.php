@@ -19,11 +19,7 @@
         </div>
         <div id="postListBox">
             @foreach ($posts as $post)
-            <div class="editPostItem row
-            @if ($post->state == '2')
-                rewriteItem
-            @endif
-            " data-post-id="{{ $post->id}}">
+            <div class="editPostItem row align-items-center @if ($post->state == '2')rewriteItem @endif" data-post-id="{{ $post->id}}">
                 <div class="indexImage col-2">
                     <img src="{{ $post->image }}" alt="{{ $post->title }}">
                 </div>
@@ -32,11 +28,11 @@
                     <p class="listPostCreateTime">{{ $post->getCreateDay() }}</p>
                     <div class="editArea">
                         @if($post->state == '2')
-                        <a href="{{ '/post/' . $post->id  . '/edit/rewrite'}}">續寫</a>
+                        <a class="btn btn-primary px-5 mr-3" href="{{ '/post/' . $post->id  . '/edit/rewrite'}}">續寫</a>
                         @elseif($post->state == '1')
-                        <a href="{{ '/post/' . $post->id  . '/edit/update'}}">編輯</a>
+                        <a class="btn btn-primary px-5 mr-3" href="{{ '/post/' . $post->id  . '/edit/update'}}">編輯</a>
                         @endif
-                        <a class="postDelete" href="">刪除</a>
+                        <a class="btn btn-primary px-5" class="postDelete" href="">刪除</a>
                     </div>
                 </div>
                 <div class="col-1 multDelBox">

@@ -216,9 +216,17 @@ select {
 .editPostItem h2 {
     font-size: 2rem;
 }
+
+.editPostItem > .col-9 {
+    min-height: 150px;
+    display: grid;
+}
 .editArea {
     text-align: right;
     font-size: 1.5rem;
+    display: flex;
+    justify-content: end;
+    align-items: end;
 }
 
 .multDelBox {
@@ -247,6 +255,23 @@ select {
 
 #filterBox > div:last-child {
     grid-column-start: 3;
+}
+
+.indexImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid #9c9cff;
+    overflow: hidden;
+    height: 150px;
+    width: 100%;
+    position: relative;
+}
+
+.indexImage > img {
+    height: 150px;
+    max-width: none;
 }
 
 /* 文章編輯頁面 */
