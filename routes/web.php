@@ -10,8 +10,9 @@ use App\Models\PediaTag;
 use App\Models\Photo;
 use App\Models\PostCategory;
 use App\Models\PostTag;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,8 +40,8 @@ Route::get('loginTest', function () {
 })->middleware(['auth:web']);
 
 Route::get('/test', function () {
-    $file = 'public/post/53/php3C85.jpg';
-    $result = Storage::exists($file);
+    // $file = 'public/post/53/php3C85.jpg';
+    $result = Cache::get(Auth::id());
 
     // $result = gettype($s);
     dump($result);

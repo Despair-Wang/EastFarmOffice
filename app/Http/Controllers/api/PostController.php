@@ -274,7 +274,9 @@ class PostController extends Controller
                     if (isset($pics) && gettype($pics) == 'array') { //確認前台有圖片時才執行
                         foreach ($pics as $pic) { //將文章內有的圖檔路徑一一取出
                             if ($tempName == $pic) { //確定該暫存圖有放在文章內時
-                                if (!Storage::exists($value)) {
+                                $check = str_replace('temp/' . Auth::id(), 'post/' . $id, $value);
+
+                                if (!Storage::exists($check)) {
                                     $result = Storage::move($value, str_replace($tempPath, $path, $value)); //移動檔案到正式儲存位置
                                 }
                                 break; //結束，後面不用跑了
@@ -308,7 +310,7 @@ class PostController extends Controller
                 //         return $this->makeJson(0, $result, 'TAG_PASTE_ERROR');
                 //     }
                 // }
-                if ($request->save = 'draft') {
+                if ($request->save == 'draft') {
                     foreach ($tags as $tag) {
                         $result = Tag_for_post::create(['postId' => $id, 'tagId' => $tag, 'state' => 2]);
                         if (!$result) {
@@ -322,7 +324,7 @@ class PostController extends Controller
                 if ($request->has('image') && !is_null($request->image) && $request->image != '/assets/post/default.jpg') {
                     $saveImage = str_replace('temp/' . Auth::id(), 'post/' . $id, $request->image);
                     // $check = Storage::exists(str_replace('storage', 'public', $request->image));
-                    $check = str_replace('storage', 'public', $request->image);
+                    $check = str_replace('storage', 'public', $saveImage);
                     // return $this->makeJson(0, $check, 'HE');
                     if (!Storage::exists($check)) {
                         $image = str_replace('storage', 'public', $request->image); //取出文章代表圖像
