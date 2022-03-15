@@ -13,8 +13,8 @@
                         <h2>{{ $cate->name }}</h2>
                     </div class="col-3">
                     <div class="editArea col-3">
-                        <a href="{{ '/post/category/' . $cate->id . '/edit' }}">編輯</a>
-                        <a class="postDelete" href="">刪除</a>
+                        <a class="btn btn-primary px-3 mr-2" href="{{ '/post/category/' . $cate->id . '/edit' }}">編輯</a>
+                        <a class="postDelete btn btn-primary px-3" href="">刪除</a>
                     </div>
                     <div class="col-1 multDelBox">
                         <input type="checkbox" class="multDelete">
@@ -24,10 +24,13 @@
         </div>
         {!! $cates->links() !!}
     </section>
+    <div id="createNew"></div>
 @endsection
 @section('customJsBottom')
     <script>
         $(() => {
+            var md = new MoveDom();
+            md.setNew('/post/category/edit');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')

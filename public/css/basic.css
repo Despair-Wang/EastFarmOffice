@@ -92,6 +92,12 @@ section {
     padding: 15px;
 }
 
+.listPostItem h3 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .listPostItem > div {
     padding: 6px;
     background-color: honeydew;
@@ -128,6 +134,16 @@ section {
     text-align: end;
 }
 
+.postImage {
+    height: 200px;
+    overflow: hidden;
+}
+
+/* .postImage > img {
+    height: 200px;
+    max-width: none;
+} */
+
 /* 文章編輯頁面 */
 
 .tagBox {
@@ -150,6 +166,16 @@ section {
 
 .tagBox > .tag {
     display: inline-block;
+}
+
+#postCover {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
 }
 
 .ali-l {

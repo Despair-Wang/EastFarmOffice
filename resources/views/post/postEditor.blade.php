@@ -82,10 +82,10 @@
         <div id="activeArea">
             @if (isset($action))
                 <div id="action" data-action="{{ $action }}" data-post-id="{{ $post->id }}"></div>
-                <button class="btn btn-outline-primary" id="submit">送出</button>
             @else
-                <button class="btn btn-outline-primary" id="submit">送出</button>
+                <button class="btn btn-outline-primary" id="draft">存成草稿</button>
             @endif
+            <button class="btn btn-outline-primary" id="submit">送出</button>
             <button class="btn btn-outline-primary" id="reset">清空重寫</button>
         </div>
     </section>
@@ -109,7 +109,11 @@
             })
 
             $('#submit').click(() => {
-                createPost();
+                createPost('normal');
+            })
+
+            $('#draft').click(() => {
+                createPost('draft');
             })
 
             let up = document.querySelector('#uploadArea');
@@ -232,7 +236,7 @@
             tb.remove();
         }
 
-        function createPost() {
+        function createPost(saveType) {
             let title = $('#title').val(),
                 content = $('.w-e-text').html(),
                 cate = $('#category').find(':selected').val(),
@@ -273,11 +277,17 @@
                     tags: tags,
                     pics: pics,
                     image: image,
+                    save:saveType,
                 },
                 success(result) {
                     if (result['state'] == '1') {
                         // alert('文章建立成功');
-                        location.href = '/post/' + result['data']['id'] + '/preview';
+                        if(saveType == 'draft') {
+                            alert('草稿建立完成')
+                            location.href = '/post/list';
+                        }else{
+                            location.href = '/post/' + result['data']['id'] + '/preview';
+                        }
                     } else {
                         alert('文章建立失敗:' + result['msg']);
                         console.log(result['data']);

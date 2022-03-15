@@ -32,7 +32,7 @@
                         @elseif($post->state == '1')
                         <a class="btn btn-primary px-5 mr-3" href="{{ '/post/' . $post->id  . '/edit/update'}}">編輯</a>
                         @endif
-                        <a class="btn btn-primary px-5" class="postDelete" href="">刪除</a>
+                        <a class="btn btn-primary px-5 postDelete" href="">刪除</a>
                     </div>
                 </div>
                 <div class="col-1 multDelBox">

@@ -3,9 +3,12 @@
 @section('h1',$post->title)
 @section('content')
 <div>
-    <a href="/o/post/category/{{ $post->category }}">{{ $post->getCategory->name }}</a>
+    <h3 class="h3">分類：</h3>
+    <a class="h3" href="/o/post/category/{{ $post->category }}">《{{ $post->getCategory->name }}》</a>
 </div>
-<img src="{{ $post->image }}">
+<div id="postCover">
+    <img src="{{ $post->image }}">
+</div>
 <div id="addedTag">
     @foreach ($tags as $tag)
         <div class="tagBox show" data-tag-id="{{ $tag['tagId'] }}">{{ $tag['name'] }}</div>

@@ -308,8 +308,18 @@ class PostController extends Controller
                 //         return $this->makeJson(0, $result, 'TAG_PASTE_ERROR');
                 //     }
                 // }
-                Cache::put(Auth::id(), $tags);
-                if ($request->has('image') && !is_null($request->image) && $request->image != '/storage/post/default/default.jpg') {
+                if ($request->save = 'draft') {
+                    foreach ($tags as $tag) {
+                        $result = Tag_for_post::create(['postId' => $id, 'tagId' => $tag, 'state' => 2]);
+                        if (!$result) {
+                            return $this->makeJson(0, $result, null);
+                        }
+                    }
+                } else {
+                    Cache::put(Auth::id(), $tags);
+                }
+
+                if ($request->has('image') && !is_null($request->image) && $request->image != '/assets/post/default.jpg') {
                     $saveImage = str_replace('temp/' . Auth::id(), 'post/' . $id, $request->image);
                     // $check = Storage::exists(str_replace('storage', 'public', $request->image));
                     $check = str_replace('storage', 'public', $request->image);
@@ -363,15 +373,22 @@ class PostController extends Controller
         try {
             $result = $post->update(['state' => 1]);
             if ($result) {
-                $tags = Cache::get(Auth::id());
-                foreach ($tags as $tag) {
-                    $result = Tag_for_post::create(['postId' => $post->id, 'tagId' => $tag, 'state' => 1]);
+                if (Cache::has(Auth::id())) {
+                    $tags = Cache::get(Auth::id());
+                    foreach ($tags as $tag) {
+                        $result = Tag_for_post::create(['postId' => $post->id, 'tagId' => $tag, 'state' => 1]);
+                        if (!$result) {
+                            return $this->makeJson(0, $result, null);
+                        }
+                    }
+                    Cache::forget(Auth::id());
+                    Cache::forget(Auth::id() . 'tag');
+                } else {
+                    $result = Tag_for_post::Where('postId', $post->id)->update(['state' => 1]);
                     if (!$result) {
                         return $this->makeJson(0, $result, null);
                     }
                 }
-                Cache::forget(Auth::id());
-                Cache::forget(Auth::id() . 'tag');
                 return $this->makeJson(1, ['id' => $post->id], null);
             } else {
                 return $this->makeJson(0, $result, null);

@@ -330,6 +330,16 @@ select {
     text-align: left;
 }
 
+#postCover {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+}
+
 /* 相簿一覽樣式 */
 
 .albumListItem {

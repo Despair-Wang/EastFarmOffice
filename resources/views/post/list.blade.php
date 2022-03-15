@@ -23,7 +23,7 @@
         @endif
             <div class="listPostItem col-lg-4 col-12">
                 <div>
-                    <h3>{{ $post->title }}</h3>
+                    <h3 class="h3">{{ $post->title }}</h3>
                     <div class="postImage">
                         <img src="{{ $post->image }}" alt="{{ $post->title }}" class="img-fluid">
                     </div>
