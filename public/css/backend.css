@@ -190,6 +190,23 @@ select {
 
 /* 文章列表樣式 */
 
+#postEditArea2 .col-12 {
+    display: grid;
+}
+
+#postEditArea2 .col-md-8 section {
+    display: flex;
+    align-items: center;
+}
+
+#postEditArea2 .col-md-8 section > div {
+    width: 100%;
+}
+
+.rewriteItem {
+    background-color: rgb(252, 218, 224);
+}
+
 .editPostItem {
     padding: 5px;
     border: 2px solid gray;

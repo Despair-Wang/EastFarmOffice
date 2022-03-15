@@ -19,7 +19,11 @@
         </div>
         <div id="postListBox">
             @foreach ($posts as $post)
-            <div class="editPostItem row" data-post-id="{{ $post->id}}">
+            <div class="editPostItem row
+            @if ($post->state == '2')
+                rewriteItem
+            @endif
+            " data-post-id="{{ $post->id}}">
                 <div class="indexImage col-2">
                     <img src="{{ $post->image }}" alt="{{ $post->title }}">
                 </div>
@@ -55,13 +59,16 @@
     <script>
         $(()=>{
             let url = location.href,
-            star = url.indexOf('list/') + 5,
-            end = url.indexOf('?'),
+            star = url.indexOf('list/'),
+            haveType = url.indexOf('type')
             type = '';
 
             type = url.split('list/')[1];
-            if(end > 0){
-                end = type.indexOf('?');
+            if(star > 0){
+                let end = type.indexOf('?');
+                if(end < 0){
+                    end = type.length;
+                }
                 type = type.slice(0, end);
             }
             console.log(type);
