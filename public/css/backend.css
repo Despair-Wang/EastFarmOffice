@@ -373,6 +373,36 @@ select {
     overflow: hidden;
 }
 
+#albumMenu > div {
+    margin-left: 35px;
+}
+#albumMenu > div > ul > li {
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+#albumMenu .yearItem {
+    list-style-type: disclosure-closed;
+    transition: all 0.5s;
+}
+#albumMenu .yearItem:hover {
+    text-shadow: 0 0 6px #666;
+}
+
+#albumMenu .yearItem.open {
+    list-style-type: disclosure-open !important;
+}
+
+#albumMenu > div > ul > ul {
+    height: 0;
+    overflow-y: hidden;
+    padding-left: 25px;
+    list-style-type: circle;
+    transition: height 0.5s;
+    width: fit-content;
+}
+
 /* 相簿照片一覽樣式 */
 
 .photoBox {
@@ -416,7 +446,7 @@ select {
 }
 
 #fullPhoto {
-    z-index: 100;
+    z-index: 700;
     width: 100vw;
     height: 100vh;
     position: fixed;

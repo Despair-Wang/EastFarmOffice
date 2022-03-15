@@ -77,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('album')->group(function () {
-        Route::get('/list', [AlbumController::class, 'albumList']);
+        Route::get('/list/{year?}/{month?}', [AlbumController::class, 'albumList']);
         Route::view('/edit', 'album.albumEditor'); //建立相簿的頁面
         Route::get('/{album}/edit', function (Album $album) {return view('album.albumEditor', compact('album'));}); //修改既有相簿的頁面
         Route::get('/{album}/photos/edit', function (Album $album) {return view('album.photoUpload', compact('album'));}); //針對指定ID的相簿上傳相片/影片的頁面

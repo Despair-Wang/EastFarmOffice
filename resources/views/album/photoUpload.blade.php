@@ -8,12 +8,12 @@
     </section>
     <section>
         <div id="uploadArea">
-            <h3>請將要上傳的照片拖移至此</h3>
+            <div id="photoShowArea" class="row w-100">
+            </div>
         </div>
+        <h3 class="h3" id="uploadCaption">請將要上傳的照片拖移至此</h3>
         <label>單張照片上傳</label>
         <input type="file" id="upload">
-        <div id="photoShowArea" class="row">
-        </div>
     </section>
     <div id="goBack">
     </div>

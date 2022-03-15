@@ -63,7 +63,7 @@ class AlbumController extends Controller
     }
 
     // 後台顯示所有相簿
-    public function albumList(Request $request)
+    public function albumList(Request $request, $year = null, $month = null)
     {
         if ($request->has('limit')) {
             $page = $request->limit; //接收前台傳來的顯示頁面數
@@ -71,23 +71,33 @@ class AlbumController extends Controller
             $page = 8; //預設為顯示10筆文章,後台文章篇幅小，適合多顯示
         }
 
+        $albums = Album::Select('*');
+
+        if (!is_null($year) && is_null($month)) {
+            $albums = $albums->Where('created_at', 'like', $year . '-%');
+        } else if (!is_null($year) && !is_null($month)) {
+            if (strlen($month) == 1) {
+                $month = '0' . $month;
+            }
+            $albums = $albums->Where('created_at', 'like', $year . '-' . $month . '-%');
+        }
+
         switch ($request->type) { //依據前台要求更改顯示對象
             case 'done':
-                $album = Album::where('state', 1); //顯示已完成的公開文章
+                $albums = $albums->where('state', 1); //顯示已完成的公開文章
                 break;
             case 'undone':
-
-                $album = Album::where('state', 2); //顯示未完成的草稿
+                $albums = $albums->where('state', 2); //顯示未完成的草稿
                 break;
             case 'freeze':
-                $album = Album::where('state', 0); //顯示已經封存的文章
+                $albums = $albums->where('state', 0); //顯示已經封存的文章
                 break;
             default:
-                $album = Album::where('state', 1)->orWhere('state', 2); //預設，全顯示
+                $albums = $albums->where('state', 1)->orWhere('state', 2); //預設，全顯示
                 break;
         }
-        $albums = $album->orderBy('updated_at', 'desc')->paginate($page); //將找到的資料輸出成分頁
-        return View('album.editList', compact('albums'));
+        $albums = $albums->orderBy('created_at', 'desc')->paginate($page); //將找到的資料輸出成分頁
+        return View('album.editList', compact('albums', 'year', 'month'));
 
     }
 
@@ -155,14 +165,18 @@ class AlbumController extends Controller
     }
 
     //建立相簿側邊欄位用
-    public function getList()
+    public function getList($admin = null)
     {
         $albums = array(); //儲存最後送出去的資料的陣列
         $year_a = array(); //暫存每年各個月份資料的陣列
         $y = ''; //作為判斷依據的年份
         $m = ''; //作為判斷依據的月份
         $count = 0; //計次用變數
-        $temp = Album::Select('created_at')->Where('state', 1)->orderBy('created_at', 'asc')->get(); //搜尋所有啟用中的相簿資料
+        if (is_null($admin)) {
+            $temp = Album::Select('created_at')->Where('state', 1)->orderBy('created_at', 'asc')->get(); //搜尋所有啟用中的相簿資料
+        } else {
+            $temp = Album::Select('created_at')->Where('state', 1)->orderBy('created_at', 'asc')->get(); //搜尋所有的相簿資料
+        }
         $first = $temp[0]['created_at']; //將第一筆資料的建立時間取出
         $y = substr($first, 0, 4); //取出年份作為依據
         $m = substr($first, 5, 2); //取出月份作為依據

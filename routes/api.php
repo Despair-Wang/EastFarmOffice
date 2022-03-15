@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/photo/{photo}/update', [AlbumController::class, 'changePhoto']); //相片更新
         Route::get('/{album}/delete', [AlbumController::class, 'freeze']);
         Route::post('photo/delete', [AlbumController::class, 'freezePhotos']);
+        Route::get('/getList/{admin}', [AlbumController::class, 'getList']);
     });
 
     Route::prefix('pedia')->group(function () {
