@@ -66,28 +66,7 @@
         }
     })
     $(()=>{
-        $('.photoBox').click(function(e){
-            if(!$(e.target).hasClass('multDelete') && !$(e.target).hasClass('multCheck')){
-                let id = $(this).data('photo-id');
-                $.ajax({
-                    url:`/api/album/photo/${id}`,
-                    type:'GET',
-                    success(result){
-                        if(result['state'] == 1){
-                            setPhoto(result['data']);
-                            t.fadeIn();
-                            t.find('').click(function(e){
-                                e.preventDefault();
-                                $(this).fadeOut();
-                            })
-                        }else{
-                            alert(result['msg']);
-                        }
-                    }
-                })
-            }
-        })
-
+        showPhoto();
         $('#submit').click(function(){
             let id = $('#photoId').val(),
                 title = $('#photoTitle').val(),
@@ -149,8 +128,8 @@
 
         $('#multDelBtn').click(function(){
             $('.multDelete').show();
-            $('.multDelete').click(function(e){
-                let input = $(this).children('input');
+            $('.photoBox').click(function(e){
+                let input = $(this).find('input');
                 if(input.prop('checked')){
                     input.attr('checked',false);
                 }else{
@@ -163,6 +142,10 @@
         $('#multDelCancel').click(function(){
             $('.multDelete').hide();
             $('#multDelCtrl').hide();
+            $('.photoBox').unbind('click');
+            $('.multCheck').attr('checked',false);
+            showPhoto();
+
         })
 
         $('#multDelRun').click(function(){
@@ -245,6 +228,30 @@
         $('#photoId').val(photo['id']);
         $('#photoTitle').val(photo['title']);
         $('#photoContent').val(photo['content']);
+    }
+
+    function showPhoto(){
+        $('.photoBox').click(function(e){
+            if(!$(e.target).hasClass('multDelete') && !$(e.target).hasClass('multCheck')){
+                let id = $(this).data('photo-id');
+                $.ajax({
+                    url:`/api/album/photo/${id}`,
+                    type:'GET',
+                    success(result){
+                        if(result['state'] == 1){
+                            setPhoto(result['data']);
+                            t.fadeIn();
+                            t.find('').click(function(e){
+                                e.preventDefault();
+                                $(this).fadeOut();
+                            })
+                        }else{
+                            alert(result['msg']);
+                        }
+                    }
+                })
+            }
+        })
     }
 
 

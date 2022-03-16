@@ -717,7 +717,7 @@ select {
     min-height: 50px;
     border-bottom-left-radius: 15px;
     display: block;
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
     padding: 10px;
     border-bottom-right-radius: 15px;
 }
