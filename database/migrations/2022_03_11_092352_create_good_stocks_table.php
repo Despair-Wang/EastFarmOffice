@@ -17,9 +17,9 @@ class CreateGoodStocksTable extends Migration
             $table->id();
             $table->integer('goodId');
             $table->integer('goodType')->default(1);
-            $table->integer('export');
-            $table->integer('import');
-            $table->integer('stock');
+            $table->integer('export')->nullable();
+            $table->integer('import')->nullable();
+            $table->integer('stock')->nullable();
             $table->timestamps();
 
         });

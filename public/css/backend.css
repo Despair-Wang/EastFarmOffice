@@ -571,6 +571,7 @@ select {
     height: 50px;
     width: 0;
     border-radius: 20px;
+    background-color: white;
 }
 
 #addGallery > div > div:last-child {
@@ -578,6 +579,7 @@ select {
     height: 0;
     width: 50px;
     border-radius: 20px;
+    background-color: white;
 }
 
 .choosePageBox {
@@ -864,4 +866,34 @@ select {
 #uploadArea .img > div > img {
     height: 230px;
     max-width: none;
+}
+
+.typeBox > [class^="col"] {
+    display: flex;
+    align-items: center;
+}
+.typeBox > [class^="col"]:last-child {
+    justify-content: end;
+}
+
+.typeBox > [class^="col"] > [class^="h"] {
+    margin-bottom: 0;
+}
+
+/* 後台商品一覽頁面 */
+
+#goodList {
+    border: 1px solid black;
+    padding: 7px;
+}
+
+.goodListBox {
+    border-radius: 10px;
+    border: 1px solid gray;
+    transition: all 0.2s;
+    padding: 7px 15px;
+}
+
+.goodListBox:hover {
+    box-shadow: 2px 2px 4px #666;
 }

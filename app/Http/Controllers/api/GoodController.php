@@ -7,6 +7,8 @@ use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\GoodDetail;
 use App\Models\GoodOrder;
+use App\Models\GoodStock;
+use App\Models\GoodType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,109 +20,151 @@ class GoodController extends Controller
         return response()->json(['state' => $state, 'data' => $data, 'msg' => $msg])->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    public function callGoodEditor(Good $good = null)
+    public function callGoodEditor($good = null)
     {
         $categories = GoodCategory::Where('state', 1)->get();
         if (is_null($good)) {
             return view('good.goodEditor', compact('categories'));
         } else {
+            $good = Good::Where('serial', $good)->first();
             return view('good.goodEditor', compact('categories', 'good'));
         }
     }
 
     public function goodCreate(Good $good = null, Request $request)
     {
-        $update = false;
-        $params = $request->only('name', 'caption', 'category', 'hot');
-        // return $this->makeJson(0, $request->hot, null);
+        try {
+            return $this->makeJson(0, $request->type1, 'FIRE');
+            $update = false;
+            $params = $request->only('name', 'caption', 'category', 'hot');
 
-        if (is_null($good)) {
-            // return $this->makeJson(0, $params, null);
-            $result = Good::create($params);
-            if ($result->id == '') {
-                return $this->makeJson(0, $result, 'GOOD_CREATE_ERROR');
-            }
-            $good = $result;
-        } else {
-            $result = $good->update($params);
-            if (!$result) {
-                return $this->makeJson(0, $result, 'GOOD_UPDATE_ERROR');
-            }
-            $update = true;
-        }
-
-        $id = $good->id;
-        $good = Good::Where('id', $id)->get()->first();
-        $savePath = '/storage/goods/' . $id;
-        $path = '/public/goods/' . $id;
-        $galleryList = explode(',', $request->galleries);
-
-        // return $this->makeJson(0, $update, null);
-
-        if ($request->has('cover')) {
-            if ($update) {
-                $result = Storage::delete(str_replace('storage', 'public', $good->cover));
+            if (is_null($good)) {
+                // return $this->makeJson(0, $params, null);
+                $result = Good::create($params);
+                if ($result->id == '') {
+                    return $this->makeJson(0, $result, 'GOOD_CREATE_ERROR');
+                }
+                $good = $result;
+            } else {
+                $result = $good->update($params);
                 if (!$result) {
-                    return $this->makeJson(0, $result, 'OLD_COVER_DELETE_ERROR');
+                    return $this->makeJson(0, $result, 'GOOD_UPDATE_ERROR');
                 }
+                $update = true;
             }
-            $file = str_replace('data:image/png;base64,', '', $request->cover);
-            $file = str_replace(' ', '+', $file);
-            $file = base64_decode($file);
-            $filename = uniqid('cover', false) . '.png';
-            $result = Storage::put($savePath . '/' . $filename, $file);
-            if (!$result) {
-                return $this->makeJson(0, $result, 'GOOD_COVER_SAVE_ERROR');
-            }
-            $result = $good->update(['cover' => $path . '/' . $filename]);
-            if (!$result) {
-                return $this->makeJson(0, $result, 'GOOD_COVER_INSERT_ERROR');
-            }
-        }
 
-        if ($request->has('galleries') && $request->galleries != "") {
-            $gallery = array();
-            $galleries = explode(',', $request->galleries);
-            if ($update) {
-                $delete = array();
-                $old = unserialize(base64_decode($good->gallery));
-                for ($i = 0; $i < count($old); $i++) {
-                    for ($j = 0; $j < count($galleries); $j++) {
-                        $newG = $path . '/' . $galleries[$j];
-                        if ($old[$i] == $newG) {
-                            array_push($gallery, $old[$i]);
-                            break;
+            $id = $good->id;
+            $good = Good::Where('id', $id)->get()->first();
+            $path = '/storage/goods/' . $id;
+            $savePath = '/public/goods/' . $id;
+            $galleryList = explode(',', $request->galleries);
+
+            // return $this->makeJson(0, $update, null);
+
+            if ($request->has('cover')) {
+                if ($update) {
+                    $result = Storage::delete(str_replace('storage', 'public', $good->cover));
+                    if (!$result) {
+                        return $this->makeJson(0, $result, 'OLD_COVER_DELETE_ERROR');
+                    }
+                }
+                $file = str_replace('data:image/png;base64,', '', $request->cover);
+                $file = str_replace(' ', '+', $file);
+                $file = base64_decode($file);
+                $filename = uniqid('cover', false) . '.png';
+                $result = Storage::put($savePath . '/' . $filename, $file);
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'GOOD_COVER_SAVE_ERROR');
+                }
+                $result = $good->update(['cover' => $path . '/' . $filename]);
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'GOOD_COVER_INSERT_ERROR');
+                }
+            }
+
+            if ($request->has('galleries') && $request->galleries != "") {
+                $gallery = array();
+                $galleries = explode(',', $request->galleries);
+                if ($update) {
+                    $delete = array();
+                    $old = unserialize(base64_decode($good->gallery));
+                    for ($i = 0; $i < count($old); $i++) {
+                        for ($j = 0; $j < count($galleries); $j++) {
+                            $newG = $path . '/' . $galleries[$j];
+                            if ($old[$i] == $newG) {
+                                array_push($gallery, $old[$i]);
+                                break;
+                            }
+                            array_push($delete, $old[$i]);
                         }
-                        array_push($delete, $old[$i]);
+                    }
+                    foreach ($delete as $del) {
+                        $result = Storage::delete(str_replace('storage', 'public', $del));
+                        if (!$result) {
+                            return $this->makeJson(0, $result, 'DELETE_OLD_IMAGE_ERROR');
+                        }
                     }
                 }
-                foreach ($delete as $del) {
-                    $result = Storage::delete(str_replace('storage', 'public', $del));
+                foreach ($galleries as $g) {
+                    $tg = str_replace('.', '_', $g);
+                    if ($request->hasFile($tg)) {
+                        $file = $request->file($tg);
+                        $filename = $g;
+                        $result = Storage::putFileAs($savePath, $file, $filename);
+                        if (!$result) {
+                            return $this->makeJson(0, $result, 'GALLERY_SAVE_ERROR');
+                        }
+                        array_push($gallery, $path . '/' . $filename);
+                    }
+                }
+                $gallery = base64_encode(serialize($gallery));
+                // return $this->makeJson(0, $gallery, null);
+                $result = $good->update(['gallery' => $gallery]);
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'GALLERY_INSERT_ERROR');
+                }
+            }
+
+            $count = 0;
+            $list = array();
+            $temp = explode(',', $request->typeList);
+            foreach ($temp as $t) {
+                $list[$count] = explode(',', $request[$t]);
+                $count++;
+            }
+
+            $typeList = explode(',', $request->typeList);
+            foreach ($typeList as $type) {
+                $temp = explode(',', $request[$type]);
+                $typeParams = array();
+                $typeParams['goodId'] = $id;
+                $typeParams['type'] = $temp[0];
+                $typeParams['name'] = $temp[1];
+                $typeParams['description'] = $temp[2];
+                $typeParams['price'] = $temp[3];
+                if (!$update) {
+                    $result = GoodType::create($typeParams);
                     if (!$result) {
-                        return $this->makeJson(0, $result, 'DELETE_OLD_IMAGE_ERROR');
+                        return $this->makeJson(0, $result, 'GOOD_TYPE_CREATE_ERROR');
                     }
-                }
-            }
-            foreach ($galleries as $g) {
-                $tg = str_replace('.', '_', $g);
-                if ($request->hasFile($tg)) {
-                    $file = $request->file($tg);
-                    $filename = $g;
-                    $result = Storage::putFileAs($savePath, $file, $filename);
+                    $stockParams['goodId'] = $id;
+                    $stockParams['goodType'] = $temp[0];
+                    $stockParams['import'] = $temp[4];
+                    $result = GoodStock::create($stockParams);
                     if (!$result) {
-                        return $this->makeJson(0, $result, 'GALLERY_SAVE_ERROR');
+                        return $this->makeJson(0, $result, 'GOOD_STOCK_CREATE_ERROR');
                     }
-                    array_push($gallery, $path . '/' . $filename);
+                } else {
+                    $result = GoodType::Where('goodId', $id)->Where('type', $temp[0])->get()->first()->update($typeParams);
+                    if (!$result) {
+                        return $this->makeJson(0, $result, 'GOOD_TYPE_UPDATE_ERROR');
+                    }
                 }
             }
-            $gallery = base64_encode(serialize($gallery));
-            // return $this->makeJson(0, $gallery, null);
-            $result = $good->update(['gallery' => $gallery]);
-            if (!$result) {
-                return $this->makeJson(0, $result, 'GALLERY_INSERT_ERROR');
-            }
+            return $this->makeJson(1, $id, null);
+        } catch (\Exception $th) {
+            return $this->makeJson(0, $th->getMessage(), null);
         }
-        return $this->makeJson(1, $id, null);
     }
 
     public function goodDelete(Good $id)
@@ -135,11 +179,21 @@ class GoodController extends Controller
 
     public function goodList($category = null)
     {
+        $goods = Good::Where('state', 1)->orWhere('state', 2);
+        if (!is_null($category)) {
+            $goods = $goods->Where('category', $category);
+        }
+        $goods = $goods->paginate(12);
+        return view('good.editList', compact('goods', 'category'));
+    }
+
+    public function showGoodList($category = null)
+    {
         $goods = Good::Where('state', 1);
         if (!is_null($category)) {
             $goods = $goods->Where('category', $category);
         }
-        $goods = $goods->pagination(12);
+        $goods = $goods->paginate(12);
         return view('good.list', compact('goods', 'category'));
     }
 

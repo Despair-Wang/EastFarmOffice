@@ -19,9 +19,10 @@ class CreateGoodsTable extends Migration
             $table->string('name');
             $table->string('cover')->default('/assets/goods/default.png');
             $table->string('category');
-            $table->string('caption')->default('暫無說明');
+            $table->text('caption')->default('暫無說明');
             $table->text('gallery')->nullable();
             $table->boolean('hot')->default(false);
+            $table->integer('state')->default(1);
             $table->timestamps();
 
         });

@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('good')->group(function () {
         Route::post('/create', [GoodController::class, 'goodCreate']);
+        Route::post('/{good}/update', [GoodController::class, 'goodCreate']);
     });
 });
 

@@ -21,7 +21,6 @@ class CreateGoodTypesTable extends Migration
             $table->string('description');
             $table->integer('price');
             $table->timestamps();
-
         });
     }
 

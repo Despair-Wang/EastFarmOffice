@@ -3,14 +3,24 @@
 @section('h1', '商品編輯')
 @section('content')
     <div>
-        <input type="hidden" id="id">
+        <input type="hidden" id="id" @isset($good) value="{{ $good->id }}" @endisset >
         <section>
+            @isset($good)
+                <h3 class="h3">{{ $good->serial }}</h3>
+            @endisset
             <label>商品名稱</label>
-            <input type="text" id="name">
+            <input type="text" id="name"
+            @isset($good)
+             value="{{ $good->name }}"
+            @endisset
+            >
         </section>
         <section>
             <label>商品照</label>
             <div id="showCover">
+                @isset($good)
+                    <img src="{{ $good->cover }}">
+                @endisset
             </div>
             <input type="file" id="cover">
             <input type="hidden" id="coverUpload">
@@ -20,7 +30,13 @@
             <select id="category">
                 <option value="-">請選擇一個分類</option>
                 @forelse ($categories as $c)
-                    <option value="{{ $c->id }}">{{ $c->name }}</option>
+                    <option value="{{ $c->id }}"
+                    @isset($good)
+                        @if ($good->category == $c->id)
+                            selected
+                        @endif
+                    @endisset
+                    >{{ $c->name }}</option>
                 @empty
                     <option value="-">暫無分類</option>
                 @endforelse
@@ -28,23 +44,55 @@
         </section>
         <section>
             <label>商品說明</label>
-            <div id="caption" contenteditable="true" class="textarea" placeholder="請輸入商品敘述"></div>
+            <div id="caption" contenteditable="true" class="textarea" placeholder="請輸入商品敘述">
+                @isset($good)
+                    {!! $good->caption !!}
+                @endisset
+            </div>
         </section>
         <section>
             <label>商品款式</label>
             <div class="type">
                 <div>
+                    @if(isset($good))
+                        <div class="row">
+                            <div class="col-2">款式名稱</div>
+                            <div class="col-5">款式說明</div>
+                            <div class="col-2">價格</div>
+                            <div class="col-1">庫存</div>
+                        </div>
+                        @foreach ($good->getTypes as $type)
+                        <div class="typeBox row" id="type{{ $type->type }}">
+                            <div class="col-2">
+                                <input type="text" class="typeName" value={{ $type->name }} required>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" class="typeDescription" value="{{ $type->description }}">
+                            </div>
+                            <div class="col-2">
+                                $<input type="number" class="price" value="{{ $type->price }}">
+                            </div>
+                            <div class="col-2">
+                                <p>{{ $type->getStock() }}個</p>
+                            </div>
+                            <div class="col-1">
+                                <i class="fa fa-times float-right typeDel curP" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        @endforeach
+                    @else
                     <div class="typeBox" id="type1">
                         <i class="fa fa-times float-right typeDel curP" aria-hidden="true"></i>
                         <label>款式名稱</label>
                         <input type="text" class="typeName" value="基本款" required>
                         <label>款式說明</label>
                         <input type="text" class="typeDescription">
-                        <label>庫存數量</label>
-                        <input type="number" class="quantity" required>
                         <label>單價</label>
-                        <input type="number" class="price" required>
+                        <input type="number" class="price" value="0" required>
+                        <label>庫存數量</label>
+                        <input type="number" class="quantity" value="0" required>
                     </div>
+                    @endif
                 </div>
                 <button class="btn btn-primary" id="addType">增加款式</button>
             </div>
@@ -53,6 +101,16 @@
             <label>其他相片</label>
             <div id="uploadArea">
                 <div id="photoShowArea" class="row w-100">
+                    @isset($good)
+                        @foreach ($good->gallery as $g)
+                        <div class="col-6 col-md-3 mb-3 img">
+                            <div>
+                                <i class="fa fa-times del" aria-hidden="true"></i>
+                                <img src="{{ $g }}">
+                            </div>
+                        </div>
+                        @endforeach
+                    @endisset
                 </div>
             </div>
             <h3 class="h3" id="uploadCaption">請將要上傳的照片拖移至此</h3>
@@ -171,7 +229,23 @@
             $('#submit').click(function(){
                 submit();
             })
+
+            $('#caption').bind('paste',function(e){
+                e.preventDefault();
+                let old = $(this).html();
+                let t = e.originalEvent.clipboardData.getData('text');
+                $(this).html(old + t);
+            })
         })
+
+        function inputFormat(content){
+            let start = /<div>/g,
+                end = /<\/div>/g;
+            content = content.replace('<div>','<br>');
+            content = content.replace(/<div>/g,'');
+            content = content.replace(/<\/div>/g,'<br>');
+            return content;
+        }
 
         function deleteInit() {
             $('.del').unbind('click');
@@ -203,13 +277,13 @@
             <div class="typeBox" id="type${count}">
                 <i class="fa fa-times float-right typeDel curP" aria-hidden="true"></i>
                 <label>款式名稱</label>
-                <input type="text" class="typeName" value="基本款">
+                <input type="text" class="typeName" value="">
                 <label>款式說明</label>
                 <input type="text" class="typeDescription">
-                <label>庫存數量</label>
-                <input type="number" class="quantity">
                 <label>單價</label>
-                <input type="number" class="price">
+                <input type="number" class="price" value="0">
+                <label>庫存數量</label>
+                <input type="number" class="quantity" value="0">
             </div>`;
             $('#addType').prev().append(html);
             deleteTypeInit();
@@ -220,28 +294,56 @@
             name = $('#name').val(),
             cover = $('#coverUpload').val(),
             category = $('#category').find(':selected').val(),
-            caption = $('#caption').html(),
+            caption = inputFormat($('#caption').html()),
             typeList = new Array(),
-            hot = '';
-            url ='';
+            hot = '',
+            url ='',
+            error = false,
+            typeCount = 1;
 
             if($('#hot').next().hasClass('lcs_on')){
                 hot = 1;
             }else{
                 hot = 0;
             }
+
             $('.typeBox').each(function(){
                 let name = $(this).find('.typeName').val(),
                 description = $(this).find('.typeDescription').val(),
                 quantity = $(this).find('.quantity').val(),
                 price = $(this).find('.price').val(),
                 typeId = $(this).attr('id');
+                if(name == ''){
+                    alert('請輸入樣式名稱');
+                    error = true;
+                }
+                if(price == ''){
+                    alert('請設定價格');
+                    error = true;
+                }else if(price <= 0){
+                    alert('價格不可小於或等於0')
+                    error = true;
+                }
+                if(quantity == ''){
+                    alert('請輸入庫存量');
+                    error = true;
+                }else if(quantity <= 0){
+                    alert('庫存量不可小於或等於0');
+                    error = true;
+                }
                 if(description == ''){
                     description = '暫無說明';
                 }
-                f.append(typeId,[name,description,quantity,price]);
+                if(error == true){
+                    return false;
+                }
+                f.append(typeId,[typeCount,name,description,price,quantity]);
                 typeList.push(typeId);
+                typeCount++;
             })
+            if(error == true){
+                return false;
+            }
             f.append('name',name);
             f.append('cover',cover);
             f.append('category',category);
@@ -264,8 +366,9 @@
                 success:function(data){
                     if(data['state'] == 1){
                         alert('商品建立成功');
-                        location.href = `/good/${data['data']}/preview`;
+                        location.href = `/good/list`;
                     }else{
+                        console.log(data['msg'])
                         console.log(data['data'])
                     }
                 },

@@ -9,5 +9,20 @@ class Good extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['serial'];
+
+    public function getCoverAttribute($cover)
+    {
+        return str_replace('public', 'storage', $cover);
+    }
+
+    public function getGalleryAttribute($gallery)
+    {
+        return unserialize(base64_decode($gallery));
+    }
+
+    public function getTypes()
+    {
+        return $this->hasMany(GoodType::class, 'goodId', 'id');
+    }
 }

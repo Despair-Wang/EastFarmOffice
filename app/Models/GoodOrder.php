@@ -9,5 +9,5 @@ class GoodOrder extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['serial'];
 }

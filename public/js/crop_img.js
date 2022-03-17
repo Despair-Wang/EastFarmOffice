@@ -2,7 +2,7 @@
     var crop_width = 480,
         crop_height = 480,
         crop_type = "square",
-        preview_size = 500,
+        preview_size = 480,
         compress_ratio = 0.5,
         img_type = "png",
         oldImg = new Image(),
@@ -50,7 +50,7 @@
         $("#oldImg_frame").css("display", "none");
     }
 
-    $("#up_img").on("change", function () {
+    $("#cover").on("change", function () {
         $("#oldImg_frame").css("display", "flex");
         $("#oldImg").show();
         read_file(this);
