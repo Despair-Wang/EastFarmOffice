@@ -49,6 +49,10 @@ select {
     cursor: pointer;
 }
 
+.beGray {
+    filter: grayscale(1);
+}
+
 #createNew > div:first-child {
     background-color: crimson;
     border-radius: 100%;

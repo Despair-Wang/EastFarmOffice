@@ -19,6 +19,11 @@ class GoodType extends Model
     public function getStock()
     {
         $stock = GoodStock::Select('stock')->where('goodId', '=', $this->goodId)->where('goodType', '=', $this->type)->orderBy('updated_at', 'desc')->limit(1)->first();
-        return $stock['stock'];
+        if (is_null($stock)) {
+            return -1;
+        } else {
+            return $stock['stock'];
+        }
+
     }
 }

@@ -103,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [GoodController::class, 'callGoodEditor']);
         Route::get('/{id}/edit', [GoodController::class, 'callGoodEditor']);
         Route::get('/list/{category?}', [GoodController::class, 'goodList']);
+        Route::get('/{good}/stock', [GoodController::class, 'goodStock']);
     });
 });
 

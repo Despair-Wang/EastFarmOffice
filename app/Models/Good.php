@@ -25,4 +25,14 @@ class Good extends Model
     {
         return $this->hasMany(GoodType::class, 'goodId', 'id');
     }
+
+    public function getState()
+    {
+        $state = $this->state;
+        if ($state == 1) {
+            return '上架中';
+        } else if ($state == 0) {
+            return '已下架';
+        }
+    }
 }

@@ -70,7 +70,7 @@
                                 <input type="text" class="typeDescription" value="{{ $type->description }}">
                             </div>
                             <div class="col-2">
-                                $<input type="number" class="price" value="{{ $type->price }}">
+                                <label class="mr-2">$</label><input type="number" class="price" value="{{ $type->price }}">
                             </div>
                             <div class="col-2">
                                 <p>{{ $type->getStock() }}個</p>
@@ -147,18 +147,20 @@
             </div>
         </div>
     </div>
+    <div id="goBack"></div>
 @endsection
 @section('customJs')
     <link rel="stylesheet" href="{{ asset('css/croppie.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/lc_switch.css') }}">
 @endsection
 @section('customJsBottom')
     <script src="{{ asset('js/croppie.js') }}"></script>
     <script src="{{ asset('js/crop_img.js') }}"></script>
-    <script src="{{ asset('js/lc_switch.js') }}"></script>
     <script>
         var f = new FormData(),
-            galleries = new Array();
+            galleries = new Array(),
+            deleteType = new Array(),
+            deleteGallery = new Array(),
+            md = new MoveDom();
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content'),
@@ -166,7 +168,8 @@
         })
         $(() => {
             deleteTypeInit();
-
+            deleteInit();
+            md.setBack('/good/list');
             $('#hot').lc_switch('開啟', '關閉');
 
             let area = $('#uploadArea')[0];
@@ -252,11 +255,13 @@
             $('.del').bind('click', function() {
                 let target = $(this).parents('.img'),
                     name = target.data('name'),
-                    index = galleries.indexOf(name);
+                    index = galleries.indexOf(name),
+                    url = target.find('img').attr('src');
                 galleries.splice(index, 1);
                 if (f.has(name)) {
                     f.delete(name);
                 }
+                deleteGallery.push(url);
                 target.remove();
             })
         }
@@ -264,7 +269,10 @@
         function deleteTypeInit(){
             $('.typeDel').unbind('click');
             $('.typeDel').bind('click',function(){
-                $(this).parent().remove();
+                let t = $(this).parents('.typeBox'),
+                    id = t.attr('id');
+                    t.remove();
+                deleteType.push(id);
             });
 
         }
@@ -351,6 +359,8 @@
             f.append('typeList',typeList);
             f.append('galleries',galleries);
             f.append('hot',hot);
+            f.append('deleteType',deleteType);
+            f.append('deleteGallery',deleteGallery);
             if(id == ''){
                 url = '/api/good/create';
             }else{

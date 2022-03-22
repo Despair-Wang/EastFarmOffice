@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @include('layouts.basicHead')
+    <script src="{{ asset('js/lc_switch.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('/css/backend.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/lc_switch.css') }}">
     @yield('customJs')
     <title>東鄉事業官網後台-@yield('title')</title>
 </head>

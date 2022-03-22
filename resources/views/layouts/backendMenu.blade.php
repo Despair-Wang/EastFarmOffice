@@ -37,7 +37,7 @@
         <a class="mainItem">產品介紹</a>
         <div class="subItem">
             <div>
-                <a href="">產品一覽</a>
+                <a href="/good/list">產品一覽</a>
                 <a href="">分類一覽</a>
                 <a href="">標籤一覽</a>
             </div>
