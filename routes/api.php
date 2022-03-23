@@ -69,6 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{good}/delete', [GoodController::class, 'goodDelete']);
         Route::get('/{good}/putdown', [GoodController::class, 'putDown']);
         Route::get('/{good}/putUp', [GoodController::class, 'putUp']);
+        Route::post('/stockChange', [GoodController::class, 'stockChange']);
+        Route::post('/category/create', [GoodController::class, 'categoryCreate']);
+        Route::post('/category/{id}/update', [GoodController::class, 'categoryCreate']);
+        Route::post('/category/delete', [GoodController::class, 'categoryDelete']);
     });
 });
 

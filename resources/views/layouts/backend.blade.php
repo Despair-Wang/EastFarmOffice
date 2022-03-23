@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="{{ asset('/css/backend.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lc_switch.css') }}">
     @yield('customJs')
+    <script>
+        $.ajaxSetup({
+            headers:{
+                'X-CSRF-TOKEN':$('meta[name="csrf_token"]').attr('content'),
+            }
+        })
+    </script>
     <title>東鄉事業官網後台-@yield('title')</title>
 </head>
 <body>

@@ -285,6 +285,28 @@ class GoodController extends Controller
         return view('good.stockChange', compact('good', 'types'));
     }
 
+    public function stockChange(Request $request)
+    {
+        $types = $request->types;
+        foreach ($types as $t) {
+            $params = array();
+            if ($t[2] != 0) {
+                $params['goodId'] = $t[0];
+                $params['goodType'] = $t[1];
+                if ($t[3] == 'true') {
+                    $params['import'] = $t[2];
+                } else {
+                    $params['export'] = $t[2];
+                }
+                $result = GoodStock::create($params);
+                if ($result->id == '') {
+                    return $this->makeJson(0, $result, 'STOCK_CREATE_ERROR');
+                }
+            }
+        }
+        return $this->makeJson(1, null, null);
+    }
+
     public function callCategoryEditor(GoodCategory $id = null)
     {
         $categories = GoodCategory::Where('state', 1)->Where('sub', 0)->get();
@@ -295,16 +317,16 @@ class GoodController extends Controller
         }
     }
 
-    public function categoryCreate(GoodCategory $cate = null, Request $request)
+    public function categoryCreate(GoodCategory $id = null, Request $request)
     {
-        $params = $request->only('name', 'content', 'state');
-        if (is_null($cate)) {
+        $params = $request->only('name', 'content', 'state', 'sub');
+        if (is_null($id)) {
             $result = GoodCategory::create($params);
         } else {
-            $result = $cate->update($params);
+            $result = $id->update($params);
         }
         if (!$result) {
-            if (is_null($cate)) {
+            if (is_null($id)) {
                 return $this->makeJson(0, $result, 'GOOD_CATEGORY_CREATE_ERROR');
             } else {
                 return $this->makeJson(0, $result, 'GOOD_CATEGORY_UPDATE_ERROR');
@@ -335,14 +357,20 @@ class GoodController extends Controller
 
     }
 
-    public function categoryList($id)
+    public function categoryShow(GoodCategory $id)
     {
-        $goods = Good::Where('category', $id)->get();
-        if ($goods->count() > 0) {
-            return $this->makeJson(1, $goods, null);
-        } else {
-            return $this->makeJson(0, $goods, 'NO_DATA');
-        }
+        // $goods = Good::Where('category', $id)->get();
+        // if ($goods->count() > 0) {
+        //     return $this->makeJson(1, $goods, null);
+        // } else {
+        //     return $this->makeJson(0, $goods, 'NO_DATA');
+        // }
+    }
+
+    public function categoryList()
+    {
+        $categories = GoodCategory::get();
+        return view('good.categoryList', compact('categories'));
     }
 
     public function orderListAdmin(Request $request)

@@ -100,6 +100,8 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('good')->group(function () {
         Route::get('/category/create', [GoodController::class, 'callCategoryEditor']);
+        Route::get('/category/{id}/edit', [GoodController::class, 'callCategoryEditor']);
+        Route::get('/category/list', [GoodController::class, 'categoryList']);
         Route::get('/create', [GoodController::class, 'callGoodEditor']);
         Route::get('/{id}/edit', [GoodController::class, 'callGoodEditor']);
         Route::get('/list/{category?}', [GoodController::class, 'goodList']);
