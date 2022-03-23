@@ -13,7 +13,7 @@ body {
 #content {
     width: 100%;
     height: 100vh;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
 }
 
 #top {
@@ -39,9 +39,17 @@ h1 {
     text-align: center;
 }
 
+.curP {
+    cursor: pointer;
+}
+
 section {
     margin-top: 2%;
     margin-bottom: 2%;
+}
+
+.hiddenScrollY {
+    overflow-y: hidden !important;
 }
 
 /* 前台表單樣式 */
@@ -293,7 +301,7 @@ section {
 
 #goBack {
     position: fixed;
-    top: 90px;
+    top: 20px;
     left: 20px;
     display: flex;
     width: 75px;
@@ -327,4 +335,145 @@ section {
     border: 2px solid white;
     border-radius: 20px;
     transform: translateX(-10px);
+}
+
+/* 商品內容頁面 */
+.typeBox {
+    border-bottom: 1px solid aqua;
+    padding: 3px;
+    margin-top: 5px;
+}
+
+#mediaArea {
+    display: grid;
+    grid-template-columns: 30px 1fr 30px;
+}
+
+#ctrlRight {
+    grid-column-start: 3;
+    grid-row-start: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#ctrlLeft {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#ctrlRight > i,
+#ctrlLeft > i {
+    transform: scale(2);
+    transition: all 0.2s;
+}
+
+#ctrlRight > i:hover,
+#ctrlLeft > i:hover {
+    text-shadow: 2px 2px 3px #666;
+    transition: all 0.2s;
+}
+
+#mediaBox {
+    background-color: white;
+    grid-column-start: 2;
+    position: relative;
+    height: 290px;
+    /* padding: 5px; */
+    border: 1px solid #666;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mediaBox > img {
+    position: absolute;
+    z-index: -1;
+}
+
+.onTop {
+    z-index: 100 !important;
+}
+
+#typeSelect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 300;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s;
+}
+
+#typeSelect > div {
+    border: 2px solid #666;
+    background-color: white;
+    border-radius: 20px;
+    height: auto;
+    padding: 25px 25px 50px;
+}
+#typeSelect div[class^="col"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selectItem {
+    border-bottom: 1px solid aqua;
+    margin: 10px 0;
+    padding: 5px 0;
+}
+
+.orderNumber {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 42px;
+    border: 1px solid aqua;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: inset -3px -5px 3px #ccc;
+}
+
+.orderNumber input {
+    border: none;
+}
+
+/* .orderNumber > div:first-child {
+
+
+} */
+
+.orderNumber > div:nth-child(2) {
+    border-right: 1px solid aqua;
+    border-left: 1px solid aqua;
+}
+
+/* .orderNumber > div:last-child {
+    padding: 5px 15px;
+} */
+
+.reduceNum,
+.addNum {
+    padding: 5px 15px;
+    height: 42px;
+    width: 49px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.reduceNum:active,
+.addNum:active {
+    background-color: white;
 }

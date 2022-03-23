@@ -59,6 +59,8 @@ Route::prefix('o')->group(function () {
     // Route::get('/album-list/{year}', [AlbumController::class, 'showAlbumList']); //顯示相簿列表，可加入年或年月搜尋
     Route::get('/album-list/{year?}/{month?}', [AlbumController::class, 'showAlbumList']); //顯示相簿列表，可加入年或年月搜尋
     Route::get('/album/{album}/photos', [AlbumController::class, 'showPhotos']); //顯示指定相簿，全開放
+    Route::get('/good-list/{category?}', [GoodController::class, 'showGoodList']); //
+    Route::get('/good/{id}', [GoodController::class, 'showGood']);
 });
 
 Route::middleware(['auth'])->group(function () {

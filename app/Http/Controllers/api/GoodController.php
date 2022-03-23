@@ -269,8 +269,9 @@ class GoodController extends Controller
         return view('good.list', compact('goods', 'category'));
     }
 
-    public function goodShow(Good $good)
+    public function showGood($id)
     {
+        $good = Good::Where('serial', $id)->first();
         if (is_null($good)) {
             return view('good.unknown');
         } else {
@@ -445,6 +446,13 @@ class GoodController extends Controller
             $order = $order->where('userId', $user);
         }
         return $order;
+    }
+
+    public function addCart(Request $request)
+    {
+        $id = $request->id;
+        $orders = $request->orders;
+        return $this->makeJson(1, $orders, null);
     }
 
     public function orderCreate($serial = null, Request $request)

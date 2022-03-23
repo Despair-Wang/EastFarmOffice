@@ -15,7 +15,7 @@
         <a href="{{ url('/o/album-list') }}">茶花千景</a>
     </div>
     <div class="menuItem">
-        <a>產品介紹</a>
+        <a href="{{ url('/o/good-list')}}">產品介紹</a>
     </div>
     <div class="menuItem">
         <a>聯絡我們</a>
