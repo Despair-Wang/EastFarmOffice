@@ -48,6 +48,11 @@ Route::get('/test', function () {
     // dd($s);
 });
 
+Route::get('/clear', function () {
+    $result = Cache::forget(Auth::id());
+    dump($result);
+});
+
 //O是OPEN的O
 Route::prefix('o')->group(function () {
     Route::get('/post-list', [PostController::class, 'showPostList']); //呼叫所有發布公開的文章頁面列表，完全開放
@@ -108,6 +113,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/edit', [GoodController::class, 'callGoodEditor']);
         Route::get('/list/{category?}', [GoodController::class, 'goodList']);
         Route::get('/{good}/stock', [GoodController::class, 'goodStock']);
+        Route::view('/orderCheck', 'good.check');
     });
 });
 

@@ -43,9 +43,12 @@
         </div>
     </div>
     <div id="goBack"></div>
-    <div id="typeSelect" data-good-id="{{ $good->serial }}">
+    <div id="typeSelect" data-good-id="{{ $good->id }}">
         <div class="container">
             <div class="row">
+                <div class="col-12">
+                    <div class="w-100 text-right"><i id="closeWindow" class="fa fa-times curP scale2" aria-hidden="true"></i></div>
+                </div>
                 <div class="col-12">
                     <h2 class="h2 w-100 text-center">購買數量</h2>
                 </div>
@@ -136,6 +139,14 @@
         $('#submit').click(function(){
             order();
         })
+
+        $('#closeWindow').click(function(){
+            closeWindow();
+        })
+
+        $('#cart').click(function(){
+            location.href='/good/orderCheck';
+        })
     })
 
     function order(){
@@ -158,7 +169,8 @@
                 },success(data){
                     if(data['state'] == 1){
                         alert('商品已經加入購物車')
-                        closeWindow()
+                        // closeWindow()
+                        location.reload();
                     }else{
                         console.log(data['msg']);
                         console.log(data['data']);

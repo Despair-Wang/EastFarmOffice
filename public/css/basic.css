@@ -52,6 +52,14 @@ section {
     overflow-y: hidden !important;
 }
 
+.scale2 {
+    transform: scale(2) !important;
+}
+
+.scale3 {
+    transform: scale(3) !important;
+}
+
 /* 前台表單樣式 */
 
 #menuBox {
@@ -476,4 +484,52 @@ section {
 .reduceNum:active,
 .addNum:active {
     background-color: white;
+}
+
+/* 購物車狀態 */
+
+#cart {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+}
+
+#cart i {
+    transform: scale(3);
+    color: coral;
+    /* text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black,
+        0 0 1px black; */
+}
+
+#cartCount {
+    transform: translate(27px, 20px);
+    width: 25px;
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    border: 2px solid white;
+    height: 25px;
+    background: coral;
+    color: white;
+    font-weight: 900;
+}
+
+#cartMessage {
+    position: absolute;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: white;
+    font-weight: 900;
+    padding: 5px 25px 52px;
+    transform: translate(-22px, 24px);
+    bottom: 0;
+}
+
+.checkItem {
+    border: 1px solid aqua;
+    padding: 7px;
 }

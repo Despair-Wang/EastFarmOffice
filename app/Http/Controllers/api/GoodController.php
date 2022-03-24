@@ -11,6 +11,7 @@ use App\Models\GoodStock;
 use App\Models\GoodType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class GoodController extends Controller
@@ -452,7 +453,28 @@ class GoodController extends Controller
     {
         $id = $request->id;
         $orders = $request->orders;
-        return $this->makeJson(1, $orders, null);
+        $user = Auth::id();
+        if (Cache::has(Auth::id())) {
+            $orderParams = Cache::get(Auth::id());
+        } else {
+            $orderParams = array();
+        }
+        foreach ($orders as $order) {
+            $number = $order[1];
+            if ($number > 0) {
+                $type = $order[0];
+                $name = (Good::Where('id', $id)->first())['name'];
+                $data = GoodType::Select('name', 'price')->Where('goodId', $id)->Where('type', $type)->first();
+                $typeName = $data['name'];
+                $price = intval($data['price']);
+                array_push($orderParams, [$id, $type, $name, $typeName, $number, $price]);
+            }
+        }
+        $result = Cache::put($user, $orderParams);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'CACHE_SAVE_ERROR');
+        }
+        return $this->makeJson(1, null, null);
     }
 
     public function orderCreate($serial = null, Request $request)
