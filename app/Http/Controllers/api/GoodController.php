@@ -477,41 +477,75 @@ class GoodController extends Controller
         return $this->makeJson(1, null, null);
     }
 
+    public function cartChange(Request $request)
+    {
+        if (Auth::check()) {
+            $id = Auth::id();
+            $list = Cache::get($id);
+            $index = $request->index;
+            unset($list[$index]);
+            $result = Cache::put(Auth::id(), $list);
+            if (!$result) {
+                return $this->makeJson(0, $result, 'CACHE_SAVE_ERROR');
+            } else {
+                return $this->makeJson(1, null, null);
+            }
+        } else {
+            return $this->makeJson(0, null, 'NO_USER_LOGIN');
+        }
+    }
+
     public function orderCreate($serial = null, Request $request)
     {
-        $orderParams = $request->only('total', 'freight', 'remark', 'state');
+        $orderParams = $request->only('name', 'tel', 'zipcode', 'pay', 'freight', 'remark');
         $orderParams['userId'] = Auth::id();
+        $total = 0;
+        $orderParams['total'] = $total;
+        $orderParams['state'] = 1;
+        $city = $request->city;
+        $dist = $request->dist;
+        $address = $request->address;
+        $address = $city . $dist . $address;
+        $orderParams['address'] = $address;
         $result = GoodOrder::create($orderParams);
         if ($result->id == '') {
             return $this->makeJson(0, $result, 'ORDER_CREATE_ERROR');
         }
         $id = $result->id;
-        $good = GoodOrder::Where('id', $id)->get()->first();
+        $good = GoodOrder::Where('id', $id)->first();
         $serial = $good->serial;
-        $createTime = substr($good->created_at, 0, 18);
-        $details = array();
-        $item = ['goodId', 'type', 'quantity', 'amount'];
-        $tempArray = explode(',', $result->details);
-        $count = 0;
-        foreach ($tempArray as $t) {
-            $details[$item[$count]] = $t;
-            $count++;
-            if ($count == 4) {
-                $details['orderId'] = $id;
-                $result = GoodDetail::create($details);
-                if ($result->id == '') {
-                    return $this->makeJson(0, $result, 'DETAIL_CREATE_ERROR');
-                }
-                $details = array();
-                $count = 0;
+        // $createTime = substr($good->created_at, 0, 18);
+        $details = Cache::get(Auth::id());
+        foreach ($details as $d) {
+            $temp = array();
+            $temp['orderId'] = $id;
+            $temp['goodId'] = $d[0];
+            $temp['type'] = $d[1];
+            $temp['quantity'] = $d[4];
+            $temp['amount'] = $d[5];
+            $total += intval($d[4]) * intval($d[5]);
+            $result = GoodDetail::create($temp);
+            if ($result->id == '') {
+                return $this->makeJson(0, $result, 'DETAIL_CREATE_ERROR');
             }
         }
-        return view('good.success', compact('serial', 'createTime'));
+        $result = $good->update(['total' => $total]);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'TOTAL_INSERT_ERROR');
+        }
+        Cache::forget(Auth::id());
+        return $this->makeJson(1, $serial, null);
+    }
+
+    public function orderComplete($serial)
+    {
+        $order = GoodOrder::Where('serial', $serial)->first();
+        return view('good.complete', compact('order'));
     }
 
     public function changeOrder(GoodOrder $order, Request $request)
     {
-        $params = $request->only('total', 'freight', 'remark', 'state');
+        $params = $request->only('name', 'tel', 'pay', 'freight', 'remark');
         $result = $order->update($params);
         $id = $order->id;
         if (!$result) {
@@ -568,5 +602,11 @@ class GoodController extends Controller
         } else {
             return $this->makeJson(1, null, null);
         }
+    }
+
+    public function getCategory()
+    {
+        $categories = GoodCategory::Select('name', 'sub')->Where('state', 1)->get();
+
     }
 }

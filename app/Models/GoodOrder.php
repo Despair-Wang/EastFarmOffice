@@ -10,4 +10,9 @@ class GoodOrder extends Model
     use HasFactory;
 
     protected $guarded = ['serial'];
+
+    public function getCreateTime()
+    {
+        return substr($this->created_at, 0, 19);
+    }
 }

@@ -114,6 +114,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/list/{category?}', [GoodController::class, 'goodList']);
         Route::get('/{good}/stock', [GoodController::class, 'goodStock']);
         Route::view('/orderCheck', 'good.check');
+        Route::get('/order/{serial}/complete', [GoodController::class, 'orderComplete']);
     });
 });
 

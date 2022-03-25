@@ -17,7 +17,12 @@ class CreateGoodOrdersTable extends Migration
             $table->id();
             $table->string('serial');
             $table->integer('userId');
+            $table->string('name');
+            $table->string('tel');
+            $table->integer('zipcode');
+            $table->string('address');
             $table->integer('total');
+            $table->string('pay');
             $table->integer('freight');
             $table->string('remark')->nullable();
             $table->string('state')->default(2); //0-取消，1-成立，2-未完成，3-已結單

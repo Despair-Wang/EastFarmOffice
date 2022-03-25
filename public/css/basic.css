@@ -533,3 +533,25 @@ section {
     border: 1px solid aqua;
     padding: 7px;
 }
+
+#twzipcode > select {
+    margin-right: 20px;
+}
+
+.freight {
+    margin-left: 10px;
+    font-size: 0.85rem;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #666;
+    overflow: auto;
+}
+
+.textarea:empty::before {
+    content: attr(placeholder);
+    color: #666;
+}

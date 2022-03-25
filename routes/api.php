@@ -74,6 +74,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/category/{id}/update', [GoodController::class, 'categoryCreate']);
         Route::post('/category/delete', [GoodController::class, 'categoryDelete']);
         Route::post('/addCart', [GoodController::class, 'addCart']);
+        Route::post('/cartChange', [GoodController::class, 'cartChange']);
+        Route::post('/order', [GoodController::class, 'orderCreate']);
     });
 });
 
