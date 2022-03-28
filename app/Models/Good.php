@@ -26,6 +26,11 @@ class Good extends Model
         return $this->hasMany(GoodType::class, 'goodId', 'id');
     }
 
+    public function getCategory()
+    {
+        return $this->hasOne(GoodCategory::class, 'id', 'category')->withDefault();
+    }
+
     public function getState()
     {
         $state = $this->state;

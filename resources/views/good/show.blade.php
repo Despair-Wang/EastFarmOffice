@@ -2,6 +2,9 @@
 @section('title',$good->name);
 @section('content')
     <div class="row">
+        <div class="col-12 categoryBox">
+            <a href="{{ url('/o/good-list/') . '/' . $good->category }}">{{ $good->getCategory->name }}</a>
+        </div>
         <div class="col-12 col-md-4">
             <div id="mediaArea">
                 <div id="mediaBox">

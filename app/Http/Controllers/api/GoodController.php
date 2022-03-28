@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class GoodController extends Controller
 {
@@ -604,9 +605,16 @@ class GoodController extends Controller
         }
     }
 
-    public function getCategory()
+    public function getCategory(View $view)
     {
-        $categories = GoodCategory::Select('name', 'sub')->Where('state', 1)->get();
+        $main = GoodCategory::Select('id', 'name')->Where('sub', '0')->Where('state', 1)->get();
+        $categories = array();
+        foreach ($main as $m) {
+            $sub = GoodCategory::Select('id', 'name')->Where('sub', $m['id'])->Where('state', 1)->get();
+            $index = $m['id'] . ',' . $m['name'];
+            $categories[$index] = $sub;
+        }
+        $view->with('categories', $categories);
 
     }
 }

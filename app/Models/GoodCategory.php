@@ -11,6 +11,11 @@ class GoodCategory extends Model
 
     protected $guarded = [];
 
+    public function getGood()
+    {
+        return $this->belongsTo(Good::class, 'category', 'id')->withDefault();
+    }
+
     public function getBelong()
     {
         if ($this->sub != 0) {

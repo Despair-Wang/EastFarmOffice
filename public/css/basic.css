@@ -94,6 +94,16 @@ section {
 .menuLogin a {
     color: white;
 }
+
+.subMenu {
+    display: none;
+    position: absolute;
+    background: white;
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
 /* 前台底部樣式 */
 
 #footer > .row > div {
@@ -484,6 +494,22 @@ section {
 .reduceNum:active,
 .addNum:active {
     background-color: white;
+}
+
+.categoryBox > a {
+    display: inline-block;
+    margin: 5px 10px 7px 25px;
+    background-color: crimson;
+    font-weight: 600;
+    color: white;
+    padding: 7px 30px;
+}
+
+.categoryBox > a:hover {
+    background-color: coral;
+    color: black;
+    font-weight: 900;
+    text-decoration: none;
 }
 
 /* 購物車狀態 */
