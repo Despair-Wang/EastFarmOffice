@@ -39,7 +39,7 @@
             <div>
                 <a href="/good/list">產品一覽</a>
                 <a href="/good/category/list">分類一覽</a>
-                <a href="">訂單一覽</a>
+                <a href="/good/order/list">訂單一覽</a>
             </div>
         </div>
     </div>

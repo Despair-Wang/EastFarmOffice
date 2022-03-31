@@ -581,3 +581,29 @@ section {
     content: attr(placeholder);
     color: #666;
 }
+
+/* 前台訂單一覽 */
+
+.boxItem {
+    border: 1px solid;
+    padding: 5px 15px;
+    transition: all 0.5s;
+    margin-bottom: 7px;
+}
+
+.boxItem:hover {
+    transform: scale(1.05);
+}
+
+/* 前台訂單詳細畫面 */
+
+#orderDetailBox {
+    border: 1px solid;
+    padding: 10px;
+}
+
+#orderDetailBox > div:nth-child(odd) {
+    background-color: aqua;
+    margin-bottom: 7px;
+    margin-top: 5px;
+}

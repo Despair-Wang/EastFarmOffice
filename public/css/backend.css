@@ -901,3 +901,29 @@ select {
 .goodListBox:hover {
     box-shadow: 2px 2px 4px #666;
 }
+
+/* 後台訂單一覽 */
+
+.orderList {
+    border: 1px solid;
+    padding: 7px 15px;
+    margin-bottom: 7px;
+    transition: all 0.5s;
+}
+
+.orderList:hover {
+    transform: scale(1.05);
+}
+
+/* 後台訂單詳細 */
+
+#orderDetailBox {
+    border: 1px solid;
+    padding: 10px;
+}
+
+#orderDetailBox > div:nth-child(odd) {
+    background-color: aqua;
+    margin-bottom: 7px;
+    margin-top: 5px;
+}

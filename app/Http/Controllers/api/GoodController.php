@@ -7,6 +7,8 @@ use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\GoodDetail;
 use App\Models\GoodOrder;
+use App\Models\GoodOrderPayment;
+use App\Models\GoodOrderState;
 use App\Models\GoodStock;
 use App\Models\GoodType;
 use Illuminate\Http\Request;
@@ -376,19 +378,21 @@ class GoodController extends Controller
         return view('good.categoryList', compact('categories'));
     }
 
-    public function orderListAdmin(Request $request)
+    public function orderListAdmin($start = null, $end = null, $page = null, $state = null)
     {
-        $orders = $this->getOrderList('admin', $request);
-        return view('good.listBackend', compact('orders'));
+        $orders = $this->getOrderList('admin', $start, $end, $page, $state);
+        $status = GoodOrderState::get();
+        return view('good.listBackend', compact('orders', 'status', 'state', 'start', 'end', 'page'));
     }
 
-    public function orderList(Request $request)
+    public function orderList($start = null, $end = null, $page = null, $state = null)
     {
-        $orders = $this->getOrderList('user', $request);
-        return view('good.list', compact('orders'));
+        $orders = $this->getOrderList('user', $start, $end, $page, $state);
+        $status = GoodOrderState::get();
+        return view('good.orderList', compact('orders', 'status', 'state', 'start', 'end', 'page'));
     }
 
-    private function getOrderList($type, $request)
+    private function getOrderList($type, $start = null, $end = null, $page = null, $state = null)
     {
         $order = GoodOrder::Select('*');
 
@@ -397,46 +401,48 @@ class GoodController extends Controller
             $order->where('userId', $user);
         }
 
-        if ($request->has('state')) {
-            $order = $order->where('state', $request->get('state'));
+        if (!is_null($state) && $state != 'all') {
+            $order = $order->where('state', $state);
         }
 
-        if ($request->has('start') && $request->has('end')) {
-            if ($request->start <= $request->end) {
-                $order = $order->where('created_at', '>=', $request->start . '%')->where('created_at', '=<', $request->end . '%');
+        if (!is_null($start) && $start != 'null' && !is_null($end) && $end != 'null') {
+            if ($start <= $end) {
+                $order = $order->where('created_at', '>=', $start . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59');
+                // $order = $order->where('created_at', '>=', '2022-03-23 00:00:00')->where('created_at', '<=', '2022-03-25 23:59:59');
             } else {
                 return $this->makeJson(0, null, 'START_BIG_THAN_END');
             }
         }
 
-        if ($request->has('sort')) {
-            if ($request->sort == 'ASC') {
-                $order = $order->orderBy('created_at', 'asc');
-            } else {
-                $order = $order->orderBy('created_at', 'desc');
-            }
+        $order = $order->orderBy('created_at', 'desc');
+
+        // if ($request->has('sort')) {
+        //     if ($request->sort == 'ASC') {
+        //         $order = $order->orderBy('created_at', 'asc');
+        //     } else {
+        //         $order = $order->orderBy('created_at', 'desc');
+        //     }
+        // }
+
+        if (is_null($page)) {
+            $page = 15;
         }
 
-        if ($request->has('limit')) {
-            $limit = $request->limit;
-        } else {
-            $limit = 15;
-        }
-
-        return $order->pagination($limit);
+        return $order->paginate($page);
 
     }
 
     public function showOrderAdmin($serial)
     {
         $order = $this->getOrder('admin', $serial);
+
         return view('good.showBackend', compact('order'));
     }
 
     public function showOrder($serial)
     {
         $order = $this->getOrder('user', $serial);
-        return view('good.show', compact('order'));
+        return view('good.orderShow', compact('order'));
 
     }
 
@@ -447,7 +453,72 @@ class GoodController extends Controller
             $user = Auth::id();
             $order = $order->where('userId', $user);
         }
+        $order = $order->first();
+        // dd($order->serial);
         return $order;
+    }
+
+    public function callOrderEditor($serial)
+    {
+        $order = GoodOrder::where('serial', $serial)->Where('state', 1)->first();
+        $status = GoodOrderState::get();
+        $payments = GoodOrderPayment::get();
+        if (is_null($order)) {
+            return view('good.unknown');
+        }
+        return view('good.orderEditor', compact('order', 'status', 'payments'));
+    }
+
+    public function orderEdit($serial, Request $request)
+    {
+        $order = GoodOrder::where('serial', $serial)->Where('state', 1)->orWhere('state', 2)->orWhere('state', 3)->first();
+        $params = $request->only('name', 'address', 'freight', 'total', 'pay', 'state');
+        $result = $order->update($params);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'ORDER_UPDATE_ERROR');
+        }
+        $types = $request->types;
+        if (!is_null($types) && count($types) > 0) {
+            foreach ($types as $v) {
+                $result = GoodDetail::Where('id', $v[0])->first()->update(['amount' => $v[1], 'quantity' => $v[2]]);
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'DETAIL_UPDATE_ERROR');
+                }
+            }
+        }
+
+        $deleteType = $request->deleteType;
+        if (!is_null($deleteType) && count($deleteType) > 0) {
+            foreach ($deleteType as $d) {
+                $result = GoodDetail::Where('id', $d)->first()->delete();
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'DETAIL_DELETE_ERROR');
+                }
+            }
+        }
+
+        return $this->makeJson(1, null, null);
+    }
+
+    public function orderChangeState($serial, $state)
+    {
+        $order = GoodOrder::where('serial', $serial)->first();
+
+        switch ($state) {
+            case 'paid':
+                $result = $order->update(['state' => 2]);
+                break;
+            case 'delivered':
+                $result = $order->update(['state' => 3]);
+                break;
+            case 'cancel':
+                $result = $order->update(['state' => 0]);
+                break;
+        }
+        if (!$result) {
+            return $this->makeJson(0, $result, 'ORDER_BE_OVER_ERROR');
+        }
+        return $this->makeJson(1, null, null);
     }
 
     public function addCart(Request $request)

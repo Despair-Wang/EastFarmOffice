@@ -5,6 +5,7 @@ use App\Http\Controllers\api\GoodController;
 use App\Http\Controllers\Api\PediaController;
 use App\Http\Controllers\Api\PostController;
 use App\Models\Album;
+use App\Models\GoodOrder;
 use App\Models\PediaCategory;
 use App\Models\PediaTag;
 use App\Models\Photo;
@@ -68,6 +69,14 @@ Route::prefix('o')->group(function () {
     Route::get('/good/{id}', [GoodController::class, 'showGood']);
 });
 
+Route::get('/Auth/order/{order}', function (GoodOrder $order) {
+    return view('good.orderShow', compact('order'));
+})->name('order.auth')->middleware([
+    'auth.signed:order,customer',
+    'auth:customer,seller',
+    'can.view,order',
+]);
+
 Route::middleware(['auth'])->group(function () {
     Route::prefix('post')->group(function () {
         Route::get('/list', [PostController::class, 'postList']); //編輯模式呼叫文章列表
@@ -115,6 +124,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{good}/stock', [GoodController::class, 'goodStock']);
         Route::view('/orderCheck', 'good.check');
         Route::get('/order/{serial}/complete', [GoodController::class, 'orderComplete']);
+        Route::get('/order/list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderListAdmin']);
+        Route::get('/order/{serial}/edit', [GoodController::class, 'callOrderEditor']);
+        Route::get('/order/{serial}', [GoodController::class, 'showOrderAdmin']);
+        Route::get('/order/user/list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderList']);
+        Route::get('/order/user/{serial}', [GoodController::class, 'showOrder']);
     });
 });
 

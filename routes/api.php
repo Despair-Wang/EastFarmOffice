@@ -76,6 +76,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/addCart', [GoodController::class, 'addCart']);
         Route::post('/cartChange', [GoodController::class, 'cartChange']);
         Route::post('/order', [GoodController::class, 'orderCreate']);
+        Route::get('/order/{serial}/{state}', [GoodController::class, 'orderChangeState']);
+        Route::post('/order/{serial}/edit', [GoodController::class, 'orderEdit']);
     });
 });
 
