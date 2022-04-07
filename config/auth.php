@@ -41,8 +41,9 @@ return [
             'provider' => 'users',
         ],
         'customer' => [
-            'driver' => 'session',
-            'provider' => 'orders',
+            'driver' => 'custom-auth',
+            'provider' => 'users',
+            'hash' => true,
         ],
     ],
 

@@ -11,7 +11,7 @@
 </div>
 <h6 class="ali-r">Coryright© 2022</h6>
 @if (Auth::check() && Cache::has(Auth::id()))
-    <div id="cart">
+    <div id="cart" onclick="location.href='/orderCheck'">
         <div>
             <div id="cartMessage" class="curP">
                 <p>前往結帳</p>

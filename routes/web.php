@@ -5,6 +5,7 @@ use App\Http\Controllers\api\GoodController;
 use App\Http\Controllers\Api\PediaController;
 use App\Http\Controllers\Api\PostController;
 use App\Models\Album;
+use App\Models\Good;
 use App\Models\GoodOrder;
 use App\Models\PediaCategory;
 use App\Models\PediaTag;
@@ -28,13 +29,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 Route::view('/welcome', 'welcome');
 
 Route::get('/dashboard', function () {
     return view('backendHome');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth', 'auth.signed:admin'])->name('dashboard');
 
 Route::get('loginTest', function () {
     return 'login';
@@ -49,10 +50,18 @@ Route::get('/test', function () {
     // dd($s);
 });
 
+Route::get('/Auth/order/{order}', function (GoodOrder $order) {
+    return view('good.orderShow', compact('order'));
+})->name('order.auth')->middleware([
+    'auth.signed:admin',
+]);
+
 Route::get('/clear', function () {
     $result = Cache::forget(Auth::id());
     dump($result);
 });
+
+Route::view('/unknown', 'post.unfound')->name('unknown');
 
 //O是OPEN的O
 Route::prefix('o')->group(function () {
@@ -66,18 +75,22 @@ Route::prefix('o')->group(function () {
     Route::get('/album-list/{year?}/{month?}', [AlbumController::class, 'showAlbumList']); //顯示相簿列表，可加入年或年月搜尋
     Route::get('/album/{album}/photos', [AlbumController::class, 'showPhotos']); //顯示指定相簿，全開放
     Route::get('/good-list/{category?}', [GoodController::class, 'showGoodList']); //
-    Route::get('/good/{id}', [GoodController::class, 'showGood']);
+    Route::get('/good/{serial}', [GoodController::class, 'showGood']);
 });
 
-Route::get('/Auth/order/{order}', function (GoodOrder $order) {
-    return view('good.orderShow', compact('order'));
-})->name('order.auth')->middleware([
-    'auth.signed:order,customer',
-    'auth:customer,seller',
-    'can.view,order',
-]);
-
 Route::middleware(['auth'])->group(function () {
+    Route::get('/order/{serial}', [GoodController::class, 'showOrder']);
+    Route::post('/addCart', [GoodController::class, 'showAddCart'])->name('addCart');
+    Route::get('/order/addCart/{good}', function (Good $good) {
+        return view('good.addCart', compact('good'));
+    });
+    Route::get('/orderCheck', [GoodController::class, 'callOrderCheck'])->name('orderCheck');
+    Route::get('/order/{serial}/complete', [GoodController::class, 'orderComplete']);
+    Route::get('/order-list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderList']);
+    Route::get('/order-list', [GoodController::class, 'orderList']);
+});
+
+Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
     Route::prefix('post')->group(function () {
         Route::get('/list', [PostController::class, 'postList']); //編輯模式呼叫文章列表
         Route::get('/list/{type}', [PostController::class, 'postList']); //編輯模式呼叫文章列表
@@ -122,13 +135,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/edit', [GoodController::class, 'callGoodEditor']);
         Route::get('/list/{category?}', [GoodController::class, 'goodList']);
         Route::get('/{good}/stock', [GoodController::class, 'goodStock']);
-        Route::view('/orderCheck', 'good.check');
-        Route::get('/order/{serial}/complete', [GoodController::class, 'orderComplete']);
         Route::get('/order/list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderListAdmin']);
         Route::get('/order/{serial}/edit', [GoodController::class, 'callOrderEditor']);
         Route::get('/order/{serial}', [GoodController::class, 'showOrderAdmin']);
-        Route::get('/order/user/list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderList']);
-        Route::get('/order/user/{serial}', [GoodController::class, 'showOrder']);
     });
 });
 

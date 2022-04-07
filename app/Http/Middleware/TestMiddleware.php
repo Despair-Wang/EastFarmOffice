@@ -15,15 +15,15 @@ class TestMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, string $parameterName = null, string $guard = null)
+    public function handle(Request $request, Closure $next, $role)
     {
-        if ($request->hasValidSignature()) {
-            if (Auth::guard($guard)->check()) {
-                Auth::guard($guard)->logout();
-            }
-            Auth::guard($guard)->loginUsingId($request->route()->parameter($parameterName));
+        // dd($next);
+        $user = Auth::guard('customer')->user();
+        if ($user->Auth == $role) {
+            return $next($request);
+        } else {
+            return redirect()->intended('unknown');
         }
-        return $next($request);
 
     }
 }

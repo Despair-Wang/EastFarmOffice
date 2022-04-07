@@ -35,7 +35,15 @@
                     @endforeach
                 </div>
                 <div class="text-right">
-                    <button id="addCart" class="btn btn-info mt-5">加入購物車</button>
+                    {{-- @if (Auth::check())
+                    @else
+                    <a href="{{ url('/login')}}" class="btn btn-info mt-5">加入購物車</a>
+                    @endif --}}
+                    <form method="post" action="{{ route('addCart') }}">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $good->id }}">
+                        <button type="submit" class="btn btn-outline-primary mt-5">加入購物車</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -46,7 +54,7 @@
         </div>
     </div>
     <div id="goBack"></div>
-    <div id="typeSelect" data-good-id="{{ $good->id }}">
+    {{-- <div id="typeSelect" data-good-id="{{ $good->id }}">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -82,7 +90,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 @section('customJsBottom')
 <script>
@@ -139,17 +147,17 @@
             t.val(number);
         })
 
-        $('#submit').click(function(){
-            order();
-        })
+        // $('#submit').click(function(){
+        //     order();
+        // })
 
-        $('#closeWindow').click(function(){
-            closeWindow();
-        })
+        // $('#closeWindow').click(function(){
+        //     closeWindow();
+        // })
 
-        $('#cart').click(function(){
-            location.href='/good/orderCheck';
-        })
+        // $('#cart').click(function(){
+        //     location.href='/good/orderCheck';
+        // })
     })
 
     function order(){

@@ -273,14 +273,21 @@ class GoodController extends Controller
         return view('good.list', compact('goods', 'category'));
     }
 
-    public function showGood($id)
+    public function showGood($serial)
     {
-        $good = Good::Where('serial', $id)->first();
+        $good = Good::Where('serial', $serial)->first();
         if (is_null($good)) {
             return view('good.unknown');
         } else {
             return view('good.show', compact('good'));
         }
+    }
+
+    public function showAddCart(Request $request)
+    {
+        $id = $request->id;
+        $good = Good::Where('id', $id)->first();
+        return view('good.addCart', compact('good'));
     }
 
     public function goodStock($good)
@@ -554,31 +561,73 @@ class GoodController extends Controller
         if (Auth::check()) {
             $id = Auth::id();
             $list = Cache::get($id);
+            $action = null;
             $index = $request->index;
             unset($list[$index]);
-            $result = Cache::put(Auth::id(), $list);
+            if (count($list) == 0) {
+                $result = Cache::forget(Auth::id());
+                $action = 'reload';
+            } else {
+                $result = Cache::put(Auth::id(), $list);
+            }
             if (!$result) {
                 return $this->makeJson(0, $result, 'CACHE_SAVE_ERROR');
             } else {
-                return $this->makeJson(1, null, null);
+                return $this->makeJson(1, $action, null);
             }
         } else {
             return $this->makeJson(0, null, 'NO_USER_LOGIN');
         }
     }
 
+    public function callOrderCheck()
+    {
+        $payments = GoodOrderPayment::get();
+        return view('good.check', compact('payments'));
+    }
+
     public function orderCreate($serial = null, Request $request)
     {
+        if (!$request->has('name') || $request->name == '') {
+            return $this->makeJson(0, null, 'NO_NAME');
+        }
+
+        if (!$request->has('tel') || $request->tel == '') {
+            return $this->makeJson(0, null, 'NO_TEL');
+        }
+
+        if ($request->pay != '2') {
+            if (!$request->has('zipcode') || $request->zipcode == '') {
+                return $this->makeJson(0, null, 'NO_ZIPCODE');
+            }
+
+            if (!$request->has('city') || $request->city == '') {
+                return $this->makeJson(0, null, 'NO_CITY');
+            }
+
+            if (!$request->has('dist') || $request->dist == '') {
+                return $this->makeJson(0, null, 'NO_DISTRICT');
+            }
+
+            if (!$request->has('address') || $request->address == '') {
+                return $this->makeJson(0, null, 'NO_ADDRESS');
+            }
+        }
+
         $orderParams = $request->only('name', 'tel', 'zipcode', 'pay', 'freight', 'remark');
         $orderParams['userId'] = Auth::id();
         $total = 0;
         $orderParams['total'] = $total;
         $orderParams['state'] = 1;
-        $city = $request->city;
-        $dist = $request->dist;
-        $address = $request->address;
-        $address = $city . $dist . $address;
-        $orderParams['address'] = $address;
+        if ($request->pay != '2') {
+            $city = $request->city;
+            $dist = $request->dist;
+            $address = $request->address;
+            $address = $city . $dist . $address;
+            $orderParams['address'] = $address;
+        } else {
+            $orderParams['address'] = '-';
+        }
         $result = GoodOrder::create($orderParams);
         if ($result->id == '') {
             return $this->makeJson(0, $result, 'ORDER_CREATE_ERROR');
@@ -674,6 +723,21 @@ class GoodController extends Controller
         } else {
             return $this->makeJson(1, null, null);
         }
+    }
+
+    public function reportPaid(Request $request)
+    {
+        $order = GoodOrder::Where('serial', $request->serial)->first();
+        $params['payName'] = $request->name;
+        $params['payTime'] = $request->time;
+        $params['payAccount'] = $request->account;
+        $params['payAmount'] = $request->amount;
+        $params['state'] = '4';
+        $result = $order->update($params);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'REPORT_ERROR');
+        }
+        return $this->makeJson(1, null, null);
     }
 
     public function getCategory(View $view)

@@ -19,8 +19,8 @@ class CreateGoodOrdersTable extends Migration
             $table->integer('userId');
             $table->string('name');
             $table->string('tel');
-            $table->integer('zipcode');
-            $table->string('address');
+            $table->integer('zipcode')->nullable();
+            $table->string('address')->nullable();
             $table->integer('total');
             $table->string('pay');
             $table->integer('freight');

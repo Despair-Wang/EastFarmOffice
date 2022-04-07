@@ -60,7 +60,7 @@
         <div class="col-6 col-md-2">訂單狀態</div>
     </div>
     @forelse ($orders as $o)
-        <div class="row boxItem curP" onclick="location.href='{{ url('/good/order/user') . '/' . $o->serial }}'">
+        <div class="row boxItem curP" onclick="location.href='{{ url('/order') . '/' . $o->serial }}'">
             <div class="col-6 col-md-3">{{ $o->serial }}</div>
             <div class="col-6 col-md-4">{{ ($o->getDetails)[0]->getName() }}</div>
             <div class="col-6 col-md-3">{{ $o->getCreateTime() }}</div>

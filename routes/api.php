@@ -23,6 +23,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('good')->group(function () {
+        Route::post('/addCart', [GoodController::class, 'addCart']);
+        Route::post('/cartChange', [GoodController::class, 'cartChange']);
+        Route::post('/order', [GoodController::class, 'orderCreate']);
+    });
+    Route::post('/order/report', [GoodController::class, 'reportPaid']);
+});
+
+Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {
     Route::prefix('post')->group(function () {
         Route::post('/category/create', [PostController::class, 'cateCreate']); //分類建立資料
         Route::post('/category/{id}/update', [PostController::class, 'cateUpdate']); //分類更新資料
@@ -73,9 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/category/create', [GoodController::class, 'categoryCreate']);
         Route::post('/category/{id}/update', [GoodController::class, 'categoryCreate']);
         Route::post('/category/delete', [GoodController::class, 'categoryDelete']);
-        Route::post('/addCart', [GoodController::class, 'addCart']);
-        Route::post('/cartChange', [GoodController::class, 'cartChange']);
-        Route::post('/order', [GoodController::class, 'orderCreate']);
+        // Route::post('/addCart', [GoodController::class, 'addCart']);
+        // Route::post('/cartChange', [GoodController::class, 'cartChange']);
+        // Route::post('/order', [GoodController::class, 'orderCreate']);
         Route::get('/order/{serial}/{state}', [GoodController::class, 'orderChangeState']);
         Route::post('/order/{serial}/edit', [GoodController::class, 'orderEdit']);
     });

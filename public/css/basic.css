@@ -418,24 +418,13 @@ section {
 }
 
 #typeSelect {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
     overflow: hidden;
-    z-index: 300;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.7);
-    transition: all 0.2s;
 }
 
 #typeSelect > div {
-    border: 2px solid #666;
-    background-color: white;
-    border-radius: 20px;
     height: auto;
     padding: 25px 25px 50px;
 }
@@ -606,4 +595,23 @@ section {
     background-color: aqua;
     margin-bottom: 7px;
     margin-top: 5px;
+}
+
+#report {
+    position: fixed;
+    display: flex;
+    z-index: 300;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#report > div {
+    background-color: white;
+    border: 1px solid;
+    padding: 20px;
 }

@@ -9,10 +9,25 @@
         </h4>
     </div>
     <div class="col-12">
-        <h4 class="h4">
+        <h4 class="h4 float-left">
             {{ $order->getState() }}
         </h4>
+        @if ($order->state == '1')
+        <button id="reportBtn" class="btn btn-info float-right">通知已付款</button>
+        @endif
     </div>
+    @if ($order->state == '4')
+    <div class="col-12">
+        <h4 class="h4">
+            付款資訊
+        </h4>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            {{ '末五碼:' . $order->payAccount . ' / 金額:$' . $order->payAmount . ' / 時間:' . $order->payTime }}
+        </h4>
+    </div>
+    @endif
     <div class="col-12">
         <h4 class="h4">
             訂購人
@@ -106,12 +121,114 @@
     </div>
 </div>
 <div id="goBack"></div>
+<div id="report">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="w-100 text-right"><i id="closeWindow" class="fa fa-times curP scale2" aria-hidden="true"></i></div>
+            </div>
+            <div class="col-12">
+                <h2 class="h2 w-100 text-center">通知付款</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <label>匯款戶名(可空白)</label>
+                <input class="w-100" type="text" id="name">
+            </div>
+            <div class="col-12 col-md-3">
+                <label>帳號末5碼</label>
+                <input class="w-100" type="text" id="account" maxlength="5">
+            </div>
+            <div class="col-12 col-md-3">
+                <label>付款時間</label>
+                <input class="w-100" type="date" id="day">
+                <select id="time" class="w-100">
+                    @for ($i = 0; $i < 24; $i++)
+                        @if ($i < 10 && $i+1 < 10)
+                        <option value="0{{ $i }}:00~0{{ $i+1 }}:00">0{{ $i }}:00~0{{ $i+1 }}:00</option>
+                        @elseif ($i < 10 && $i+1 >= 10)
+                        <option value="0{{ $i }}:00~{{ $i+1 }}:00">0{{ $i }}:00~{{ $i+1 }}:00</option>
+                        @else
+                            @if($i==23)
+                            <option value="{{ $i }}:00~00:00">{{ $i }}:00~00:00</option>
+                            @else
+                            <option value="{{ $i }}:00~{{ $i+1 }}:00">{{ $i }}:00~{{ $i+1 }}:00</option>
+                            @endif
+                        @endif
+                    @endfor
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <label>金額</label>
+                <input class="w-100" type="number" id="amount">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-right">
+                <button id="submit" class="btn btn-outline-primary">通知已付款</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('customJsBottom')
     <script>
-        var md = new MoveDom();
-        $(()=>{
-            md.setBack('/good/order/user/list');
+        var md = new MoveDom(),
+            report = $('#report');
+        $.ajaxSetup({
+            headers:{
+                'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content'),
+            }
         })
+        $(()=>{
+            report.hide();
+            md.setBack('/order-list');
+
+            $('#closeWindow').click(function(){
+                report.hide();
+                $('body').removeClass('hiddenScrollY');
+            })
+
+            $('#reportBtn').click(function(){
+                report.show();
+                $('body').addClass('hiddenScrollY');
+            })
+
+            $('#submit').click(function(){
+                reportPaid();
+            })
+        })
+
+        function reportPaid(){
+            let serial = $('#orderDetailBox').data('serial'),
+                name = $('#name').val(),
+                day = $('#day').val(),
+                time = $('#time').find(':selected').val(),
+                account = $('#account').val(),
+                amount = $('#amount').val();
+            time = day + ' ' + time;
+            $.ajax({
+                url:'/api/order/report',
+                type:'POST',
+                data:{
+                    serial:serial,
+                    name:name,
+                    time:time,
+                    account:account,
+                    amount:amount,
+                },success(data){
+                    if(data['state'] == 1){
+                        alert('已通知商家，確認後會盡快出貨')
+                        location.reload();
+                    }else{
+                        console.log(data['msg'])
+                        console.log(data['data'])
+                    }
+                },error(data) {
+                    console.log(data)
+                }
+            })
+        }
     </script>
 @endsection

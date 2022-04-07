@@ -49,12 +49,27 @@
         @if (Route::has('login'))
         <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
             @auth
-            <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">進入後台</a>
+                <div>
+                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hi, {{ Auth::user()->name }}</button>
+                    <div class="dropdown-menu">
+                        @if(Auth::user()->Auth == 'admin')
+                            <a href="{{ url('/dashboard') }}" class="dropdown-item text-dark">進入後台</a>
+                        @else
+                            <a href="{{ url('/order-list') }}" class="dropdown-item text-dark">訂單一覽</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" class="dropdown-item">
+                            @csrf
+                            <a class="block text-dark text-dark" href="route('logout')" onclick="event.preventDefault();
+                                                            this.closest('form').submit();">
+                                登出
+                            </a>
+                        </form>
+                    </div>
+                </div>
             @else
-            <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
-
+            <a href="{{ route('login') }}" class="text-dark text-sm text-gray-700 dark:text-gray-500 ">登入</a>
             @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">註冊</a>
+            <a href="{{ route('register') }}" class="text-dark ml-4 text-sm text-gray-700 dark:text-gray-500 ">註冊</a>
                 @endif
                 @endauth
             </div>
