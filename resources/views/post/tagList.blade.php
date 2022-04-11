@@ -26,8 +26,11 @@
     </section>
     <div id="createNew"></div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/post/tag/list.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(() => {
             var md = new MoveDom();
             md.setNew('/post/tag/edit');
@@ -140,5 +143,5 @@
                 });
             });
         })
-    </script>
+    </script> --}}
 @endsection

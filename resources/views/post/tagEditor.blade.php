@@ -27,8 +27,11 @@
         <button id="reset" class="btn btn-outline-primary">重寫</button>
     </div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/post/tag/edit.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(()=>{
             $.ajaxSetup({
                 headers:{
@@ -68,5 +71,5 @@
                 $('#content').val('');
             })
         })
-    </script>
+    </script> --}}
 @endsection

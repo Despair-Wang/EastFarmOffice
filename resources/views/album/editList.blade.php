@@ -32,8 +32,11 @@
     <div id="createNew">
     </div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/album/editList.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(()=>{
             $.ajax({
                 url: '/api/album/getList/admin',
@@ -114,5 +117,5 @@
                 }
             })
         }
-    </script>
+    </script> --}}
 @endsection

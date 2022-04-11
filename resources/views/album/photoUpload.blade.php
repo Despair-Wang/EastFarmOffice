@@ -18,8 +18,11 @@
     <div id="goBack">
     </div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/album/upload.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(() => {
             var md = new MoveDom(),
             albumId = $('#id').val();
@@ -96,5 +99,5 @@
                 })
             })
         })
-    </script>
+    </script> --}}
 @endsection

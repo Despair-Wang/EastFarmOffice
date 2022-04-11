@@ -56,8 +56,11 @@
     </div>
 </div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/album/photoEditList.js')}}"></script>
+@endsection
 @section('customJsBottom')
-<script>
+{{-- <script>
     let t = $('#fullPhoto');
     t.hide();
     $.ajaxSetup({
@@ -255,5 +258,5 @@
     }
 
 
-</script>
+</script> --}}
 @endsection

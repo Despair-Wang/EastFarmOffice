@@ -91,8 +91,11 @@
     </section>
     <div id="goBack"></div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/post/edit.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(() => {
             var md = new MoveDom();
             md.setBack('/post/list');
@@ -295,5 +298,5 @@
                 }
             })
         }
-    </script>
+    </script> --}}
 @endsection

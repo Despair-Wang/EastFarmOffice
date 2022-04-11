@@ -18,8 +18,11 @@
         </div>
     @endif
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/user/user/changeInfo.js')}}"></script>
+@endsection
 @section('customJsBottom')
-<script>
+{{-- <script>
     $(()=>{
         $('#submit').click(function(){
             let name = $('#name').val(),
@@ -56,5 +59,5 @@
             })
         })
     })
-</script>
+</script> --}}
 @endsection

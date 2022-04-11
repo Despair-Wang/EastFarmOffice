@@ -26,8 +26,11 @@
         </div>
     </section>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/album/list.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(() => {
             $.ajax({
                 url: '/api/getAlbumList',
@@ -68,5 +71,5 @@
                 }
             })
         }
-    </script>
+    </script> --}}
 @endsection

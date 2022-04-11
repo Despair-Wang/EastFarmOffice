@@ -26,8 +26,11 @@
     </section>
     <div id="createNew"></div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/post/category/list.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(() => {
             var md = new MoveDom();
             md.setNew('/post/category/edit');
@@ -125,5 +128,5 @@
                 });
             });
         })
-    </script>
+    </script> --}}
 @endsection

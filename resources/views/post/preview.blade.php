@@ -20,8 +20,11 @@
     <button class="btn btn-outline-primary" id="rewrite">重寫</button>
     <button class="btn btn-outline-primary" id="complete">發佈</button>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/post/preview.js')}}"
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(() => {
             let id = $('#post').data('postid');
             $('#rewrite').click(function() {
@@ -51,5 +54,5 @@
                 })
             })
         })
-    </script>
+    </script> --}}
 @endsection

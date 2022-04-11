@@ -88,7 +88,7 @@ section {
         padding: 5px;
         border: 1px solid;
         border-radius: 5px;
-        transform: translateY(30px);
+        transform: translateY(38px);
     }
 
     .subMenu.show {

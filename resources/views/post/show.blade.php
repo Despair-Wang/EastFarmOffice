@@ -19,8 +19,11 @@
 </div>
 <div id="goBack"></div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/post/show.js')}}"></script>
+@endsection
 @section('customJsBottom')
-<script>
+{{-- <script>
     $(()=>{
         var md = new MoveDom();
         md.setBack('/o/post-list');
@@ -35,5 +38,5 @@
             location.href = '/o/post/tag/' + d;
         })
     })
-</script>
+</script> --}}
 @endsection

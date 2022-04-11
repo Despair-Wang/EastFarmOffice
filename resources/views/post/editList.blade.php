@@ -52,7 +52,7 @@
     </div>
 @endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         $(()=>{
             let url = location.href,
             star = url.indexOf('list/'),
@@ -75,5 +75,5 @@
                 location.href='/post/list/' + target;
             })
         })
-    </script>
+    </script> --}}
 @endsection

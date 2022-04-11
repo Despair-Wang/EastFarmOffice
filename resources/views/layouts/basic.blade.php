@@ -25,4 +25,5 @@
     </div>
 </body>
 @yield('customJsBottom')
+
 </html>

@@ -26,8 +26,11 @@
         </div>
     </div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/user/admin/create.js')}}"></script>
+@endsection
 @section('customJsBottom')
-<script>
+{{-- <script>
     $(()=>{
         $('.showPassword').click(function(){
             let t = $(this).prev('input');
@@ -92,5 +95,5 @@
         $('#password').val('');
         $('#confirmPassword').val('');
     }
-</script>
+</script> --}}
 @endsection

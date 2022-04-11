@@ -54,7 +54,7 @@
         @if (Route::has('login'))
         <div>
             @auth
-                <div>
+                <div class="d-flex">
                     <a id="authBtn" class="subDrop dropdown-toggle">Hi, {{ Auth::user()->name }}</a>
                     <div class="subMenu">
                         @if(Auth::user()->Auth == 'admin')
@@ -87,32 +87,3 @@
             @endif
     </div>
 </div>
-<script>
-    $(()=>{
-        $('.subDrop').click(function(){
-            let t = $(this).next();
-            if(t.hasClass('show')){
-                t.removeClass('show');
-            }else{
-                t.addClass('show');
-            }
-        })
-
-        $('#navbarBtn').click(function(){
-            let t = $('#menuBox');
-            if(t.hasClass('show')){
-                t.removeClass('show');
-            }else{
-                t.addClass('show');
-            }
-        })
-
-        // $('.subMenu').mouseleave(function(){
-        //     $(this).hide();
-        // })
-
-        // $('.dropdown-button').click(function(){
-        //     $(this).next('.dropdown-menu').addClass('show');
-        // })
-    })
-</script>

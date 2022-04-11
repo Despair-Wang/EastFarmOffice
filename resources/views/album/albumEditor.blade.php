@@ -44,8 +44,11 @@
 </section>
 <div id="goBack"></div>
 @endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/album/edit.js')}}"></script>
+@endsection
 @section('customJsBottom')
-    <script>
+    {{-- <script>
         var f = new FormData();
         $(()=>{
             var md = new MoveDom();
@@ -127,5 +130,5 @@
         })
 
 
-    </script>
+    </script> --}}
 @endsection
