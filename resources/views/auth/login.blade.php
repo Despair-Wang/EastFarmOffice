@@ -31,6 +31,7 @@
                                 type="password"
                                 name="password"
                                 required autocomplete="current-password" />
+                <span class="showPassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
             </div>
 
             <!-- Remember Me -->
@@ -55,3 +56,28 @@
         </form>
     </x-auth-card>
 </x-guest-layout>
+<style>
+.showPassword {
+    float: right;
+    transform: translate(-17px, -33px) scale(1.8);
+    cursor: pointer;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /></link>
+<script>
+    $(()=>{
+        $('.showPassword').click(function(){
+            let t = $(this).prev('input');
+            if(t.hasClass('show')){
+                t.attr('type','password');
+                t.removeClass('show');
+                $(this).html('<i class="fa fa-eye-slash" aria-hidden="true"></i>');
+            }else{
+                t.attr('type','text');
+                t.addClass('show');
+                $(this).html('<i class="fa fa-eye" aria-hidden="true"></i>');
+            }
+        })
+    })
+</script>

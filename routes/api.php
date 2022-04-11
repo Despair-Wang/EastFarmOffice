@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AlbumController;
+use App\Http\Controllers\Api\CustomUserController;
 use App\Http\Controllers\api\GoodController;
 use App\Http\Controllers\Api\PediaController;
 use App\Http\Controllers\Api\PostController;
@@ -29,9 +30,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/order', [GoodController::class, 'orderCreate']);
     });
     Route::post('/order/report', [GoodController::class, 'reportPaid']);
+    Route::post('/changePassword', [CustomUserController::class, 'changePassword']);
+    Route::post('/changeInfo', [CustomUserController::class, 'changeInfo']);
 });
 
 Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::post('/create', [CustomUserController::class, 'store']);
+    });
     Route::prefix('post')->group(function () {
         Route::post('/category/create', [PostController::class, 'cateCreate']); //分類建立資料
         Route::post('/category/{id}/update', [PostController::class, 'cateUpdate']); //分類更新資料

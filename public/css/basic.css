@@ -61,7 +61,6 @@ section {
 }
 
 /* 前台表單樣式 */
-
 #menuBox {
     position: relative;
 }
@@ -71,6 +70,110 @@ section {
     height: 100%;
     width: 150px;
     padding: 25px 10px;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .menuItem {
+        display: inline-block;
+        height: 100%;
+        width: 150px;
+        padding: 25px 10px;
+    }
+
+    .subMenu {
+        display: none;
+        position: absolute;
+        background: white;
+        padding: 5px;
+        border: 1px solid;
+        border-radius: 5px;
+        transform: translateY(30px);
+    }
+
+    .subMenu.show {
+        display: block;
+    }
+    .dropdown-menu.show {
+        position: absolute;
+        transform: translate3d(107px, 55px, 0px);
+        top: 0px;
+        left: 0px;
+        will-change: transform;
+        width: 200px;
+    }
+
+    .dropdown-menu.show > div {
+        display: flex;
+    }
+
+    .dropdown-menu.show > div > a:first-child {
+        width: 170px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 767px) {
+    #menuBox {
+        overflow: auto;
+        z-index: 1000;
+        background-color: #fff;
+        transition: all 0.5s;
+    }
+
+    .menuItem {
+        display: block;
+        height: auto;
+        width: 100%;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .subMenu {
+        display: none;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    .subMenu.show {
+        display: block;
+    }
+
+    .dropdown-menu {
+        position: relative;
+        border: none;
+    }
+
+    .dropdown-menu.show {
+        will-change: transform;
+        width: 100%;
+    }
+
+    .dropdown-menu.show > div {
+        margin-left: -10px;
+        margin-right: -10px;
+        padding: 5px 15px;
+        border-bottom: 1px solid white;
+        background-color: rgb(230, 230, 230);
+    }
+
+    .dropdown-menu.show > div > a:first-child {
+        width: 170px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .subDrop {
+        float: right;
+    }
+
+    .dropdown-item {
+        border-bottom: 1px solid gray;
+        background-color: beige;
+    }
 }
 
 .menuItem a {
@@ -93,15 +196,6 @@ section {
 
 .menuLogin a {
     color: white;
-}
-
-.subMenu {
-    display: none;
-    position: absolute;
-    background: white;
-    padding: 5px;
-    border: 1px solid;
-    border-radius: 5px;
 }
 
 /* 前台底部樣式 */
@@ -614,4 +708,10 @@ section {
     background-color: white;
     border: 1px solid;
     padding: 20px;
+}
+
+.showPassword {
+    float: right;
+    transform: translate(-17px, -33px) scale(1.8);
+    cursor: pointer;
 }

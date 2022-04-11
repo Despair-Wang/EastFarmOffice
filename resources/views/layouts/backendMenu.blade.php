@@ -44,6 +44,16 @@
         </div>
     </div>
     <div class="menuItem">
+        <a class="mainItem">帳號管理</a>
+        <div class="subItem">
+            <div>
+                <a href="/admin/changeInfo">更改帳號資料</a>
+                <a href="/admin/changePassword">更改密碼</a>
+                <a href="/admin/create">建立新管理者</a>
+            </div>
+        </div>
+    </div>
+    <div class="menuItem">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <a class="mainItem" href="route('logout')" onclick="event.preventDefault();

@@ -88,9 +88,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/order/{serial}/complete', [GoodController::class, 'orderComplete']);
     Route::get('/order-list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderList']);
     Route::get('/order-list', [GoodController::class, 'orderList']);
+    Route::view('/changePassword', 'user.changePw');
+    Route::view('/changeInfo', 'user.changeInfo');
 });
 
 Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::view('/create', 'user.create');
+        Route::view('/changePassword', 'user.changePwBackend');
+        Route::view('/changeInfo', 'user.changeInfoBackend');
+    });
     Route::prefix('post')->group(function () {
         Route::get('/list', [PostController::class, 'postList']); //編輯模式呼叫文章列表
         Route::get('/list/{type}', [PostController::class, 'postList']); //編輯模式呼叫文章列表

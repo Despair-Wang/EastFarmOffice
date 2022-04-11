@@ -1,3 +1,8 @@
+<nav class="navbar navbar-dark bg-dark d-md-none">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+</nav>
 <div id="menuBox">
     <div class="menuItem">
         <a href="/">首頁</a>
@@ -16,10 +21,10 @@
     </div>
     <div class="menuItem">
         <a href="{{ url('/o/good-list')}}">產品介紹</a>
-        <a id="goodMenu" class="dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-            <span class="sr-only">Toggle DropDown</span>
+        <a class="subDrop dropdown-toggle-split">
+            <i class="fa fa-caret-down" aria-hidden="true"></i>
         </a>
-        <div class="dropdown-menu" aria-labelledby="goodMenu">
+        <div class="dropdown-menu">
         @foreach($categories as $key => $good)
             @php
             $key = explode(',',$key);
@@ -29,8 +34,8 @@
             <div>
                 <a href="{{ url('/o/good-list') . '/' . $id }}">{{ $name }}</a>
                 @if(count($good) > 0)
-                    <a class="subDrop dropdown-toggle dropdown-toggle-split">
-                        <span class="sr-only">Toggle DropDown</span>
+                    <a class="subDrop dropdown-button dropdown-toggle-split">
+                        <i class="fa fa-caret-down" aria-hidden="true"></i>
                     </a>
                     <div class="subMenu">
                     @foreach ($good as $g)
@@ -47,7 +52,7 @@
     </div>
     <div class="menuLogin">
         @if (Route::has('login'))
-        <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+        <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block" style="z-index:1000">
             @auth
                 <div>
                     <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hi, {{ Auth::user()->name }}</button>
@@ -56,6 +61,8 @@
                             <a href="{{ url('/dashboard') }}" class="dropdown-item text-dark">進入後台</a>
                         @else
                             <a href="{{ url('/order-list') }}" class="dropdown-item text-dark">訂單一覽</a>
+                            <a href="{{ url('/changePassword') }}" class="dropdown-item text-dark">變更密碼</a>
+                            <a href="{{ url('/changeInfo') }}" class="dropdown-item text-dark">變更帳號資訊</a>
                         @endif
                         <form method="POST" action="{{ route('logout') }}" class="dropdown-item">
                             @csrf
@@ -67,9 +74,9 @@
                     </div>
                 </div>
             @else
-            <a href="{{ route('login') }}" class="text-dark text-sm text-gray-700 dark:text-gray-500 ">登入</a>
+            <a href="{{ route('login') }}" class="text-dark text-gray-700 dark:text-gray-500 ">登入</a>
             @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="text-dark ml-4 text-sm text-gray-700 dark:text-gray-500 ">註冊</a>
+            <a href="{{ route('register') }}" class="text-dark ml-4 text-gray-700 dark:text-gray-500 ">註冊</a>
                 @endif
                 @endauth
             </div>
@@ -78,13 +85,21 @@
 </div>
 <script>
     $(()=>{
-        $('.subDrop').mouseenter(function(){
-            $(this).next().show();
+        $('.subDrop').click(function(){
+            let t = $(this).next();
+            if(t.hasClass('show')){
+                t.removeClass('show');
+            }else{
+                t.addClass('show');
+            }
         })
 
-        $('.subMenu').mouseleave(function(){
-            console.log('leave');
-            $(this).hide();
-        })
+        // $('.subMenu').mouseleave(function(){
+        //     $(this).hide();
+        // })
+
+        // $('.dropdown-button').click(function(){
+        //     $(this).next('.dropdown-menu').addClass('show');
+        // })
     })
 </script>

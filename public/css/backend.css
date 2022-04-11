@@ -927,3 +927,11 @@ select {
     margin-bottom: 7px;
     margin-top: 5px;
 }
+
+/* 使用者建立畫面 */
+
+.showPassword {
+    float: right;
+    transform: translate(-17px, -33px) scale(1.8);
+    cursor: pointer;
+}
