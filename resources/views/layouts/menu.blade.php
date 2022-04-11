@@ -1,5 +1,5 @@
 <nav class="navbar navbar-dark bg-dark d-md-none">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button id="navbarBtn" class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
     </button>
 </nav>
@@ -32,7 +32,7 @@
             $name = $key[1];
             @endphp
             <div>
-                <a href="{{ url('/o/good-list') . '/' . $id }}">{{ $name }}</a>
+                <a class="subDrop-item" href="{{ url('/o/good-list') . '/' . $id }}">{{ $name }}</a>
                 @if(count($good) > 0)
                     <a class="subDrop dropdown-button dropdown-toggle-split">
                         <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -52,11 +52,11 @@
     </div>
     <div class="menuLogin">
         @if (Route::has('login'))
-        <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block" style="z-index:1000">
+        <div>
             @auth
                 <div>
-                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hi, {{ Auth::user()->name }}</button>
-                    <div class="dropdown-menu">
+                    <a id="authBtn" class="subDrop dropdown-toggle">Hi, {{ Auth::user()->name }}</a>
+                    <div class="subMenu">
                         @if(Auth::user()->Auth == 'admin')
                             <a href="{{ url('/dashboard') }}" class="dropdown-item text-dark">進入後台</a>
                         @else
@@ -74,9 +74,13 @@
                     </div>
                 </div>
             @else
-            <a href="{{ route('login') }}" class="text-dark text-gray-700 dark:text-gray-500 ">登入</a>
+            <div style="padding-bottom:10px">
+                <a href="{{ route('login') }}" class="text-dark text-gray-700 dark:text-gray-500 ">登入</a>
+            </div>
             @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="text-dark ml-4 text-gray-700 dark:text-gray-500 ">註冊</a>
+            <div style="padding-top:10px;">
+                <a href="{{ route('register') }}" class="text-dark text-gray-700 dark:text-gray-500 ">註冊</a>
+            </div>
                 @endif
                 @endauth
             </div>
@@ -87,6 +91,15 @@
     $(()=>{
         $('.subDrop').click(function(){
             let t = $(this).next();
+            if(t.hasClass('show')){
+                t.removeClass('show');
+            }else{
+                t.addClass('show');
+            }
+        })
+
+        $('#navbarBtn').click(function(){
+            let t = $('#menuBox');
             if(t.hasClass('show')){
                 t.removeClass('show');
             }else{
