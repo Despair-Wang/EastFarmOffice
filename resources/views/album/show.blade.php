@@ -32,35 +32,6 @@
     </div>
 </div>
 @endsection
-@section('customJsBottom')
-<script>
-    let t = $('#fullPhoto');
-    t.hide();
-    $(()=>{
-        var md = new MoveDom();
-        md.setBack('/o/album-list');
-        $('.photoBox').click(function(){
-            let id = $(this).data('photo-id');
-            $.ajax({
-                url:`/api/album/photo/${id}`,
-                type:'GET',
-                success(result){
-                    if(result['state'] == 1){
-                        t.find('img').attr('src',result['data']['url']);
-                        t.find('h4').html(result['data']['title']);
-                        t.find('h6').html(result['data']['content']);
-                        // t.addClass('show');
-                        t.fadeIn();
-                        t.click(function(e){
-                            e.preventDefault();
-                            $(this).fadeOut();
-                        })
-                    }else{
-                        alert(result['msg']);
-                    }
-                }
-            })
-        })
-    })
-</script>
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/album/show.js')}}"></script>
 @endsection

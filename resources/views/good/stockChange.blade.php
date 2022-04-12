@@ -27,52 +27,6 @@
     </div>
     <div id="goBack"></div>
 @endsection
-@section('customJsBottom')
-<script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN':$('meta[name="csrf_token"]').attr('content'),
-        }
-    })
-    var md = new MoveDom();
-    $(()=>{
-        $('.io').lc_switch('進貨','出貨');
-
-        md.setBack('/good/list');
-
-        $('#submit').click(function(){
-            submit();
-        })
-    })
-
-    function submit(){
-        types = new Array();
-        $('.typeBox').each(function(){
-            let t = $(this),
-            goodId = t.data('good-id'),
-            type = t.data('type'),
-            number = t.find('.ioControl').val(),
-            action = t.find('.io').prop('checked');
-            types.push([goodId,type,number,action]);
-        })
-        $.ajax({
-            url:'/api/good/stockChange',
-            type:'POST',
-            data:{
-                types:types
-            },
-            success(data){
-                if(data['state'] == 1){
-                    alert('庫存調整完畢');
-                    location.reload();
-                }else{
-                    console.log(data['msg']);
-                    console.log(data['data']);
-                }
-            },error(data) {
-                console.log(data);
-            }
-        })
-    }
-</script>
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/good/backend/stockChange.js')}}"></script>
 @endsection

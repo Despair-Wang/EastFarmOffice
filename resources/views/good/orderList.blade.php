@@ -43,10 +43,6 @@
                     <option value="{{ $i }}">{{ $i }}</option>
                     @endif
                 @endforeach
-                {{-- <option value="15">15</option>
-                <option value="30">30</option>
-                <option value="45">45</option>
-                <option value="60">60</option> --}}
             </select>
         </div>
         <div class="col-4 col-md-2">
@@ -69,6 +65,8 @@
     @empty
         <p>尚無訂單，去購物吧</p>
     @endforelse
-
 </div>
+@endsection
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/good/order/list.js')}}"></script>
 @endsection

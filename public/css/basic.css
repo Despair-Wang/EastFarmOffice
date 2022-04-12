@@ -121,11 +121,16 @@ section {
     }
 
     .menuLogin > div {
-        display: fixed;
+        position: fixed;
+        display: flex;
         top: 0;
         right: 0;
         padding: 25px 10px;
         z-index: 1000;
+    }
+
+    #registerBtn {
+        margin-left: 15px;
     }
 
     .subDrop-item {
@@ -235,6 +240,14 @@ section {
         display: block;
         padding: 10px;
         text-align: left;
+    }
+
+    #loginBtn {
+        padding-bottom: 10px;
+    }
+
+    #registerBtn {
+        padding-top: 10px;
     }
 
     #authBtn {

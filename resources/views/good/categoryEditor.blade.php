@@ -49,60 +49,6 @@
     </div>
     <div id="goBack"></div>
 @endsection
-@section('customJsBottom')
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content'),
-            }
-        })
-        var md = new MoveDom();
-        $(()=>{
-            md.setBack('/good/category/list');
-            $('#submit').click(function(){
-                let id = $('#id').val(),
-                name = $('#name').val(),
-                sub = $('#sub').find(':selected').val(),
-                content = $('#cateContent').val(),
-                url = '';
-                if(typeof(id) == 'undefined'){
-                    url='/api/good/category/create';
-                }else{
-                    url = `/api/good/category/${id}/update`
-                }
-                $.ajax({
-                    url:url,
-                    type:'POST',
-                    data:{
-                        id:id,
-                        name:name,
-                        sub:sub,
-                        content:content,
-                    },success(result){
-                        if(result['state']==1){
-                            alert('建立成功');
-                            location.href = '/good/category/list';
-                        }else{
-                            alert('建立失敗');
-                            console.log(result['data'])
-                        }
-                    },error(result){
-                        console.log(result);
-                    }
-                })
-            })
-
-            $('#reset').click(function(){
-                reset();
-            })
-        })
-
-        function reset(){
-            let id = $('#id').val(''),
-                name = $('#name').val(''),
-                sub = $('#sub').find('option[value="-"]').attr('selected',true),
-                content = $('#content').val('');
-        }
-    </script>
+@section('customJs')
+    <script type="text/javascript" src="{{ asset('js/good/category/edit.js')}}"></script>
 @endsection
-

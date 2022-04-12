@@ -389,7 +389,7 @@ class GoodController extends Controller
     {
         $orders = $this->getOrderList('admin', $start, $end, $page, $state);
         $status = GoodOrderState::get();
-        return view('good.listBackend', compact('orders', 'status', 'state', 'start', 'end', 'page'));
+        return view('good.orderListBackend', compact('orders', 'status', 'state', 'start', 'end', 'page'));
     }
 
     public function orderList($start = null, $end = null, $page = null, $state = null)

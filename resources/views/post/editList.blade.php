@@ -1,8 +1,5 @@
 @extends('layouts.backend')
 @section('title','文選編輯')
-@section('customJs')
-<script src="{{ asset('/js/postList.js') }}"></script>
-@endsection
 @section('content')
     <section>
         <div id="filterBox" style="text-align: right">
@@ -51,29 +48,6 @@
         <div></div>
     </div>
 @endsection
-@section('customJsBottom')
-    {{-- <script>
-        $(()=>{
-            let url = location.href,
-            star = url.indexOf('list/'),
-            haveType = url.indexOf('type')
-            type = '';
-
-            type = url.split('list/')[1];
-            if(star > 0){
-                let end = type.indexOf('?');
-                if(end < 0){
-                    end = type.length;
-                }
-                type = type.slice(0, end);
-            }
-            console.log(type);
-            $('#type').find(`[value="${type}"]`).attr('selected',true);
-
-            $('#type').change(function(){
-                let target = $(this).val();
-                location.href='/post/list/' + target;
-            })
-        })
-    </script> --}}
+@section('customJs')
+<script src="{{ asset('/js/postList.js') }}"></script>
 @endsection

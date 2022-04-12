@@ -74,11 +74,11 @@
                     </div>
                 </div>
             @else
-            <div style="padding-bottom:10px">
+            <div id="loginBtn">
                 <a href="{{ route('login') }}" class="text-dark text-gray-700 dark:text-gray-500 ">登入</a>
             </div>
             @if (Route::has('register'))
-            <div style="padding-top:10px;">
+            <div id="registerBtn">
                 <a href="{{ route('register') }}" class="text-dark text-gray-700 dark:text-gray-500 ">註冊</a>
             </div>
                 @endif

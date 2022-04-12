@@ -4,7 +4,7 @@
 @section('content')
     <div class="row goodListBox">
         @forelse ($goods as $g)
-            <div class="col-12 col-md-4 goodBox curP" data-id="{{ $g->serial }}">
+            <div class="col-12 col-md-4 goodBox curP" data-id="{{ $g->serial }}" onclick="location.href = '/o/good/' + $(this).data('id');">
                 <div>
                     <img src="{{ $g->cover }}" alt="">
                 </div>
@@ -14,14 +14,4 @@
             暫無商品
         @endforelse
     </div>
-@endsection
-@section('customJsBottom')
-<script>
-    $(()=>{
-        $('.goodBox').click(function(){
-            let id = $(this).data('id');
-            location.href = `/o/good/${id}`;
-        })
-    })
-</script>
 @endsection
