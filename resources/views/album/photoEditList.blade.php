@@ -56,6 +56,6 @@
     </div>
 </div>
 @endsection
-@section('customJs')
+@section('customJsBottom')
     <script type="text/javascript" src="{{ asset('js/album/photoEditList.js')}}"></script>
 @endsection

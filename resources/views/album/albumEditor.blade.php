@@ -1,16 +1,19 @@
 @extends('layouts.backend')
-@section('title','相簿建立')
-@section('h1','相簿建立')
+@if(isset($album))
+    @section('title','相簿更新')
+    @section('h1','相簿更新')
+@else
+    @section('title','相簿建立')
+    @section('h1','相簿建立')
+@endif
 @section('content')
 <section>
     <div>
         <label>相簿封面</label>
         <div id="showCover">
-            <img class="img-fluid" src="
             @isset($album)
-            {{ $album->cover }}
+            {!! $album->getCover() !!}
             @endisset
-            " alt="">
         </div>
         <input type="file" id="cover">
     </div>
@@ -30,7 +33,7 @@
         @endif
         >
     </div>
-    <div class="ali-r">
+    <div class="ali-r mt-3">
         @if (isset($album))
         <input type="hidden" id="id" value="{{ $album->id }}">
         <input type="hidden" id="action" value="update">

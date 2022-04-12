@@ -1,6 +1,6 @@
-let t = $("#fullPhoto");
-t.hide();
 $(() => {
+    let t = $("#fullPhoto");
+    t.hide();
     let md = new MoveDom();
 
     let id = $("#id").val();

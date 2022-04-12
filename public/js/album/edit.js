@@ -31,7 +31,7 @@ $(() => {
         f.append("name", name);
         f.append("content", content);
         if (action == "update") {
-            url = `/api/album/${id}/update`;
+            url = `/api/album/${id}/edit`;
         } else {
             url = "/api/album/create";
         }
@@ -44,8 +44,13 @@ $(() => {
             data: f,
             success(result) {
                 if (result["state"] == 1) {
-                    alert("相簿建立/更新完成");
-                    location.href = `/album/${result["data"]["id"]}/photos/edit`;
+                    if (action == "update") {
+                        alert("相簿更新完成");
+                        location.href = `/album/${result["data"]["id"]}/photos/`;
+                    } else {
+                        alert("相簿建立完成");
+                        location.href = `/album/${result["data"]["id"]}/photos/edit`;
+                    }
                 } else {
                     alert(result["data"] + "," + result["msg"]);
                 }

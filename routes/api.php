@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {
 
     Route::prefix('album')->group(function () {
         Route::post('/create', [AlbumController::class, 'albumCreate']); //相簿建立資料
-        Route::post('/{album}/edit}', [AlbumController::class, 'albumUpdate']); //指定相簿更新資料
+        Route::post('/{album}/edit', [AlbumController::class, 'albumUpdate']); //指定相簿更新資料
         Route::get('/list', [AlbumController::class, 'getList']); //顯示所有相簿的年月分類陣列資料
         Route::post('/uploadImg', [AlbumController::class, 'UploadImg']); //相簿內圖片上傳
         Route::post('/photo/{photo}/edit', [AlbumController::class, 'editImgInfo']); //相片資訊更新

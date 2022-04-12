@@ -27,6 +27,6 @@
         <button id="reset" class="btn btn-outline-primary">重寫</button>
     </div>
 @endsection
-@section('customJs')
-    <script type="text/javascript" src="{{ asset('js/post/category/edit.js')}}"
+@section('customJsBottom')
+    <script type="text/javascript" src="{{ asset('js/post/category/edit.js')}}"></script>
 @endsection

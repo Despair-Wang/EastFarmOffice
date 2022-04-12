@@ -1,6 +1,6 @@
-const serial = $("#orderDetailBox").data("serial"),
-    md = new MoveDom();
+const serial = $("#orderDetailBox").data("serial");
 $(() => {
+    let md = new MoveDom();
     md.setBack("/good/order/list");
     $("#edit").click(function () {
         location.href = `/good/order/${serial}/edit`;

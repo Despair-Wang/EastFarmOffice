@@ -3,7 +3,7 @@
         <x-slot name="logo">
             <a href="/">
                 {{-- <x-application-logo class="w-20 h-20 fill-current text-gray-500" /> --}}
-                <img src="/storage/source/eastfarmLogo.png" style="height: 300px;width:auto">
+                <img src="/storage/source/eastfarmLogo.png" style="height: 250px;width:auto">
             </a>
         </x-slot>
 
@@ -29,12 +29,13 @@
 
             <!-- Password -->
             <div class="mt-4">
-                <x-label for="password" :value="__('密碼')" />
+                <x-label for="password" :value="__('密碼(8碼以上)')" />
 
                 <x-input id="password" class="block mt-1 w-full"
                                 type="password"
                                 name="password"
                                 required autocomplete="new-password" />
+                <span class="showPassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
             </div>
 
             <!-- Confirm Password -->
@@ -44,6 +45,7 @@
                 <x-input id="password_confirmation" class="block mt-1 w-full"
                                 type="password"
                                 name="password_confirmation" required />
+                <span class="showPassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -58,3 +60,13 @@
         </form>
     </x-auth-card>
 </x-guest-layout>
+<style>
+    .showPassword {
+        float: right;
+        transform: translate(-17px, -33px) scale(1.4);
+        cursor: pointer;
+    }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /></link>
+<script type="text/javascript" src="{{ asset('js/showPassword.js') }}"></script>

@@ -318,7 +318,7 @@ class PostController extends Controller
                         }
                     }
                 } else {
-                    Cache::put(Auth::id(), $tags);
+                    Cache::put('tag' . Auth::id(), $tags);
                 }
 
                 if ($request->has('image') && !is_null($request->image) && $request->image != '/assets/post/default.jpg') {
@@ -359,7 +359,7 @@ class PostController extends Controller
 
     public function saveForNext(Post $post)
     {
-        $tags = Cache::get(Auth::id());
+        $tags = Cache::get('tag' . Auth::id());
         foreach ($tags as $tag) {
             $result = PostTag::create(['postId' => $post->id, 'tagId' => $tag]);
             if (!$result) {
@@ -375,16 +375,15 @@ class PostController extends Controller
         try {
             $result = $post->update(['state' => 1]);
             if ($result) {
-                if (Cache::has(Auth::id())) {
-                    $tags = Cache::get(Auth::id());
+                if (Cache::has('tag' . Auth::id())) {
+                    $tags = Cache::get('tag' . Auth::id());
                     foreach ($tags as $tag) {
                         $result = Tag_for_post::create(['postId' => $post->id, 'tagId' => $tag, 'state' => 1]);
                         if (!$result) {
                             return $this->makeJson(0, $result, null);
                         }
                     }
-                    Cache::forget(Auth::id());
-                    Cache::forget(Auth::id() . 'tag');
+                    Cache::forget('tag' . Auth::id());
                 } else {
                     $result = Tag_for_post::Where('postId', $post->id)->update(['state' => 1]);
                     if (!$result) {
@@ -471,13 +470,12 @@ class PostController extends Controller
         if (is_null($post)) {
             return 'UNKNOWN POST';
         };
-        $temp = Cache::get(Auth::id());
+        $temp = Cache::get('tag' . Auth::id());
         $tags = array();
         foreach ($temp as $tag) {
             $result = PostTag::where('id', $tag)->get()->first();
             array_push($tags, $result);
         }
-        Cache::put(Auth::id() . 'tag', $tags);
         return view('post.preview', compact('post', 'tags'));
 
     }

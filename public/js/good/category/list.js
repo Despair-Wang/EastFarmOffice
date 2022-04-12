@@ -1,5 +1,5 @@
-var md = new MoveDom();
 $(() => {
+    var md = new MoveDom();
     md.setNew("/good/category/create");
     $(".edit").click(function () {
         let id = $(this).parents(".listBox").attr("id");

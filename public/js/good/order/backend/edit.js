@@ -1,7 +1,7 @@
 var deleteType = new Array(),
-    serial = $("#orderDetailBox").data("serial"),
-    md = new MoveDom();
+    serial = $("#orderDetailBox").data("serial");
 $(() => {
+    let md = new MoveDom();
     md.setBack("/good/order/list");
     $(".typeDel").click(function () {
         let t = $(this).parents(".typeBox"),
@@ -18,6 +18,8 @@ $(() => {
                 q = parseInt(t.find(".quantity").val());
             total += a * q;
         });
+        let f = parseInt($("#freight").val());
+        total += f;
         $("#total").val(total);
     });
 

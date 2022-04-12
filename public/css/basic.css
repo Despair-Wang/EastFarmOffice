@@ -84,6 +84,7 @@ section {
     .subMenu {
         display: none;
         position: absolute;
+        right: 0;
         background: white;
         padding: 5px;
         border: 1px solid;
@@ -790,6 +791,6 @@ section {
 
 .showPassword {
     float: right;
-    transform: translate(-17px, -33px) scale(1.8);
+    transform: translate(-17px, -33px) scale(1.4);
     cursor: pointer;
 }

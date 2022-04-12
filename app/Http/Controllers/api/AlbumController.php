@@ -54,10 +54,24 @@ class AlbumController extends Controller
     {
         $params = $request->only(['name', 'content']);
         $result = $album->update($params);
+        $id = $album->id;
         if ($result) {
-            return $this->makeJson(1, null, null);
+            if ($request->has('pic')) {
+                $file = $request->pic;
+                $type = $file->extension();
+                $fileName = str_replace('tmp', $type, $file->getFilename());
+                $path = 'public/album/' . $id;
+                $saveResult = Storage::putFileAs($path, $file, $fileName);
+                $url = $path . '/' . $fileName;
+                if (!$saveResult) {
+                    return $this->makeJson(0, null, 'COVER_SAVE_ERROR');
+                }
+            } else {
+                $url = '/storage/album/albumDefault.png';
+            }
+            $album->update(['cover' => $url]);
+            return $this->makeJson(1, ['id' => $id], null);
         } else {
-
             return $this->makeJson(0, null, 'ALBUM_UPDATE_ERROR');
         }
     }

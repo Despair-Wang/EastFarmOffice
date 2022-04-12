@@ -125,6 +125,6 @@
 </div>
 <div id="goBack"></div>
 @endsection
-@section('customJs')
-    <script type="text/javascript" src="{{ asset('js/good/order/edit.js')}}"></script>
+@section('customJsBottom')
+    <script type="text/javascript" src="{{ asset('js/good/order/backend/edit.js')}}"></script>
 @endsection

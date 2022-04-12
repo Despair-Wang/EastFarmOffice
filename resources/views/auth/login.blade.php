@@ -3,7 +3,7 @@
         <x-slot name="logo">
             <a href="/">
                 {{-- <x-application-logo class="w-20 h-20 fill-current text-gray-500" /> --}}
-                <img src="/storage/source/eastfarmLogo.png" style="height: 300px;width:auto">
+                <img src="/storage/source/eastfarmLogo.png" style="height: 250px;width:auto">
             </a>
         </x-slot>
 
@@ -62,25 +62,10 @@
 <style>
 .showPassword {
     float: right;
-    transform: translate(-17px, -33px) scale(1.8);
+    transform: translate(-17px, -33px) scale(1.4);
     cursor: pointer;
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /></link>
-<script>
-    $(()=>{
-        $('.showPassword').click(function(){
-            let t = $(this).prev('input');
-            if(t.hasClass('show')){
-                t.attr('type','password');
-                t.removeClass('show');
-                $(this).html('<i class="fa fa-eye-slash" aria-hidden="true"></i>');
-            }else{
-                t.attr('type','text');
-                t.addClass('show');
-                $(this).html('<i class="fa fa-eye" aria-hidden="true"></i>');
-            }
-        })
-    })
-</script>
+<script type="text/javascript" src="{{ asset('js/showPassword.js') }}"></script>

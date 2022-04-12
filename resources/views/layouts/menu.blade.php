@@ -54,7 +54,7 @@
         @if (Route::has('login'))
         <div>
             @auth
-                <div class="d-flex">
+                <div class="d-flex relative">
                     <a id="authBtn" class="subDrop dropdown-toggle">Hi, {{ Auth::user()->name }}</a>
                     <div class="subMenu">
                         @if(Auth::user()->Auth == 'admin')

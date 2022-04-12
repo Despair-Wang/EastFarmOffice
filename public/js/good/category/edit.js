@@ -1,5 +1,5 @@
-var md = new MoveDom();
 $(() => {
+    var md = new MoveDom();
     md.setBack("/good/category/list");
     $("#submit").click(function () {
         let id = $("#id").val(),
@@ -31,6 +31,7 @@ $(() => {
             },
             error(result) {
                 alert(result);
+                console.log(result);
             },
         });
     });

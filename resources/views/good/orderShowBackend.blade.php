@@ -76,7 +76,7 @@
         </div>
         <div class="col-12">
             <h4 class="h4">
-                總金額
+                運費
             </h4>
         </div>
         <div class="col-12">
@@ -123,6 +123,6 @@
     </div>
     <div id="goBack"></div>
 @endsection
-@section('customJs')
+@section('customJsBottom')
     <script type="text/javascript" src="{{ asset('js/good/order/backend/show.js')}}"></script>
 @endsection

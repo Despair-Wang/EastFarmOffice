@@ -10,7 +10,7 @@
     </div>
 </div>
 <h6 class="ali-r">Coryright© 2022</h6>
-@if (Auth::check() && Cache::has(Auth::id()))
+@if (Auth::check() && Cache::has('good' . Auth::id()))
     <div id="cart" onclick="location.href='/orderCheck'">
         <div>
             <div id="cartMessage" class="curP">
@@ -18,7 +18,7 @@
             </div>
             <i class="fa fa-shopping-cart curP" aria-hidden="true"></i>
             <div id="cartCount" class="curP">
-                {{ count(Cache::get(Auth::id())) }}
+                {{ count(Cache::get('good' . Auth::id())) }}
             </div>
         </div>
     </div>

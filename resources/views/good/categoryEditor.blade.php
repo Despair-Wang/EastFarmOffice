@@ -11,7 +11,7 @@
         >
         <label for="">所屬分類</label>
         <select id="sub">
-            <option value="-">無所屬</option>
+            <option value="0">無所屬</option>
             @foreach ($categories as $g)
                 @if(isset($id))
                     @if($id->id == $g->id)

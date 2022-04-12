@@ -443,7 +443,7 @@ class GoodController extends Controller
     {
         $order = $this->getOrder('admin', $serial);
 
-        return view('good.showBackend', compact('order'));
+        return view('good.orderShowBackend', compact('order'));
     }
 
     public function showOrder($serial)
@@ -532,9 +532,9 @@ class GoodController extends Controller
     {
         $id = $request->id;
         $orders = $request->orders;
-        $user = Auth::id();
-        if (Cache::has(Auth::id())) {
-            $orderParams = Cache::get(Auth::id());
+        $user = 'good' . Auth::id();
+        if (Cache::has($user)) {
+            $orderParams = Cache::get($user);
         } else {
             $orderParams = array();
         }
@@ -559,16 +559,16 @@ class GoodController extends Controller
     public function cartChange(Request $request)
     {
         if (Auth::check()) {
-            $id = Auth::id();
+            $id = 'good' . Auth::id();
             $list = Cache::get($id);
             $action = null;
             $index = $request->index;
             unset($list[$index]);
             if (count($list) == 0) {
-                $result = Cache::forget(Auth::id());
+                $result = Cache::forget($id);
                 $action = 'reload';
             } else {
-                $result = Cache::put(Auth::id(), $list);
+                $result = Cache::put($id, $list);
             }
             if (!$result) {
                 return $this->makeJson(0, $result, 'CACHE_SAVE_ERROR');
@@ -636,7 +636,7 @@ class GoodController extends Controller
         $good = GoodOrder::Where('id', $id)->first();
         $serial = $good->serial;
         // $createTime = substr($good->created_at, 0, 18);
-        $details = Cache::get(Auth::id());
+        $details = Cache::get('good' . Auth::id());
         foreach ($details as $d) {
             $temp = array();
             $temp['orderId'] = $id;
@@ -654,7 +654,7 @@ class GoodController extends Controller
         if (!$result) {
             return $this->makeJson(0, $result, 'TOTAL_INSERT_ERROR');
         }
-        Cache::forget(Auth::id());
+        Cache::forget('good' . Auth::id());
         return $this->makeJson(1, $serial, null);
     }
 
