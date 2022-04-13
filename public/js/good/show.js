@@ -1,5 +1,5 @@
-var md = new MoveDom();
 $(() => {
+    var md = new MoveDom();
     md.setBack("/o/good-list");
     $("#ctrlRight")
         .children("i")

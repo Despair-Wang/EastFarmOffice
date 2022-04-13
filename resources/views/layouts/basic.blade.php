@@ -19,9 +19,9 @@
             {{-- @include('menu') --}}
             @yield('content')
         </div>
-        <div id="footer">
-            @include('layouts.footer')
-        </div>
+    </div>
+    <div id="footer">
+        @include('layouts.footer')
     </div>
 </body>
 @yield('customJsBottom')

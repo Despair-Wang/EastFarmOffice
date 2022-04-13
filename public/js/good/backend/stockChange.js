@@ -1,5 +1,5 @@
-var md = new MoveDom();
 $(() => {
+    var md = new MoveDom();
     $(".io").lc_switch("進貨", "出貨");
 
     md.setBack("/good/list");

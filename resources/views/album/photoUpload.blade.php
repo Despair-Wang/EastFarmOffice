@@ -17,6 +17,15 @@
     </section>
     <div id="goBack">
     </div>
+    <div id="uploadAnime">
+        <div>
+            <div id="animeCore">
+                <div></div>
+                <div></div>
+                <p>UPLOADING</p>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('customJs')
     <script type="text/javascript" src="{{ asset('js/album/upload.js')}}"></script>

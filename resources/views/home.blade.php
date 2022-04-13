@@ -9,12 +9,18 @@
     <link rel="stylesheet" href="{{ asset('css/basic.css') }}">
     <title>{{ env('APP_NAME') }}-台灣首座國際級茶花公園</title>
     <style>
-        #topImage {
+        #content {
             background-image:
-            linear-gradient(to bottom,rgba(255,255,255,0.7) 0%, rgba(0,0,0,0) 20%),
+            linear-gradient(to bottom,rgba(255,255,255,0.8) 0% ,rgba(255,255,255,0.7) 7%, rgba(0,0,0,0) 20%),
             url('/assets/source/577697.jpg');
             background-size: cover;
-            height: 100vh;
+        }
+        #topImage {
+            /* background-image:
+            linear-gradient(to bottom,rgba(255,255,255,0.7) 0%, rgba(0,0,0,0) 20%),
+            url('/assets/source/577697.jpg');
+            background-size: cover; */
+            height: 100%;
             width: 100%;
             margin-top: -100px;
             display: flex;
@@ -48,17 +54,15 @@
         <div id="top">
             @include('layouts.menu')
         </div>
-        <div id="container">
-            <div id="topImage">
-                <div>
-                    <p id="topTitle">東鄉事業</p>
-                    <p id="topSubtitle">台灣首座國際級茶花公園</p>
-                </div>
+        <div id="topImage">
+            <div>
+                <p id="topTitle">東鄉事業</p>
+                <p id="topSubtitle">台灣首座國際級茶花公園</p>
             </div>
         </div>
-        <div id="footer">
-            @include('layouts.footer')
-        </div>
+    </div>
+    <div id="footer">
+        @include('layouts.footer')
     </div>
 </body>
 

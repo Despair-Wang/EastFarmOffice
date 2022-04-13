@@ -39,20 +39,22 @@
 </div>
 <div id="fullPhoto">
     <div>
-        <input type="hidden" id="photoId" value="">
-        <img src="" alt="">
-        <h4 class="h4">更換相片</h4>
-        <input type="file" id="newPhoto">
-        <h4 class="h4">照片標題</h4>
-        <input type="text" id="photoTitle">
-        <h4 class="h4">照片說明</h4>
-        <input type="text" id="photoContent">
-        <div class="ali-r">
-            <button id="submit" class="btn btn-outline-light mt-2">修改</button>
-            <button id="recover" class="btn btn-outline-light mt-2">復原</button>
-            <button id="delete" class="btn btn-outline-light mt-2">刪除</button>
+        <div>
+            <input type="hidden" id="photoId" value="">
+            <img src="" alt="">
+            <h4 class="h4">更換相片</h4>
+            <input type="file" id="newPhoto">
+            <h4 class="h4">照片標題</h4>
+            <input type="text" id="photoTitle">
+            <h4 class="h4">照片說明</h4>
+            <input type="text" id="photoContent">
+            <div class="ali-r">
+                <button id="submit" class="btn btn-outline-light mt-2">修改</button>
+                <button id="recover" class="btn btn-outline-light mt-2">復原</button>
+                <button id="delete" class="btn btn-outline-light mt-2">刪除</button>
+            </div>
+            <button id="close" class="btn btn-outline-light mt-4 p-2 w-100">關閉</button>
         </div>
-        <button id="close" class="btn btn-outline-light mt-4 p-2 w-100">關閉</button>
     </div>
 </div>
 @endsection

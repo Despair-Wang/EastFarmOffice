@@ -1,4 +1,4 @@
-\@extends('layouts.basic')
+@extends('layouts.basic')
 @section('title', '文章列表')
 @section('h1', '茶花文選')
 @section('content')

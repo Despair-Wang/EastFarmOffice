@@ -11,9 +11,11 @@
     <div>
         <label>相簿封面</label>
         <div id="showCover">
-            @isset($album)
+            @if(isset($album))
             {!! $album->getCover() !!}
-            @endisset
+            @else
+            <img src="">
+            @endif
         </div>
         <input type="file" id="cover">
     </div>
@@ -47,6 +49,6 @@
 </section>
 <div id="goBack"></div>
 @endsection
-@section('customJs')
+@section('customJsBottom')
     <script type="text/javascript" src="{{ asset('js/album/edit.js')}}"></script>
 @endsection

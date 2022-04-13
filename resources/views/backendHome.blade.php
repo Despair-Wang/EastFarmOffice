@@ -5,4 +5,4 @@
 <div class="d-flex justify-center align-center">
     <img class="img-fluid" src="{{ asset('/assets/source/eastfarmLogo.png') }}" alt="" style="width:500px;">
 </div>
-    @endsection
+@endsection

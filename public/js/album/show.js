@@ -1,8 +1,8 @@
 $(() => {
     var md = new MoveDom();
     md.setBack("/o/album-list");
-    let t = $("#fullPhoto");
-    t.hide();
+    let t = $("#fullPhoto"),
+        b = $("body");
     $(".photoBox").click(function () {
         let id = $(this).data("photo-id");
         $.ajax({
@@ -15,9 +15,11 @@ $(() => {
                     t.find("h6").html(result["data"]["content"]);
                     // t.addClass('show');
                     t.fadeIn();
+                    b.addClass("hiddenScrollY");
                     t.click(function (e) {
                         e.preventDefault();
                         $(this).fadeOut();
+                        b.removeClass("hiddenScrollY");
                     });
                 } else {
                     alert(result["msg"]);

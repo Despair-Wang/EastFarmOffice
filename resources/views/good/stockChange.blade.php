@@ -27,6 +27,6 @@
     </div>
     <div id="goBack"></div>
 @endsection
-@section('customJs')
+@section('customJsBottom')
     <script type="text/javascript" src="{{ asset('js/good/backend/stockChange.js')}}"></script>
 @endsection

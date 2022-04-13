@@ -165,42 +165,41 @@ $(() => {
     $("#close").click(function () {
         t.fadeOut();
     });
+
+    function setPhoto(photo) {
+        t.find("img").attr("src", photo["url"]);
+        $("#photoId").val(photo["id"]);
+        $("#photoTitle").val(photo["title"]);
+        $("#photoContent").val(photo["content"]);
+    }
+
+    function showPhoto() {
+        $(".photoBox").click(function (e) {
+            if (
+                !$(e.target).hasClass("multDelete") &&
+                !$(e.target).hasClass("multCheck")
+            ) {
+                let id = $(this).data("photo-id");
+                $.ajax({
+                    url: `/api/album/photo/${id}`,
+                    type: "GET",
+                    success(result) {
+                        if (result["state"] == 1) {
+                            setPhoto(result["data"]);
+                            t.fadeIn();
+                            t.find("").click(function (e) {
+                                e.preventDefault();
+                                $(this).fadeOut();
+                            });
+                        } else {
+                            alert(result["msg"]);
+                        }
+                    },
+                    error(data) {
+                        alert(data);
+                    },
+                });
+            }
+        });
+    }
 });
-
-function setPhoto(photo) {
-    console.log("done");
-    t.find("img").attr("src", photo["url"]);
-    $("#photoId").val(photo["id"]);
-    $("#photoTitle").val(photo["title"]);
-    $("#photoContent").val(photo["content"]);
-}
-
-function showPhoto() {
-    $(".photoBox").click(function (e) {
-        if (
-            !$(e.target).hasClass("multDelete") &&
-            !$(e.target).hasClass("multCheck")
-        ) {
-            let id = $(this).data("photo-id");
-            $.ajax({
-                url: `/api/album/photo/${id}`,
-                type: "GET",
-                success(result) {
-                    if (result["state"] == 1) {
-                        setPhoto(result["data"]);
-                        t.fadeIn();
-                        t.find("").click(function (e) {
-                            e.preventDefault();
-                            $(this).fadeOut();
-                        });
-                    } else {
-                        alert(result["msg"]);
-                    }
-                },
-                error(data) {
-                    alert(data);
-                },
-            });
-        }
-    });
-}

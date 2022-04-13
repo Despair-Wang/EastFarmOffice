@@ -5,7 +5,7 @@
     <div>
         <div class="row">
             <div class="col-6 col-md-3">
-                開始時間：
+                <label class="w-100">開始時間：</label>
                 @if (is_null($start) || $start == 'null')
                 <input type="date" id="start">
                 @else
@@ -13,7 +13,7 @@
                 @endif
             </div>
             <div class="col-6 col-md-3">
-                結束時間：
+                <label class="w-100">結束時間：</label>
                 @if (is_null($end) || $end == 'null')
                 <input type="date" id="end">
                 @else
@@ -21,7 +21,7 @@
                 @endif
             </div>
             <div class="col-4 col-md-2">
-                訂單狀態：
+                <label class="w-100">訂單狀態：</label>
                 <select id="state">
                     <option value="all">全部</option>
                     @foreach ($status as $s)
@@ -34,7 +34,7 @@
                 </select>
             </div>
             <div class="col-4 col-md-2">
-                顯示頁數：
+                <label class="w-100">顯示頁數：</label>
                 <select id="page">
                     @foreach (['15','30','45','60'] as $i)
                         @if($page == $i)
@@ -45,11 +45,11 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-4 col-md-2">
+            <div class="col-4 col-md-2 d-flex justify-center align-items-end">
                 <button id="filter" class="btn btn-primary">篩選訂單</button>
             </div>
         </div>
-        <div class="row">
+        <div class="row my-3">
             <div class="col-10 col-md-4">訂單編號</div>
             <div class="col-2 col-md-2">訂購人</div>
             <div class="col-6 col-md-3">下單時間</div>

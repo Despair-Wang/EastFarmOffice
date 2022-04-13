@@ -7,6 +7,7 @@
     @include('layouts.basicHead')
     <script src="{{ asset('js/lc_switch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/backend.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/loading.js')}}"></script>
     <link rel="stylesheet" href="{{ asset('/css/backend.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lc_switch.css') }}">
     @yield('customJs')
@@ -26,6 +27,15 @@
     </div>
     <div class="" id="footer">
         @include('layouts.footer')
+    </div>
+    <div id="uploadAnime">
+        <div>
+            <div id="animeCore">
+                <div></div>
+                <div></div>
+                <p>UPLOADING</p>
+            </div>
+        </div>
     </div>
 </body>
 @yield('customJsBottom')

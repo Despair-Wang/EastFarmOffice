@@ -26,9 +26,11 @@
 <div id="goBack"></div>
 <div id="fullPhoto">
     <div>
-        <img src="" alt="">
-        <h4 class="h4"></h4>
-        <h6 class="h6"></h6>
+        <div>
+            <img src="" alt="">
+            <h4 class="h4"></h4>
+            <h6 class="h6"></h6>
+        </div>
     </div>
 </div>
 @endsection
