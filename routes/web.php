@@ -26,8 +26,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
+Route::view('/', 'working');
 
-Route::get('/', function () {
+Route::get('/testArea', function () {
     return view('home');
 })->name('home');
 

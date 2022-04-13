@@ -3,7 +3,7 @@
         <p>Hello,{{ Auth::user()->name }}</p>
     </div>
     <div class="menuItem">
-        <a href="{{ url('/') }}" class="mainItem">前台首頁</a>
+        <a href="{{ route('home') }}" class="mainItem">前台首頁</a>
     </div>
     <div class="menuItem">
         <a class="mainItem">茶花文選</a>

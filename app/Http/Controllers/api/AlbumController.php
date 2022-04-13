@@ -33,7 +33,7 @@ class AlbumController extends Controller
                         return $this->makeJson(0, null, 'COVER_SAVE_ERROR');
                     }
                 } else {
-                    $url = '/storage/album/albumDefault.png';
+                    $url = '/assets/album/albumDefault.png';
                 }
                 $result->update(['cover' => $url]);
                 if ($result) {
@@ -67,7 +67,7 @@ class AlbumController extends Controller
                     return $this->makeJson(0, null, 'COVER_SAVE_ERROR');
                 }
             } else {
-                $url = '/storage/album/albumDefault.png';
+                $url = '/assets/album/albumDefault.png';
             }
             $album->update(['cover' => $url]);
             return $this->makeJson(1, ['id' => $id], null);

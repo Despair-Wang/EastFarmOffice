@@ -23,9 +23,9 @@
         <div class="container" id="container">
             @yield('content')
         </div>
-        <div class="" id="footer">
-            @include('layouts.footer')
-        </div>
+    </div>
+    <div class="" id="footer">
+        @include('layouts.footer')
     </div>
 </body>
 @yield('customJsBottom')

@@ -20,10 +20,12 @@ class Album extends Model
     public function getCover()
     {
         if (is_null($this->cover)) {
-            return "<h3>無相片</h3>";
+            return '<img src="/assets/album/albumDefault.png">';
         } else {
             if (substr($this->cover, 0, 4) == 'http') {
                 return '<img src="' . $this->cover . '">';
+            } else if (substr($this->cover, 0, 7) == '/assets') {
+                return '<img src="/assets/album/albumDefault.png">';
             } else {
                 return '<img src="' . url(Storage::url($this->cover)) . '">';
             }

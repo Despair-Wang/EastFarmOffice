@@ -5,7 +5,7 @@
 </nav>
 <div id="menuBox">
     <div class="menuItem">
-        <a href="/">首頁</a>
+        <a href="{{ route('home') }}">首頁</a>
     </div>
     <div class="menuItem">
         <a>關於東鄉</a>
