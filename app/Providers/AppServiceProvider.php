@@ -27,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
 
-        View::composer('layouts.menu', 'App\Http\Controllers\api\GoodController@getCategory');
+        View::composer('layouts.menu', 'App\Http\Controllers\Api\GoodController@getCategory');
     }
 }

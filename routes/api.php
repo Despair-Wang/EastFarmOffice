@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\AlbumController;
 use App\Http\Controllers\Api\CustomUserController;
-use App\Http\Controllers\api\GoodController;
+use App\Http\Controllers\Api\GoodController;
 use App\Http\Controllers\Api\PediaController;
 use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;

@@ -12,7 +12,7 @@
         #topImage {
             background-image:
             linear-gradient(to bottom,rgba(255,255,255,0.7) 0%, rgba(0,0,0,0) 20%),
-            url('/storage/source/577697.jpg');
+            url('/assets/source/577697.jpg');
             background-size: cover;
             height: 100vh;
             width: 100%;

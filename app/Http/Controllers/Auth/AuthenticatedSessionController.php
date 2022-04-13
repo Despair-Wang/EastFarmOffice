@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::user()->Auth == 'admin') {
             return redirect()->intended(RouteServiceProvider::HOME);
         } else {
-            return redirect()->intended('/');
+            return redirect()->intended(route('home'));
         }
     }
 
