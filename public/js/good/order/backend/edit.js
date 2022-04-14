@@ -1,7 +1,9 @@
 var deleteType = new Array(),
-    serial = $("#orderDetailBox").data("serial");
+    serial = $("#orderDetailBox").data("serial"),
+    la;
 $(() => {
     let md = new MoveDom();
+    la = new LoadAnime();
     md.setBack("/good/order/list");
     $(".typeDel").click(function () {
         let t = $(this).parents(".typeBox"),
@@ -24,6 +26,7 @@ $(() => {
     });
 
     $("#submit").click(function () {
+        la.run();
         let state = $("#state").find(":selected").val(),
             name = $("#name").val(),
             address = $("#address").val(),
@@ -52,6 +55,7 @@ $(() => {
                 deleteType: deleteType,
             },
             success(data) {
+                la.stop();
                 if (data["state"] == 1) {
                     alert("訂單修改完成");
                     location.href = `/good/order/${serial}/`;
@@ -60,6 +64,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });

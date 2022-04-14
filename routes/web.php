@@ -34,10 +34,6 @@ Route::get('/testArea', function () {
 
 Route::view('/welcome', 'welcome');
 
-Route::get('/dashboard', function () {
-    return view('backendHome');
-})->middleware(['auth', 'auth.signed:admin'])->name('dashboard');
-
 Route::get('loginTest', function () {
     return 'login';
 })->middleware(['auth:web']);
@@ -94,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
+    Route::view('/dashboard', 'backendHome')->name('dashboard');
     Route::prefix('admin')->group(function () {
         Route::view('/create', 'user.create');
         Route::view('/changePassword', 'user.changePwBackend');

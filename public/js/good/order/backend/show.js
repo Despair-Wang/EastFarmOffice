@@ -1,6 +1,8 @@
 const serial = $("#orderDetailBox").data("serial");
+var la;
 $(() => {
     let md = new MoveDom();
+    la = new LoadAnime();
     md.setBack("/good/order/list");
     $("#edit").click(function () {
         location.href = `/good/order/${serial}/edit`;
@@ -20,6 +22,7 @@ $(() => {
 });
 
 function changeState(state) {
+    la.run();
     let url = "";
     switch (state) {
         case "paid":
@@ -36,6 +39,7 @@ function changeState(state) {
         url: url,
         type: "GET",
         success(data) {
+            la.stop();
             if (data["state"] == 1) {
                 alert("狀態變更成功");
                 location.reload();
@@ -44,6 +48,7 @@ function changeState(state) {
             }
         },
         error(data) {
+            la.stop();
             alert(data);
         },
     });

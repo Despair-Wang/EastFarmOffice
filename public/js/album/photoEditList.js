@@ -1,9 +1,9 @@
 $(() => {
-    let t = $("#fullPhoto");
+    let t = $("#fullPhoto"),
+        md = new MoveDom(),
+        la = new LoadAnime(),
+        id = $("#id").val();
     t.hide();
-    let md = new MoveDom();
-
-    let id = $("#id").val();
     md.setNew(`/album/${id}/photos/edit`);
     md.setBack("/album/list");
 
@@ -34,11 +34,13 @@ $(() => {
     });
 
     $("#recover").click(function () {
+        la.run();
         let id = $("#photoId").val();
         $.ajax({
             url: `/api/album/photo/${id}`,
             type: "GET",
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     setPhoto(result["data"]);
                 } else {
@@ -46,12 +48,14 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });
     });
 
     $("#delete").click(function () {
+        la.run();
         let id = $("#photoId").val();
         $.ajax({
             url: `/api/album/photo/delete`,
@@ -60,6 +64,7 @@ $(() => {
                 data: id,
             },
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     location.reload();
                 } else {
@@ -69,6 +74,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });
@@ -96,6 +102,7 @@ $(() => {
     });
 
     $("#multDelRun").click(function () {
+        la.run();
         let items = $(".multCheck"),
             data = new Array();
         items.each(function (e) {
@@ -111,6 +118,7 @@ $(() => {
                 data: data,
             },
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     alert("刪除成功");
                     location.reload();
@@ -119,12 +127,14 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });
     });
 
     $("#newPhoto").change(function (e) {
+        la.run();
         let file = e.target.files[0],
             f = new FormData(),
             id = $("#photoId").val();
@@ -137,6 +147,7 @@ $(() => {
             cache: false,
             data: f,
             success(result) {
+                la.stop();
                 $(this).val("");
                 if (result["state"] == 1) {
                     t.find("img").attr("src", result["data"]);
@@ -157,6 +168,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });
@@ -175,6 +187,7 @@ $(() => {
 
     function showPhoto() {
         $(".photoBox").click(function (e) {
+            la.run();
             if (
                 !$(e.target).hasClass("multDelete") &&
                 !$(e.target).hasClass("multCheck")
@@ -184,6 +197,7 @@ $(() => {
                     url: `/api/album/photo/${id}`,
                     type: "GET",
                     success(result) {
+                        la.stop();
                         if (result["state"] == 1) {
                             setPhoto(result["data"]);
                             t.fadeIn();
@@ -196,6 +210,7 @@ $(() => {
                         }
                     },
                     error(data) {
+                        la.stop();
                         alert(data);
                     },
                 });

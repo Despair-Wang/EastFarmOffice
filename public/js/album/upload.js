@@ -1,7 +1,7 @@
 $(() => {
     var md = new MoveDom(),
         albumId = $("#id").val(),
-        anime = $("#uploadAnime");
+        la = new LoadAnime();
 
     md.setBack(`/album/${albumId}/photos`);
 
@@ -11,7 +11,7 @@ $(() => {
     };
 
     area.ondrop = function (e) {
-        startRun();
+        la.run();
         e.preventDefault();
         let data = e.dataTransfer.files,
             f = new FormData();
@@ -27,7 +27,7 @@ $(() => {
             cache: false,
             data: f,
             success(result) {
-                endRun();
+                la.stop();
                 if (result["state"] == 1) {
                     result = result["data"];
                     for (let i = 0; i < result.length; i++) {
@@ -44,14 +44,14 @@ $(() => {
                 }
             },
             error(data) {
-                endRun();
+                la.stop();
                 alert(data);
             },
         });
     };
 
     $("#upload").change(function (e) {
-        startRun();
+        la.run();
         let f = new FormData();
         f.append("pic", e.target.files[0]);
         f.append("id", $("#id").val());
@@ -63,7 +63,7 @@ $(() => {
             cache: false,
             data: f,
             success(result) {
-                endRun();
+                la.stop();
                 if (result["state"] == 1) {
                     result = result["data"];
                     for (let i = 0; i < result.length; i++) {
@@ -81,19 +81,9 @@ $(() => {
                 }
             },
             error(data) {
-                endRun();
+                la.stop();
                 alert(data);
             },
         });
     });
-
-    function startRun() {
-        anime.fadeIn();
-        $("body").addClass("hiddenScrollY");
-    }
-
-    function endRun() {
-        anime.fadeOut();
-        $("body").removeClass("hiddenScrollY");
-    }
 });

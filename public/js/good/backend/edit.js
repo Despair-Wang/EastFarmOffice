@@ -1,9 +1,11 @@
 var f = new FormData(),
     galleries = new Array(),
     deleteType = new Array(),
-    deleteGallery = new Array();
+    deleteGallery = new Array(),
+    la;
 $(() => {
     var md = new MoveDom();
+    la = new LoadAnime();
     deleteTypeInit();
     deleteInit();
     md.setBack("/good/list");
@@ -210,6 +212,7 @@ function submit() {
     } else {
         url = `/api/good/${id}/update`;
     }
+    la.run();
     $.ajax({
         url: url,
         type: "POST",
@@ -218,6 +221,7 @@ function submit() {
         cache: false,
         data: f,
         success: function (data) {
+            la.stop();
             if (data["state"] == 1) {
                 alert("商品建立成功");
                 location.href = `/good/list`;
@@ -227,6 +231,7 @@ function submit() {
             }
         },
         error: function (data) {
+            la.stop();
             console.log(data);
         },
     });

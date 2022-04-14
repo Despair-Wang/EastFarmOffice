@@ -16,7 +16,8 @@ $(() => {
         },
     });
 
-    var md = new MoveDom();
+    var md = new MoveDom(),
+        la = new LoadAnime();
     md.setNew("/album/edit");
 
     $(".albumListItem").click(function (e) {
@@ -50,12 +51,14 @@ $(() => {
     });
 
     $(".delete").click(function (e) {
+        la.run();
         e.preventDefault();
         let id = $(this).parent("div").data("album-id");
         $.ajax({
             url: `/api/album/${id}/delete`,
             type: "GET",
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     alert("相簿刪除成功");
                     location.href = "/album/list";
@@ -64,6 +67,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });

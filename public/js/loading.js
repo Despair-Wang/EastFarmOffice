@@ -1,5 +1,5 @@
 var anime, b;
-class loadAnime {
+class LoadAnime {
     constructor() {
         anime = $("#uploadAnime");
         b = $("body");

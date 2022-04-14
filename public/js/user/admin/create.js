@@ -1,4 +1,5 @@
 $(() => {
+    var la = new LoadAnime();
     $(".showPassword").click(function () {
         let t = $(this).prev("input");
         if (t.hasClass("show")) {
@@ -31,6 +32,8 @@ $(() => {
             alert("密碼與確認密碼不一致");
             return false;
         }
+
+        la.run();
         $.ajax({
             url: "/api/admin/create",
             type: "POST",
@@ -41,6 +44,7 @@ $(() => {
                 password_confirmation: check,
             },
             success(data) {
+                la.stop();
                 if (data["state"] == 1) {
                     alert("管理者建立成功");
                     reset();
@@ -49,6 +53,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert("Code Error," + data["responseJSON"]["message"]);
                 console.log(data);
             },

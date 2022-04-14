@@ -1,6 +1,8 @@
-var f = new FormData();
+var f = new FormData(),
+    la;
 $(() => {
     var md = new MoveDom();
+    la = new LoadAnime();
     md.setBack("/album/list");
 
     $("#cover").change(function (e) {
@@ -23,6 +25,7 @@ $(() => {
     });
 
     $("#submit").click(function () {
+        la.run();
         let name = $("#albumName").val(),
             content = $("#albumContent").val(),
             action = $("#action").val(),
@@ -43,6 +46,7 @@ $(() => {
             cache: false,
             data: f,
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     if (action == "update") {
                         alert("相簿更新完成");
@@ -56,17 +60,20 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });
     });
 
     $("#delete").click(function () {
+        la.run();
         let id = $("#id").val();
         $.ajax({
             url: `/api/album/${id}/delete`,
             type: "GET",
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     alert("相簿刪除成功");
                     location.href = "/album/list";
@@ -75,6 +82,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });

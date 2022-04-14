@@ -17,12 +17,16 @@ class CustomerMiddleware
      */
     public function handle(Request $request, Closure $next, $role)
     {
-        // dd($next);
-        $user = Auth::guard('customer')->user();
-        if ($user->Auth == $role) {
-            return $next($request);
+        // return $next($request);
+        if (Auth::check()) {
+            $user = Auth::guard('customer')->user();
+            if ($user->Auth == $role) {
+                return $next($request);
+            } else {
+                return redirect()->intended('unknown');
+            }
         } else {
-            return redirect()->intended('unknown');
+            return redirect()->intended('login');
         }
 
     }

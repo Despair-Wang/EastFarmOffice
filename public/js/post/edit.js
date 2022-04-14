@@ -1,6 +1,8 @@
+var la;
 $(() => {
     var md = new MoveDom();
     md.setBack("/post/list");
+    la = new LoadAnime();
     const E = window.wangEditor;
     const e = new E("#mainInput");
     e.config.uploadImgServer = "/api/post/upload";
@@ -51,12 +53,6 @@ $(() => {
         $("#imgUpload").val("");
     });
 
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf_token"]').attr("content"),
-        },
-    });
-
     var postId = $("#action").data("post-id");
     if (postId != "" && typeof postId != "undefined") {
         getContent(postId);
@@ -64,6 +60,7 @@ $(() => {
 });
 
 function uploadImg(file) {
+    la.run();
     let f = new FormData();
     f.append("pic", file);
     $.ajax({
@@ -74,6 +71,7 @@ function uploadImg(file) {
         cache: false,
         data: f,
         success(result) {
+            la.stop();
             result = JSON.parse(result);
             if (result["errno"] == 0) {
                 $("#indexImage").attr("src", result["data"][0]["url"]);
@@ -81,15 +79,20 @@ function uploadImg(file) {
                 alert("圖片上傳失敗, " + result["data"][0]["url"]);
             }
         },
+        error(data) {
+            la.stop();
+            alert("圖片上傳失敗, " + data);
+        },
     });
 }
 
 function getContent(id) {
-    // let postId = $('#action').data('post-id');
+    la.run();
     $.ajax({
         url: `/api/post/${id}/getContent`,
         type: "get",
         success(result) {
+            la.stop();
             if (result["state"] == 1) {
                 let data = result["data"],
                     taglist = $("#tag > option"),
@@ -106,10 +109,12 @@ function getContent(id) {
                     removeTag(e.target);
                 });
             } else {
+                la.stop();
                 alert(result["data"]);
             }
         },
         error(data) {
+            la.stop();
             alert(data);
         },
     });
@@ -145,6 +150,7 @@ function removeTag(target) {
 }
 
 function createPost(saveType) {
+    la.run();
     let title = $("#title").val(),
         content = $(".w-e-text").html(),
         cate = $("#category").find(":selected").val(),
@@ -188,6 +194,7 @@ function createPost(saveType) {
             save: saveType,
         },
         success(result) {
+            la.stop();
             if (result["state"] == "1") {
                 // alert('文章建立成功');
                 if (saveType == "draft") {
@@ -202,6 +209,7 @@ function createPost(saveType) {
             }
         },
         error(data) {
+            la.stop();
             alert(data);
         },
     });

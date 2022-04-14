@@ -1,4 +1,7 @@
 $(() => {
+    var md = new MoveDom(),
+        la = new LoadAnime();
+    md.setBack("/post/category/list");
     $("#submit").click(function () {
         let name = $("#cateName").val(),
             content = $("#cateContent").val(),

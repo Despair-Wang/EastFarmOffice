@@ -1,5 +1,7 @@
+var la;
 $(() => {
     var md = new MoveDom();
+    la = new LoadAnime();
     md.setNew("/good/category/create");
     $(".edit").click(function () {
         let id = $(this).parents(".listBox").attr("id");
@@ -13,13 +15,15 @@ $(() => {
 });
 
 function categoryDelete(id) {
+    la.run();
     $.ajax({
         url: "/api/good/category/delete",
         type: "POST",
         data: {
             id: id,
         },
-        success: function (data) {
+        success(data) {
+            la.stop();
             if (data["state"] == 1) {
                 alert("刪除成功");
                 location.reload();
@@ -27,7 +31,8 @@ function categoryDelete(id) {
                 alert(data["data"]);
             }
         },
-        error: function (data) {
+        error(data) {
+            la.stop();
             alert(data);
         },
     });

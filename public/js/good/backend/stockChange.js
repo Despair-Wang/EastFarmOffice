@@ -1,4 +1,6 @@
+var la;
 $(() => {
+    la = new LoadAnime();
     var md = new MoveDom();
     $(".io").lc_switch("進貨", "出貨");
 
@@ -10,6 +12,7 @@ $(() => {
 });
 
 function submit() {
+    la.run();
     types = new Array();
     $(".typeBox").each(function () {
         let t = $(this),
@@ -20,6 +23,7 @@ function submit() {
         types.push([goodId, type, number, action]);
     });
     $.ajax({
+        la.stop();
         url: "/api/good/stockChange",
         type: "POST",
         data: {
@@ -34,6 +38,7 @@ function submit() {
             }
         },
         error(data) {
+            la.stop();
             alert(data);
         },
     });

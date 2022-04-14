@@ -26,6 +26,7 @@
         <button id="submit" class="btn btn-outline-primary">送出</button>
         <button id="reset" class="btn btn-outline-primary">重寫</button>
     </div>
+    <div id="goBack"></div>
 @endsection
 @section('customJsBottom')
     <script type="text/javascript" src="{{ asset('js/post/category/edit.js')}}"></script>

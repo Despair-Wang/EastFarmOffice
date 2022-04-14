@@ -1,7 +1,9 @@
 $(() => {
-    var md = new MoveDom();
+    var md = new MoveDom(),
+        la = new LoadAnime();
     md.setBack("/good/category/list");
     $("#submit").click(function () {
+        la.run();
         let id = $("#id").val(),
             name = $("#name").val(),
             sub = $("#sub").find(":selected").val(),
@@ -22,6 +24,7 @@ $(() => {
                 content: content,
             },
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     alert("建立成功");
                     location.href = "/good/category/list";
@@ -30,6 +33,7 @@ $(() => {
                 }
             },
             error(result) {
+                la.stop();
                 alert(result);
                 console.log(result);
             },

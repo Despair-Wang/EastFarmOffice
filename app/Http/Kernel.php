@@ -63,7 +63,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'auth.signed' => \App\Http\Middleware\TestMiddleware::class,
+        'auth.signed' => \App\Http\Middleware\CustomerMiddleware::class,
     ];
 
     protected $middlewarePriority = [

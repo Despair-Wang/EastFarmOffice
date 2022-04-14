@@ -1,5 +1,9 @@
 $(() => {
+    var md = new MoveDom(),
+        la = new LoadAnime();
+    md.setBack("/post/tag/list");
     $("#submit").click(function () {
+        la.run();
         let name = $("#tagName").val(),
             content = $("#tagContent").val(),
             id = $("#tagId").val(),
@@ -17,6 +21,7 @@ $(() => {
                 content: content,
             },
             success(result) {
+                la.stop();
                 if (result["state"] == 1) {
                     alert("建立/更新成功");
                     location.href = "/post/tag/list";
@@ -25,6 +30,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert(data);
             },
         });

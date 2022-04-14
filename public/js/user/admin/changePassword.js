@@ -1,4 +1,5 @@
 $(() => {
+    var la = new LoadAnime();
     $(".showPassword").click(function () {
         let t = $(this).prev("input");
         if (t.hasClass("show")) {
@@ -20,6 +21,7 @@ $(() => {
             alert("密碼與確認密碼不一致");
             return false;
         }
+        la.run();
         $.ajax({
             url: "/api/changePassword",
             type: "POST",
@@ -28,6 +30,7 @@ $(() => {
                 password_confirmation: check,
             },
             success(data) {
+                la.stop();
                 if (data["state"] == 1) {
                     alert("密碼已更新");
                     location.href = "/dashboard";
@@ -36,6 +39,7 @@ $(() => {
                 }
             },
             error(data) {
+                la.stop();
                 alert("Code Error," + data["responseJSON"]["message"]);
                 console.log(data);
             },
