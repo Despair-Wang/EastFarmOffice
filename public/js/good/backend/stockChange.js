@@ -22,8 +22,8 @@ function submit() {
             action = t.find(".io").prop("checked");
         types.push([goodId, type, number, action]);
     });
+    la.stop();
     $.ajax({
-        la.stop();
         url: "/api/good/stockChange",
         type: "POST",
         data: {

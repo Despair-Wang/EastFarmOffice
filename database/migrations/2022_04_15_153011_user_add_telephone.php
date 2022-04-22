@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGoodOrderPaymentsTable extends Migration
+class UserAddTelephone extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateGoodOrderPaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('good_order_payments', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 50);
-            $table->integer('price');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('tel')->after('name');
         });
     }
 
@@ -28,6 +25,6 @@ class CreateGoodOrderPaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('good_order_payments');
+        //
     }
 }

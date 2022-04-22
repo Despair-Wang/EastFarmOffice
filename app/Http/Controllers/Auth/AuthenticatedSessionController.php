@@ -47,11 +47,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        if (Auth::check()) {
 
-        $request->session()->invalidate();
+            Auth::guard('web')->logout();
 
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+        }
 
         return redirect(route('home'));
     }

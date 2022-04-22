@@ -25,11 +25,22 @@
             <div>
                 <h2 class="h2">{{ $good->name }}</h2>
                 <div>
+                    @php
+                        $total = count($good->getTypes);
+                        $count = 0;
+                    @endphp
                     @foreach ($good->getTypes as $type)
                     <div class="typeBox row">
                         <div class="col-5">{{ $type->name }}</div>
                         <div class="col-5">{{ $type->price }} 元</div>
+                        @if($type->getStock() == 0)
+                        @php
+                            $count++;
+                        @endphp
+                        <div class="col-2">已售完</div>
+                        @else
                         <div class="col-2">庫存 {{ $type->getStock() }}</div>
+                        @endif
                         <div class="col-12"><h6 class="h6">{{ $type->description }}</h6></div>
                     </div>
                     @endforeach
@@ -38,7 +49,14 @@
                     <form method="post" action="{{ route('addCart') }}">
                         @csrf
                         <input type="hidden" name="id" value="{{ $good->id }}">
+                        @if($total == $count)
+                        <h4 class="h4 bg-danger text-light p-1 pr-4 my-3">已全數售完，無法購買</h4>
+                        @else
                         <button type="submit" class="btn btn-outline-primary mt-5">加入購物車</button>
+                        @endif
+                        @if($count > 0)
+                        <button id="restockNotice" class="btn btn-info my-1">當商品有補貨時通知我</button>
+                        @endif
                     </form>
                 </div>
             </div>

@@ -11,6 +11,7 @@ use App\Models\GoodOrderPayment;
 use App\Models\GoodOrderState;
 use App\Models\GoodStock;
 use App\Models\GoodType;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -479,7 +480,8 @@ class GoodController extends Controller
     public function orderEdit($serial, Request $request)
     {
         $order = GoodOrder::where('serial', $serial)->Where('state', 1)->orWhere('state', 2)->orWhere('state', 3)->first();
-        $params = $request->only('name', 'address', 'freight', 'total', 'pay', 'state');
+        $params = $request->only('name', 'tel', 'address', 'freight', 'total', 'pay', 'receiptType', 'taxNumber', 'receiptSendType', 'receiptZipcode', 'receiptAddress', 'state');
+        // return $this->makeJson(0, $params, null);
         $result = $order->update($params);
         if (!$result) {
             return $this->makeJson(0, $result, 'ORDER_UPDATE_ERROR');
@@ -586,6 +588,49 @@ class GoodController extends Controller
         return view('good.check', compact('payments'));
     }
 
+    public function getUserInfo()
+    {
+        $name = Auth::user()->name;
+        $tel = Auth::user()->tel;
+        return $this->makeJson(1, ['name' => $name, 'tel' => $tel], null);
+    }
+
+    public function addAddress(Request $request)
+    {
+        $params = $request->only('zipcode', 'address');
+        $params['userId'] = Auth::id();
+        $result = UserAddress::create($params);
+        if ($result->id == '') {
+            return $this->makeJson(0, $result, 'SAVE_ADDRESS_ERROR');
+        } else {
+            return $this->makeJson(1, null, null);
+        }
+    }
+
+    public function getAddress()
+    {
+        $user = Auth::id();
+        $addresses = UserAddress::Where('userId', $user)->get();
+        if (count($addresses) == 0 || is_null($addresses)) {
+            return $this->makeJson(0, null, 'NO_ADDRESS_DATA');
+        } else {
+            return $this->makeJson(1, $addresses, null);
+        }
+    }
+
+    public function removeAddress(UserAddress $address)
+    {
+        if (is_null($address)) {
+            return $this->makeJson(0, null, 'NO_DELETE_TARGET');
+        } else {
+            $result = $address->delete();
+            if (!$result) {
+                return $this->makeJson(0, $result, 'DELETE_ADDRESS_ERROR');
+            }
+            return $this->makeJson(1, null, null);
+        }
+    }
+
     public function orderCreate($serial = null, Request $request)
     {
         if (!$request->has('name') || $request->name == '') {
@@ -596,36 +641,49 @@ class GoodController extends Controller
             return $this->makeJson(0, null, 'NO_TEL');
         }
 
+        //當付款方式不為來店取貨時，確保有填寫送貨地址
         if ($request->pay != '2') {
             if (!$request->has('zipcode') || $request->zipcode == '') {
                 return $this->makeJson(0, null, 'NO_ZIPCODE');
             }
 
-            if (!$request->has('city') || $request->city == '') {
-                return $this->makeJson(0, null, 'NO_CITY');
-            }
-
-            if (!$request->has('dist') || $request->dist == '') {
-                return $this->makeJson(0, null, 'NO_DISTRICT');
-            }
-
             if (!$request->has('address') || $request->address == '') {
                 return $this->makeJson(0, null, 'NO_ADDRESS');
             }
+
+            if (!$request->has('receiptType') || $request->receiptType == '') {
+                return $this->makeJson(0, null, 'NO_RECEIPT_TYPE');
+            }
+
+            //選擇三聯式發票時需要輸入統編
+            if ($request->receiptType == 'triplePart') {
+                if (!$request->has('taxNumber') || $request->taxNumber == '') {
+                    return $this->makeJson(0, null, 'NO_TAX_NUMBER');
+                }
+            }
+
+            if (!$request->has('receiptSendType') || $request->receiptSendType == '') {
+                return $this->makeJson(0, null, 'NO_RECEIPT_SEND_TYPE');
+            }
+
+            //選擇其他記送地址時，需要輸入郵遞區號與地址
+            if ($request->receiptSendType == 'another') {
+                if (!$request->has('receiptZipcode') || $request->receiptZipcode == '') {
+                    return $this->makeJson(0, null, 'NO_RECEIPT_SEND_ZIPCODE');
+                }
+                if (!$request->has('receiptAddress') || $request->receiptAddress == '') {
+                    return $this->makeJson(0, null, 'NO_RECEIPT_SEND_ADDRESS');
+                }
+            }
+
         }
 
-        $orderParams = $request->only('name', 'tel', 'zipcode', 'pay', 'freight', 'remark');
+        $orderParams = $request->only('name', 'tel', 'zipcode', 'address', 'pay', 'receiptType', 'taxNumber', 'receiptSendType', 'receiptZipcode', 'receiptAddress', 'freight', 'remark');
         $orderParams['userId'] = Auth::id();
         $total = 0;
         $orderParams['total'] = $total;
         $orderParams['state'] = 1;
-        if ($request->pay != '2') {
-            $city = $request->city;
-            $dist = $request->dist;
-            $address = $request->address;
-            $address = $city . $dist . $address;
-            $orderParams['address'] = $address;
-        } else {
+        if ($request->pay == '2') {
             $orderParams['address'] = '-';
         }
         $result = GoodOrder::create($orderParams);
@@ -666,7 +724,8 @@ class GoodController extends Controller
 
     public function changeOrder(GoodOrder $order, Request $request)
     {
-        $params = $request->only('name', 'tel', 'pay', 'freight', 'remark');
+        $params = $request->only('name', 'tel', 'zipcode', 'address', 'receiptType', 'taxNumber', 'receiptSendType', 'receiptZipcode', 'receiptAddress', 'pay', 'freight', 'remark');
+        return $this->makeJson(0, $params, null);
         $result = $order->update($params);
         $id = $order->id;
         if (!$result) {

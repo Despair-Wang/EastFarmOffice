@@ -7,17 +7,17 @@
         <div class="col-6 col-md-3">
             <label class="w-100">開始時間：</label>
             @if (is_null($start) || $start == 'null')
-            <input type="date" id="start">
+            <input class="w-100" type="date" id="start">
             @else
-            <input type="date" id="start" value="{{ $start }}">
+            <input class="w-100" type="date" id="start" value="{{ $start }}">
             @endif
         </div>
         <div class="col-6 col-md-3">
             <label class="w-100">結束時間：</label>
             @if (is_null($end) || $end == 'null')
-            <input type="date" id="end">
+            <input class="w-100" type="date" id="end">
             @else
-            <input type="date" id="end" value="{{ $end }}">
+            <input class="w-100" type="date" id="end" value="{{ $end }}">
             @endif
         </div>
         <div class="col-4 col-md-2">

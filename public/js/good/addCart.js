@@ -3,10 +3,11 @@ $.ajaxSetup({
         "X-CSRF-TOKEN": $('meta[name="csrf_token"]').attr("content"),
     },
 });
-var md = new MoveDom(),
-    id = $("#typeSelect").data("good-id"),
-    serial = $("#typeSelect").data("good-serial");
+var md, id, serial;
 $(() => {
+    md = new MoveDom();
+    id = $("#typeSelect").data("good-id");
+    serial = $("#typeSelect").data("good-serial");
     md.setBack("/o/good-list");
 
     $(".addNum").click(function () {

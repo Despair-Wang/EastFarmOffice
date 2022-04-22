@@ -35,21 +35,126 @@ $(() => {
         });
     });
 
+    $("#useUserInfo").change(function () {
+        if ($(this).prop("checked")) {
+            $.ajax({
+                url: "/api/getUserInfo",
+                type: "GET",
+                success(data) {
+                    if (data["state"] == 1) {
+                        $("#name").val(data["data"]["name"]);
+                        $("#tel").val(data["data"]["tel"]);
+                    } else {
+                        alert(data["msg"] + "," + data["data"]);
+                    }
+                },
+                error(data) {
+                    alert(data);
+                },
+            });
+        } else {
+            $("#name").val("");
+            $("#tel").val("");
+        }
+    });
+
+    let t = $("#commonlyUsed");
+
+    $("#selectAddress").click(function () {
+        t.data("target", "main");
+        addressInit();
+        t.fadeIn();
+    });
+
+    $("#selectSubAddress").click(function () {
+        t.data("target", "sub");
+        addressInit();
+        t.fadeIn();
+    });
+
+    $("#closeAddress").click(function () {
+        t.fadeOut();
+    });
+
+    $("#addAddress").click(function () {
+        $("#addressKeyIn").show();
+    });
+
+    $("#another").change(function () {
+        if ($(this).prop("checked")) {
+            $("#anotherAddress").show();
+        } else {
+            $("#anotherAddress").hide();
+        }
+    });
+
+    $("#addressSubmit").click(function () {
+        let city = $('select[name="county"]').find(":selected").val(),
+            district = $('select[name="district"]').find(":selected").val(),
+            zipcode = $('input[name="zipcode"]').val(),
+            address = city + district + $("#address").val();
+        $.ajax({
+            url: "/api/addAddress",
+            type: "POST",
+            data: {
+                zipcode: zipcode,
+                address: address,
+            },
+            success(data) {
+                if (data["state"] == 1) {
+                    $("#addressKeyIn").hide();
+                    addressInit();
+                }
+            },
+            error(data) {
+                alert("ERROR,PLEASE TO SEE THE CONSOLE");
+                console.log(data);
+            },
+        });
+    });
+
+    $("#useAddress").click(function () {
+        let selected = $('input[name="address"]:checked'),
+            target = $("#commonlyUsed").data("target");
+        if (target != "null") {
+            if (selected.length > 0) {
+                let zipcode = selected.next().find(".zipcode").html(),
+                    address = selected.next().find(".address").html();
+                switch (target) {
+                    case "main":
+                        $("#addressShow > h6").html(zipcode + " " + address);
+                        $("#zipcodeInput").val(zipcode);
+                        $("#addressInput").val(address);
+                        break;
+                    case "sub":
+                        $("#subAddress").html(zipcode + " " + address);
+                        $("#subZipcodeInput").val(zipcode);
+                        $("#subAddressInput").val(address);
+                        break;
+                }
+
+                t.fadeOut();
+            } else {
+                alert("請選擇一個地址，或建立一個新地址");
+            }
+        }
+    });
+
     $('input[name="payWay"]').on("change", function () {
         if ($(this).val() == "2") {
             $("#addressBox").hide();
+            $("#sendReceipt").hide();
         } else {
             $("#addressBox").show();
+            $("#sendReceipt").show();
         }
     });
 
     $("#buy").click(function () {
         let name = $("#name").val(),
             tel = $("#tel").val(),
-            zipcode = $('[name="zipcode"]').val(),
-            city = $('select[name="county"]').find(":selected").val(),
-            dist = $('select[name="district"]').find(":selected").val(),
-            address = $("#address").val(),
+            zipcode = $("#zipcodeInput").val(),
+            address = $("#addressInput").val(),
             payWay = $('[name="payWay"]:checked'),
             pay = payWay.val(),
             freight = payWay.next().find(".freight").html().replace("$", ""),
@@ -64,8 +169,6 @@ $(() => {
                     name: name,
                     tel: tel,
                     zipcode: zipcode,
-                    city: city,
-                    dist: dist,
                     address: address,
                     pay: pay,
                     freight: freight,
@@ -88,16 +191,15 @@ $(() => {
                                 msg = "請輸入郵遞區號";
                                 break;
                             case "NO_ADDRESS":
-                            case "NO_CITY":
-                            case "NO_DISTRICT":
-                                msg = "請輸入完整的收件地址";
+                                msg = "請選擇一個收件地址";
                                 break;
                         }
                         alert(msg);
                     }
                 },
                 error(data) {
-                    alert(data);
+                    alert("ERROR,PLEASE TO SEE THE CONSOLE");
+                    console.log(data);
                 },
             });
         } else {
@@ -130,6 +232,61 @@ $(() => {
             count++;
         });
         $("#total").html("Total " + total);
+    }
+
+    function addressInit() {
+        let list = $("#addressList");
+        list.html("");
+        $.ajax({
+            url: "/api/getAddress",
+            type: "GET",
+            success(data) {
+                if (data["state"] == 1) {
+                    let addresses = data["data"];
+                    addresses.forEach(function (a) {
+                        let id = a["id"],
+                            zipcode = a["zipcode"],
+                            address = a["address"];
+                        temp = `<div class="col-12">
+                                    <input id="${id}" class="mr-3" type="radio" name="address">
+                                    <label class="curP w-100" for="${id}">
+                                        <h6 class="h6 zipcode">${zipcode}</h6>
+                                        <h6 class="h6 address">${address}</h6>
+                                    </label>
+                                    <i class="fa fa-times curP deleteAddress" aria-hidden="true"></i>
+                                </div>`;
+                        list.append(temp);
+                    });
+                    removeAddress();
+                }
+            },
+            error(data) {
+                alert("ERROR,PLEASE TO SEE THE CONSOLE");
+                console.log(data);
+            },
+        });
+    }
+
+    function removeAddress() {
+        $(".deleteAddress").unbind("click");
+        $(".deleteAddress").click(function () {
+            if (confirm("是否確定要刪除此地址？")) {
+                let id = $(this).prev().prev().attr("id");
+                $.ajax({
+                    url: `/api/removeAddress/${id}`,
+                    type: "GET",
+                    success(data) {
+                        if (data["state"] == 1) {
+                            addressInit();
+                        }
+                    },
+                    error(data) {
+                        alert("ERROR,PLEASE TO SEE THE CONSOLE");
+                        console.log(data);
+                    },
+                });
+            }
+        });
     }
 
     function inputFormat(content) {

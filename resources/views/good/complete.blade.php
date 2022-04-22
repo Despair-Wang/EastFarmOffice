@@ -27,5 +27,5 @@
     @else
         <p>您不該出現在此處...</p>
     @endif
-    <a href="/" class="btn btn-primary w-100 mt-5">返回首頁</a>
+    <a href="{{ route('home') }}" class="btn btn-primary w-100 mt-5">返回首頁</a>
 @endsection

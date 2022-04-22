@@ -22,7 +22,7 @@
             @endphp
         @endif
             <div class="listPostItem col-lg-4 col-12">
-                <div>
+                <div onclick="location.href='{{ '/o/post/' . $post->id }}'">
                     <h3 class="h3">{{ $post->title }}</h3>
                     <div class="postImage">
                         <img src="{{ $post->image }}" alt="{{ $post->title }}" class="img-fluid">
@@ -37,7 +37,7 @@
                     </div>
                     <p class="listPostCreateTime">{{ $post->getCreateDay() }}</p>
                     <div class="ali-r">
-                        <a href="{{ '/o/post/' . $post->id }}">(繼續閱讀)</a>
+                        <p>(繼續閱讀)</p>
                     </div>
                 </div>
             </div>

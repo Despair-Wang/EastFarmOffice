@@ -24,12 +24,14 @@ class CustomUserController extends Controller
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'tel' => ['required', 'string', 'starts_with:0', 'min:9', 'max:10'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
             $params = [
                 'name' => $request->name,
                 'email' => $request->email,
+                'tel' => $request->tel,
                 'password' => Hash::make($request->password),
                 'Auth' => 'admin',
             ];

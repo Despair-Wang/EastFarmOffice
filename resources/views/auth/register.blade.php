@@ -27,6 +27,12 @@
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
             </div>
 
+            <div class="mt-4">
+                <x-label for="tel" :value="__('電話')" />
+
+                <x-input id="tel" class="block mt-1 w-full" type="tel" name="tel" :value="old('tel')" required />
+            </div>
+
             <!-- Password -->
             <div class="mt-4">
                 <x-label for="password" :value="__('密碼(8碼以上)')" />

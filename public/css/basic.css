@@ -46,15 +46,13 @@ h1 {
     text-align: center;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-select {
-    width: 100%;
-}
-
 .curP {
     cursor: pointer;
+}
+
+.clear-both:after {
+    content: " ";
+    clear: both;
 }
 
 section {
@@ -73,6 +71,26 @@ section {
 
 .scale3 {
     transform: scale(3) !important;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="tel"],
+select {
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="tel"]:focus,
+select:focus {
+    outline: none;
+    --tw-ring-shadow: none;
+    border: none;
+    border-bottom: 3px solid salmon;
 }
 
 /* 前台表單樣式 */
@@ -814,4 +832,55 @@ section {
     float: right;
     transform: translate(-17px, -33px) scale(1.4);
     cursor: pointer;
+}
+
+/* 結帳畫面 */
+
+#commonlyUsed {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 100vw;
+    height: 100vh;
+    z-index: 10001;
+}
+
+#commonlyUsed > div {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#commonlyUsed > div > div {
+    padding: 50px;
+    padding-top: 20px;
+    height: fit-content;
+    border: 1px solid;
+    border-radius: 15px;
+    box-shadow: 4px 4px 3px #666;
+    background-color: white;
+}
+
+#addressKeyIn {
+    padding: 10px;
+    border: 1px solid;
+    display: none;
+}
+
+#addressList > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+#anotherAddress {
+    display: none;
+}
+
+#anotherAddress > h6 {
+    display: inline-block;
 }

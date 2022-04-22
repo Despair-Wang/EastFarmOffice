@@ -23,7 +23,7 @@ class CustomerMiddleware
             if ($user->Auth == $role) {
                 return $next($request);
             } else {
-                return redirect()->intended('unknown');
+                return redirect()->intended('unfound');
             }
         } else {
             return redirect()->intended('login');

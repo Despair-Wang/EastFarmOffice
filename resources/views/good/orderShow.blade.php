@@ -91,7 +91,7 @@
     </div>
     <div class="col-12">
         <h4 class="h4">
-            總金額
+            運費
         </h4>
     </div>
     <div class="col-12">
@@ -119,6 +119,50 @@
             {{ $order->getPayment->name }}
         </h4>
     </div>
+    <div class="col-12">
+        <h4 class="h4">
+            發票類型
+        </h4>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            {{ $order->getReceiptType() }}
+        </h4>
+    </div>
+    @if($order->receiptType == 'triplePart')
+    <div class="col-12">
+        <h4 class="h4">
+            統編
+        </h4>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            {{ $order->taxNumber }}
+        </h4>
+    </div>
+    @endif
+    <div class="col-12">
+        <h4 class="h4">
+            發票寄送方式
+        </h4>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            {{ $order->getReceiptSendType() }}
+        </h4>
+    </div>
+    @if($order->receiptSendType == 'another')
+    <div class="col-12">
+        <h4 class="h4">
+            寄送地址
+        </h4>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            {{ $order->receiptZipcode . ' ' . $order->receiptAddress }}
+        </h4>
+    </div>
+    @endif
 </div>
 <div id="goBack"></div>
 <div id="report">
@@ -172,6 +216,6 @@
     </div>
 </div>
 @endsection
-@section('customJs')
+@section('customJsBottom')
     <script type="text/javascript" src="{{ asset('js/good/order/show.js')}}"></script>
 @endsection

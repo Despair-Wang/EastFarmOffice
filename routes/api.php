@@ -32,6 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/order/report', [GoodController::class, 'reportPaid']);
     Route::post('/changePassword', [CustomUserController::class, 'changePassword']);
     Route::post('/changeInfo', [CustomUserController::class, 'changeInfo']);
+    Route::get('/getUserInfo', [GoodController::class, 'getUserInfo']);
+    Route::post('/addAddress', [GoodController::class, 'addAddress']);
+    Route::get('/getAddress', [GoodController::class, 'getAddress']);
+    Route::get('/removeAddress/{address}', [GoodController::class, 'removeAddress']);
 });
 
 Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {

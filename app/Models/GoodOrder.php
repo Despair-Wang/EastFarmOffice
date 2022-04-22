@@ -37,4 +37,42 @@ class GoodOrder extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getReceiptType()
+    {
+        $receiptType = $this->receiptType;
+        $result = '無資料';
+        switch ($receiptType) {
+            case 'twoPart':
+                $result = '二聯式發票';
+                break;
+            case 'triplePart':
+                $result = '三聯式發票';
+                break;
+            case 'donate':
+                $result = '捐贈發票';
+                break;
+        }
+        return $result;
+    }
+
+    public function getReceiptSendType()
+    {
+        $receiptSendType = $this->receiptSendType;
+        $result = '無資料';
+        switch ($receiptSendType) {
+            case 'withGood':
+                $result = '隨貨寄送發票';
+                break;
+            case 'another':
+                $result = '指定寄送地址';
+                break;
+        }
+        return $result;
+    }
+
+    public function restockNotice()
+    {
+
+    }
 }

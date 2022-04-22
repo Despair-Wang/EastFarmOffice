@@ -29,11 +29,17 @@ $(() => {
         la.run();
         let state = $("#state").find(":selected").val(),
             name = $("#name").val(),
+            tel = $("#tel").val(),
             address = $("#address").val(),
             types = new Array(),
             freight = $("#freight").val(),
             total = $("#total").val(),
-            payment = $("#payment").find(":selected").val();
+            payment = $("#payment").find(":selected").val(),
+            receiptType = $("#receiptType").find(":selected").val(),
+            taxNumber = $("#taxNumber").val(),
+            receiptSendType = $("#receiptSendType").find(":selected").val(),
+            receiptZipcode = $("#subZipcode").val(),
+            receiptAddress = $("#subAddress").val();
         $(".typeBox").each(function () {
             let id = $(this).attr("id"),
                 a = $(this).find(".amount").val(),
@@ -53,6 +59,11 @@ $(() => {
                 total: total,
                 pay: payment,
                 deleteType: deleteType,
+                receiptType: receiptType,
+                taxNumber: taxNumber,
+                receiptSendType: receiptSendType,
+                receiptZipcode: receiptZipcode,
+                receiptAddress: receiptAddress,
             },
             success(data) {
                 la.stop();
@@ -61,6 +72,7 @@ $(() => {
                     location.href = `/good/order/${serial}/`;
                 } else {
                     alert(data["msg"] + "," + data["data"]);
+                    console.log(data["data"]);
                 }
             },
             error(data) {

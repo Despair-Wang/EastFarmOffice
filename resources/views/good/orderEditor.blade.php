@@ -43,7 +43,7 @@
         </h4>
     </div>
     <div class="col-12">
-        <input id="zipcode" type="text" value="{{ $order->zipcode }}">
+        <input id="zipcode" class="mb-2" style="width:auto" maxlength="5" type="text" value="{{ $order->zipcode }}">
         <input id="address" type="text" value="{{ $order->address }}">
     </div>
     <div class="col-12">
@@ -68,10 +68,12 @@
                 <h5 class="h5">{{ $d->getName() }}</h5>
                 <h6 class="h6">{{ $d->getType() }}</h6>
             </div>
-            <div class="col-4">$
+            <div class="col-4">
+                <label class="mr-2 mb-0">$</label>
                 <input type="number" class="amount" value="{{ $d->amount }}">
             </div>
-            <div class="col-3">x
+            <div class="col-3">
+                <label class="mr-2 mb-0">x</label>
                 <input type="number" class="quantity" value="{{ $d->quantity }}">
             </div>
             <div class="col-1">
@@ -85,8 +87,11 @@
             運費
         </h4>
     </div>
-    <div class="col-12">$
-        <input type="number" id="freight" value="{{ $order->freight }}">
+    <div class="col-12">
+        <div class="d-flex align-items-center">
+            <label class="mr-2 mb-0">$</label>
+            <input type="number" id="freight" value="{{ $order->freight }}">
+        </div>
     </div>
     <div class="col-12">
         <h4 class="h4">
@@ -94,8 +99,11 @@
         </h4>
     </div>
     <div class="col-12">
-        <input type="number" id="total" value="{{ $order->total }}">
-        <button id="sum" class="btn btn-primary w-100">重新計算總金額</button>
+        <div class="d-flex align-items-center">
+            <label class="mr-2 mb-0">$</label>
+            <input type="number" id="total" value="{{ $order->total }}">
+        </div>
+        <button id="sum" class="btn btn-primary w-100 my-3">重新計算總金額</button>
     </div>
     <div class="col-12">
         <h4 class="h4">
@@ -113,6 +121,63 @@
             @endforeach
         </select>
         </h4>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            發票類型
+        </h4>
+    </div>
+    <div class="col-12">
+    @php
+    $receiptType = ['二聯式發票','三聯式發票','捐贈發票'];
+    $receiptTypeValue = ['twoPart','triplePart','donate'];
+    @endphp
+    <select id="receiptType">
+        @for ($i = 0; $i < 3; $i++)
+            @if($receiptTypeValue[$i] == $order->receiptType)
+            <option value="{{ $receiptTypeValue[$i] }}" selected>{{ $receiptType[$i] }}</option>
+            @else
+            <option value="{{ $receiptTypeValue[$i] }}">{{ $receiptType[$i] }}</option>
+            @endif
+        @endfor
+    </select>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            統編
+        </h4>
+    </div>
+    <div class="col-12">
+        <input id="taxNumber" type="text" value="{{ $order->taxNumber }}" maxlength="8">
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            發票寄送方式
+        </h4>
+    </div>
+    <div class="col-12">
+    @php
+        $receiptSendType = ['隨貨寄送發票','指定寄送地點'];
+        $receiptSendTypeValue = ['withGood','another'];
+    @endphp
+    <select id="receiptSendType">
+    @for ($i = 0; $i < 2; $i++)
+        @if ($order->receiptSendType == $receiptSendTypeValue[$i])
+            <option value="{{ $receiptSendTypeValue[$i] }}" selected>{{ $receiptSendType[$i] }}</option>
+        @else
+            <option value="{{ $receiptSendTypeValue[$i] }}">{{ $receiptSendType[$i] }}</option>
+        @endif
+    @endfor
+    </select>
+    </div>
+    <div class="col-12">
+        <h4 class="h4">
+            寄送地址
+        </h4>
+    </div>
+    <div class="col-12">
+        <input id="subZipcode" maxlength="5" type="text" style="width:auto" value="{{ $order->receiptZipcode }}">
+        <input id="subAddress" type="text" value="{{ $order->receiptAddress }}">
     </div>
 </div>
 <div class="row">

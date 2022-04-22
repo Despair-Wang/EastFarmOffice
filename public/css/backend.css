@@ -63,8 +63,22 @@ section {
 input[type="text"],
 input[type="number"],
 input[type="date"],
+input[type="tel"],
 select {
     width: 100%;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="tel"]:focus,
+select:focus {
+    outline: none;
+    --tw-ring-shadow: none;
+    border: none;
+    border-bottom: 3px solid salmon;
 }
 
 .curP {
@@ -73,6 +87,10 @@ select {
 
 .beGray {
     filter: grayscale(1);
+}
+
+.hiddenScrollY {
+    overflow-y: hidden;
 }
 
 #createNew > div:first-child {
@@ -507,13 +525,13 @@ select {
 }
 
 #uploadAnime {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     display: none;
     height: 100vh;
     width: 100vw;
-    z-index: 1001;
+    z-index: 10001;
     background-color: rgba(0, 0, 0, 0.9);
 }
 
