@@ -29,6 +29,12 @@ class OrderAddReceiptSetting extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('good_orders', function (Blueprint $table) {
+            $table->dropColumn('receiptType');
+            $table->dropColumn('taxNumber');
+            $table->dropColumn('receiptSendType');
+            $table->dropColumn('receiptZipcode');
+            $table->dropColumn('receiptAddress');
+        });
     }
 }

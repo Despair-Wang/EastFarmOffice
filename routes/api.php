@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/addAddress', [GoodController::class, 'addAddress']);
     Route::get('/getAddress', [GoodController::class, 'getAddress']);
     Route::get('/removeAddress/{address}', [GoodController::class, 'removeAddress']);
+    Route::post('/restockNotice', [GoodController::class, 'restockNotice']);
 });
 
 Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {

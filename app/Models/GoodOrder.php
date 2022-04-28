@@ -73,6 +73,6 @@ class GoodOrder extends Model
 
     public function restockNotice()
     {
-
+        //
     }
 }

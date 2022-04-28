@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    public function getRestockNotice()
+    {
+        return $this->belongsTo(RestockNotice::class, 'UserId', 'id')->withDefault();
+    }
 }

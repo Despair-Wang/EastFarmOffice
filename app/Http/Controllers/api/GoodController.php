@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\RestockNoticeMail;
 use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\GoodDetail;
@@ -11,10 +12,12 @@ use App\Models\GoodOrderPayment;
 use App\Models\GoodOrderState;
 use App\Models\GoodStock;
 use App\Models\GoodType;
+use App\Models\restockNotice;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -301,6 +304,7 @@ class GoodController extends Controller
     public function stockChange(Request $request)
     {
         $types = $request->types;
+        $restock = false;
         foreach ($types as $t) {
             $params = array();
             if ($t[2] != 0) {
@@ -308,6 +312,10 @@ class GoodController extends Controller
                 $params['goodType'] = $t[1];
                 if ($t[3] == 'true') {
                     $params['import'] = $t[2];
+                    $stock = (GoodStock::Select('stock')->Where('goodId', $t[0])->first())['stock'];
+                    if ($stock == 0) {
+                        $restock = true;
+                    }
                 } else {
                     $params['export'] = $t[2];
                 }
@@ -315,9 +323,31 @@ class GoodController extends Controller
                 if ($result->id == '') {
                     return $this->makeJson(0, $result, 'STOCK_CREATE_ERROR');
                 }
+                if ($restock) {
+                    $this->sendRestockNotice($t[0]);
+                }
             }
         }
         return $this->makeJson(1, null, null);
+    }
+
+    public function sendRestockNotice($good)
+    {
+        // $stock = GoodStock::Where('goodId', $good)->first();
+        // $stock = $stock['stock'];
+        $t = Good::Select('name', 'cover')->Where('id', $good)->first();
+        $good = $t->name;
+        $cover = $t->cover;
+        $list = RestockNotice::Select('userId')->Where('goodId', $good)->get();
+        foreach ($list as $l) {
+            $user = $l->getUser;
+            $mail = $user->mail;
+            $name = $user->name;
+            $to = collect([
+                'name' => $name, 'email' => $mail,
+            ]);
+            Mail::to($to)->send(new RestockNoticeMail($good, $cover));
+        }
     }
 
     public function callCategoryEditor(GoodCategory $id = null)
@@ -795,6 +825,17 @@ class GoodController extends Controller
         $result = $order->update($params);
         if (!$result) {
             return $this->makeJson(0, $result, 'REPORT_ERROR');
+        }
+        return $this->makeJson(1, null, null);
+    }
+
+    public function restockNotice(Request $request)
+    {
+        $params = $request->only('goodId');
+        $params['userId'] = Auth::id();
+        $result = RestockNotice::create($params);
+        if ($result->id == '') {
+            return $this->makeJson(0, $result, 'SET_RESTOCK_NOTICE_ERROR');
         }
         return $this->makeJson(1, null, null);
     }

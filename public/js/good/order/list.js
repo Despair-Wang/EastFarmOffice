@@ -17,12 +17,12 @@ $(() => {
             alert("請選擇結束範圍");
         } else if (start != null && end != null) {
             if (end >= start) {
-                location.href = `/good-list/${start}/${end}/${page}/${state}`;
+                location.href = `/order-list/${start}/${end}/${page}/${state}`;
             } else {
                 alert("結束日期不可小於開始日期");
             }
         } else {
-            location.href = `/good-list/${start}/${end}/${page}/${state}`;
+            location.href = `/order-list/${start}/${end}/${page}/${state}`;
         }
     });
 });
