@@ -55,7 +55,7 @@
                         <button type="submit" class="btn btn-outline-primary mt-5">加入購物車</button>
                         @endif
                         @if($count > 0)
-                        <button id="restockNotice" class="btn btn-info my-1">當商品有補貨時通知我</button>
+                        <button id="restockNotice" class="btn btn-info mt-5">當商品有補貨時通知我</button>
                         @endif
                     </form>
                 </div>

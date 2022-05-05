@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/order', [GoodController::class, 'orderCreate']);
     });
     Route::post('/order/report', [GoodController::class, 'reportPaid']);
+    Route::post('/order/cancel', [GoodController::class, 'orderCancel']);
     Route::post('/changePassword', [CustomUserController::class, 'changePassword']);
     Route::post('/changeInfo', [CustomUserController::class, 'changeInfo']);
     Route::get('/getUserInfo', [GoodController::class, 'getUserInfo']);

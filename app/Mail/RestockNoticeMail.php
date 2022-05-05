@@ -10,17 +10,20 @@ class RestockNoticeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $good, $cover;
+    public $id, $good, $cover, $user, $type;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($good, $cover)
+    public function __construct($user, $id, $good, $cover, $type)
     {
+        $this->user = $user;
+        $this->id = $id;
         $this->good = $good;
         $this->cover = $cover;
+        $this->type = $type;
     }
 
     /**
@@ -33,8 +36,11 @@ class RestockNoticeMail extends Mailable
         return $this->subject('您關注的商品進貨了！')
             ->view('mail.restockNotice')
             ->with([
+                'user' => $this->user,
+                'id' => $this->id,
                 'good' => $this->good,
                 'cover' => $this->cover,
+                'type' => $this->type,
             ]);
     }
 }

@@ -5,7 +5,7 @@ $.ajaxSetup({
 });
 $(() => {
     $("#twzipcode").twzipcode();
-
+    var la = new LoadAnime();
     init();
 
     $(".delete").click(function () {
@@ -89,6 +89,7 @@ $(() => {
     });
 
     $("#addressSubmit").click(function () {
+        la.run();
         let city = $('select[name="county"]').find(":selected").val(),
             district = $('select[name="district"]').find(":selected").val(),
             zipcode = $('input[name="zipcode"]').val(),
@@ -101,12 +102,14 @@ $(() => {
                 address: address,
             },
             success(data) {
+                la.stop();
                 if (data["state"] == 1) {
                     $("#addressKeyIn").hide();
                     addressInit();
                 }
             },
             error(data) {
+                la.stop();
                 alert("ERROR,PLEASE TO SEE THE CONSOLE");
                 console.log(data);
             },
@@ -143,14 +146,23 @@ $(() => {
     $('input[name="payWay"]').on("change", function () {
         if ($(this).val() == "2") {
             $("#addressBox").hide();
-            $("#sendReceipt").hide();
+            $("#sendInvoice").hide();
         } else {
             $("#addressBox").show();
-            $("#sendReceipt").show();
+            $("#sendInvoice").show();
+        }
+    });
+
+    $('input[name="invoiceType"]').on("change", function () {
+        if ($(this).val() == "donate") {
+            $("#sendInvoice").hide();
+        } else {
+            $("#sendInvoice").show();
         }
     });
 
     $("#buy").click(function () {
+        la.run();
         let name = $("#name").val(),
             tel = $("#tel").val(),
             zipcode = $("#zipcodeInput").val(),
@@ -159,6 +171,11 @@ $(() => {
             pay = payWay.val(),
             freight = payWay.next().find(".freight").html().replace("$", ""),
             remark = inputFormat($("#remark").html()),
+            invoiceType = $('[name="invoiceType"]:checked').val(),
+            taxNumber = $("#taxNumber").val(),
+            invoiceSendType = $('[name="sendType"]:checked').val(),
+            invoiceZipcode = $("#subZipcodeInput").val(),
+            invoiceAddress = $("#subAddressInput").val(),
             nothing = $("#nothing").val();
 
         if (nothing != "true") {
@@ -171,6 +188,11 @@ $(() => {
                     zipcode: zipcode,
                     address: address,
                     pay: pay,
+                    invoiceType: invoiceType,
+                    taxNumber: taxNumber,
+                    invoiceSendType: invoiceSendType,
+                    invoiceZipcode: invoiceZipcode,
+                    invoiceAddress: invoiceAddress,
                     freight: freight,
                     remark: remark,
                 },
@@ -179,6 +201,7 @@ $(() => {
                         let serial = data["data"];
                         location.href = `/order/${serial}/complete`;
                     } else {
+                        la.stop();
                         let msg = "訂購失敗" + data["msg"];
                         switch (data["msg"]) {
                             case "NO_NAME":
@@ -195,14 +218,17 @@ $(() => {
                                 break;
                         }
                         alert(msg);
+                        console.log(data["data"]);
                     }
                 },
                 error(data) {
+                    la.stop();
                     alert("ERROR,PLEASE TO SEE THE CONSOLE");
                     console.log(data);
                 },
             });
         } else {
+            la.stop();
             alert("購物車是空的，請先去購物");
         }
     });

@@ -23,6 +23,7 @@
     <div id="footer">
         @include('layouts.footer')
     </div>
+
 </body>
 @yield('customJsBottom')
 

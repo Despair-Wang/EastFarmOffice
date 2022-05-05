@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\AlbumController;
 use App\Http\Controllers\Api\GoodController;
 use App\Http\Controllers\Api\PediaController;
 use App\Http\Controllers\Api\PostController;
-use App\Mail\RestockNoticeMail;
+use App\Mail\OrderCompleteMail;
 use App\Models\Album;
 use App\Models\Good;
 use App\Models\GoodOrder;
@@ -13,10 +13,8 @@ use App\Models\PediaTag;
 use App\Models\Photo;
 use App\Models\PostCategory;
 use App\Models\PostTag;
-use App\Models\RestockNotice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,25 +39,23 @@ Route::get('loginTest', function () {
     return 'login';
 })->middleware(['auth:web']);
 
+Route::get('/mailTest', function () {
+    $order = GoodOrder::Where('id', '13')->first();
+    $details = $order->getDetails;
+    $payment = $order->getPayment;
+    $user = $order->name;
+    $serial = $order->serial;
+    $freight = $order->freight;
+    $total = $order->total;
+    return (new OrderCompleteMail($user, $serial, $details, $freight, $total, $payment))->render();
+});
+
 Route::get('/test', function () {
-    $good = '23';
-    $t = Good::Select('name', 'cover')->Where('id', $good)->first();
-    $goodName = $t->name;
-    $cover = $t->cover;
-    $list = RestockNotice::Select('userId')->Where('goodId', $good)->get();
-    dump($list);
-    foreach ($list as $l) {
-        $user = $l->getUser;
-        dump($user);
-        $mail = $user->email;
-        dd($mail);
-        $name = $user->name;
-        $to = collect([
-            'name' => $name, 'email' => $mail,
-        ]);
-        $result = Mail::to($to)->send(new RestockNoticeMail($goodName, $cover));
-        dump('result = ' . $result);
-    }
+    $order = GoodOrder::where('id', '13');
+    $user = Auth::id();
+    $order = $order->where('userId', $user);
+    $order = $order->first();
+    return is_null($order);
 });
 
 Route::get('/Auth/order/{order}', function (GoodOrder $order) {

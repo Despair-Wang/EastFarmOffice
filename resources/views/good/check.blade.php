@@ -99,14 +99,14 @@
                             </div>
                         </div>
                     </div>
-                    <div id="sendReceipt" class="row my-2">
+                    <div id="sendInvoice" class="row my-2">
                         <div class="col-12">
                             <label>發票寄送方式</label>
                         </div>
                         <div class="col-12">
-                            <input type="radio" name="sendType" id="withGood" checked>
+                            <input type="radio" name="sendType" id="withGood" value="withGood" checked>
                             <label for="withGood">隨貨寄送發票</label>
-                            <input type="radio" name="sendType" id="another">
+                            <input type="radio" name="sendType" id="another" value="another">
                             <label for="another">指定寄送地點</label>
                             <div id="anotherAddress">
                                 <input type="hidden" id="subZipcodeInput">

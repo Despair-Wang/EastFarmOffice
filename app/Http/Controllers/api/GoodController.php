@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderCompleteMail;
 use App\Mail\RestockNoticeMail;
 use App\Models\Good;
 use App\Models\GoodCategory;
@@ -305,16 +306,20 @@ class GoodController extends Controller
     {
         $types = $request->types;
         $restock = false;
+        $goodId = '';
+        $typeList = array();
         foreach ($types as $t) {
             $params = array();
             if ($t[2] != 0) {
+                $goodId = $t[0];
                 $params['goodId'] = $t[0];
                 $params['goodType'] = $t[1];
                 if ($t[3] == 'true') {
                     $params['import'] = $t[2];
-                    $stock = (GoodStock::Select('stock')->Where('goodId', $t[0])->first())['stock'];
+                    $stock = (GoodStock::Select('stock')->Where('goodId', $t[0])->Where('goodType', $t[1])->orderBy('created_at', 'DESC')->first())['stock'];
                     if ($stock == 0) {
                         $restock = true;
+                        array_push($typeList, $t[1]);
                     }
                 } else {
                     $params['export'] = $t[2];
@@ -323,30 +328,38 @@ class GoodController extends Controller
                 if ($result->id == '') {
                     return $this->makeJson(0, $result, 'STOCK_CREATE_ERROR');
                 }
-                if ($restock) {
-                    $this->sendRestockNotice($t[0]);
-                }
             }
         }
-        return $this->makeJson(1, null, null);
+        if ($restock) {
+            $this->sendRestockNotice($goodId, $typeList);
+        }
+
+        return $this->makeJson(1, null, $result);
     }
 
-    public function sendRestockNotice($good)
+    public function sendRestockNotice($good, $typeList)
     {
         // $stock = GoodStock::Where('goodId', $good)->first();
         // $stock = $stock['stock'];
-        $t = Good::Select('name', 'cover')->Where('id', $good)->first();
-        $good = $t->name;
+        $type = array();
+        $t = Good::Select('name', 'cover', 'serial')->Where('id', $good)->first();
+        foreach ($typeList as $value) {
+            $temp = GoodType::Select('name')->Where('goodId', $good)->Where('type', $value)->first();
+            array_push($type, $temp['name']);
+        }
+        $goodName = $t->name;
         $cover = $t->cover;
-        $list = RestockNotice::Select('userId')->Where('goodId', $good)->get();
+        $serial = $t->serial;
+        $list = RestockNotice::Where('goodId', $good)->get();
         foreach ($list as $l) {
             $user = $l->getUser;
-            $mail = $user->mail;
+            $mail = $user->email;
             $name = $user->name;
-            $to = collect([
-                'name' => $name, 'email' => $mail,
-            ]);
-            Mail::to($to)->send(new RestockNoticeMail($good, $cover));
+            $to = [
+                ['email' => $mail, 'name' => $name],
+            ]
+            ;
+            Mail::to($to)->send(new RestockNoticeMail($name, $serial, $goodName, $cover, $type));
         }
     }
 
@@ -479,20 +492,22 @@ class GoodController extends Controller
 
     public function showOrder($serial)
     {
-        $order = $this->getOrder('user', $serial);
-        return view('good.orderShow', compact('order'));
-
+        $order = $this->getOrder($serial);
+        if (is_null($order)) {
+            return view('post.unfound');
+        } else {
+            return view('good.orderShow', compact('order'));
+        }
     }
 
-    private function getOrder($type, $serial)
+    private function getOrder($serial)
     {
         $order = GoodOrder::where('serial', $serial);
-        if ($type == 'user') {
+        if (Auth::user()->Auth == 'user') {
             $user = Auth::id();
             $order = $order->where('userId', $user);
         }
         $order = $order->first();
-        // dd($order->serial);
         return $order;
     }
 
@@ -681,34 +696,38 @@ class GoodController extends Controller
                 return $this->makeJson(0, null, 'NO_ADDRESS');
             }
 
-            if (!$request->has('receiptType') || $request->receiptType == '') {
-                return $this->makeJson(0, null, 'NO_RECEIPT_TYPE');
+            if (!$request->has('invoiceType') || $request->invoiceType == '') {
+                return $this->makeJson(0, null, 'NO_INVOICE_TYPE');
             }
 
             //選擇三聯式發票時需要輸入統編
-            if ($request->receiptType == 'triplePart') {
+            if ($request->invoiceType == 'triplePart') {
                 if (!$request->has('taxNumber') || $request->taxNumber == '') {
                     return $this->makeJson(0, null, 'NO_TAX_NUMBER');
                 }
             }
 
-            if (!$request->has('receiptSendType') || $request->receiptSendType == '') {
-                return $this->makeJson(0, null, 'NO_RECEIPT_SEND_TYPE');
+            if (!$request->has('invoiceSendType') || $request->invoiceSendType == '') {
+                return $this->makeJson(0, null, 'NO_INVOICE_SEND_TYPE');
             }
 
             //選擇其他記送地址時，需要輸入郵遞區號與地址
-            if ($request->receiptSendType == 'another') {
-                if (!$request->has('receiptZipcode') || $request->receiptZipcode == '') {
-                    return $this->makeJson(0, null, 'NO_RECEIPT_SEND_ZIPCODE');
+            if ($request->invoiceSendType == 'another') {
+                if (!$request->has('invoiceZipcode') || $request->invoiceZipcode == '') {
+                    return $this->makeJson(0, null, 'NO_INVOICE_SEND_ZIPCODE');
                 }
-                if (!$request->has('receiptAddress') || $request->receiptAddress == '') {
-                    return $this->makeJson(0, null, 'NO_RECEIPT_SEND_ADDRESS');
+                if (!$request->has('invoiceAddress') || $request->invoiceAddress == '') {
+                    return $this->makeJson(0, null, 'NO_INVOICE_SEND_ADDRESS');
                 }
             }
 
         }
 
-        $orderParams = $request->only('name', 'tel', 'zipcode', 'address', 'pay', 'receiptType', 'taxNumber', 'receiptSendType', 'receiptZipcode', 'receiptAddress', 'freight', 'remark');
+        $orderParams = $request->only('name', 'tel', 'zipcode', 'address', 'pay', 'invoiceType', 'taxNumber', 'invoiceSendType', 'invoiceZipcode', 'invoiceAddress', 'freight', 'remark');
+        if ($request->invoiceType == 'donate') {
+            $orderParams['invoiceSendType'] = 'no';
+        }
+        // return $this->makeJson(0, $orderParams, null);
         $orderParams['userId'] = Auth::id();
         $total = 0;
         $orderParams['total'] = $total;
@@ -743,18 +762,59 @@ class GoodController extends Controller
             return $this->makeJson(0, $result, 'TOTAL_INSERT_ERROR');
         }
         Cache::forget('good' . Auth::id());
+        $order = GoodOrder::Where('serial', $serial)->first();
+        $this->sendOrderCompleteMail($order);
         return $this->makeJson(1, $serial, null);
     }
 
     public function orderComplete($serial)
     {
         $order = GoodOrder::Where('serial', $serial)->first();
+        // $this->sendOrderCompleteMail($order);
         return view('good.complete', compact('order'));
+    }
+
+    private function sendOrderCompleteMail($order)
+    {
+        $name = Auth::user()->name;
+        $email = Auth::user()->email;
+        $details = $order->getDetails;
+        $payment = $order->getPayment;
+        $user = $order->name;
+        $serial = $order->serial;
+        $freight = $order->freight;
+        $total = $order->total;
+        $to = [
+            [
+                'name' => $user,
+                'email' => $email,
+            ],
+        ];
+        Mail::to($to)->send(new OrderCompleteMail($user, $serial, $details, $freight, $total, $payment));
+    }
+
+    public function orderCancel(Request $request)
+    {
+        if (Auth::user()->Auth == 'user') {
+            $serial = $request->serial;
+            $user = Auth::id();
+            $result = GoodOrder::Where('serial', $serial)->Where('userId', $user)->first();
+            if (is_null($result)) {
+                return $this->makeJson(0, null, 'ORDER_NOT_FOUND');
+            } else {
+                $result = $result->update(['state' => 0]);
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'ORDER_CANCEL_ERROR');
+                } else {
+                    return $this->makeJson(1, null, null);
+                }
+            }
+        }
     }
 
     public function changeOrder(GoodOrder $order, Request $request)
     {
-        $params = $request->only('name', 'tel', 'zipcode', 'address', 'receiptType', 'taxNumber', 'receiptSendType', 'receiptZipcode', 'receiptAddress', 'pay', 'freight', 'remark');
+        $params = $request->only('name', 'tel', 'zipcode', 'address', 'invoiceType', 'taxNumber', 'invoiceSendType', 'invoiceZipcode', 'invoiceAddress', 'pay', 'freight', 'remark');
         return $this->makeJson(0, $params, null);
         $result = $order->update($params);
         $id = $order->id;

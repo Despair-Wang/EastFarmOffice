@@ -7,8 +7,7 @@
     @include('layouts.basicHead')
     <script src="{{ asset('js/lc_switch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/backend.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('js/loading.js')}}"></script>
-    <link rel="stylesheet" href="{{ asset('/css/backend.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/backend.css') }}">
     <link rel="stylesheet" href="{{ asset('css/lc_switch.css') }}">
     @yield('customJs')
     <title>東鄉事業官網後台-@yield('title')</title>
@@ -28,7 +27,7 @@
     <div class="" id="footer">
         @include('layouts.footer')
     </div>
-    <div id="uploadAnime">
+    {{-- <div id="uploadAnime">
         <div>
             <div id="animeCore">
                 <div></div>
@@ -36,7 +35,7 @@
                 <p>UPLOADING</p>
             </div>
         </div>
-    </div>
+    </div> --}}
 </body>
 @yield('customJsBottom')
 </html>

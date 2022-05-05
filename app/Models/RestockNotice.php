@@ -13,6 +13,6 @@ class RestockNotice extends Model
 
     public function getUser()
     {
-        return $this->hasOne(User::class, 'id', 'UserId')->withDefault();
+        return $this->hasOne(User::class, 'id', 'userId')->withDefault();
     }
 }

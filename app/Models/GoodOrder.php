@@ -38,11 +38,11 @@ class GoodOrder extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getReceiptType()
+    public function getInvoiceType()
     {
-        $receiptType = $this->receiptType;
+        $invoiceType = $this->invoiceType;
         $result = '無資料';
-        switch ($receiptType) {
+        switch ($invoiceType) {
             case 'twoPart':
                 $result = '二聯式發票';
                 break;
@@ -56,11 +56,11 @@ class GoodOrder extends Model
         return $result;
     }
 
-    public function getReceiptSendType()
+    public function getInvoiceSendType()
     {
-        $receiptSendType = $this->receiptSendType;
+        $invoiceSendType = $this->invoiceSendType;
         $result = '無資料';
-        switch ($receiptSendType) {
+        switch ($invoiceSendType) {
             case 'withGood':
                 $result = '隨貨寄送發票';
                 break;

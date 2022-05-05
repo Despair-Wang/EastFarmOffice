@@ -884,3 +884,13 @@ select:focus {
 #anotherAddress > h6 {
     display: inline-block;
 }
+
+@media print {
+    #footer {
+        display: none;
+    }
+
+    .btn {
+        display: none;
+    }
+}

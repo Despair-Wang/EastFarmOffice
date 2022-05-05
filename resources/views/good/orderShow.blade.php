@@ -126,10 +126,10 @@
     </div>
     <div class="col-12">
         <h4 class="h4">
-            {{ $order->getReceiptType() }}
+            {{ $order->getInvoiceType() }}
         </h4>
     </div>
-    @if($order->receiptType == 'triplePart')
+    @if($order->invoiceType == 'triplePart')
     <div class="col-12">
         <h4 class="h4">
             統編
@@ -141,6 +141,7 @@
         </h4>
     </div>
     @endif
+    @if($order->invoiceType != 'donate')
     <div class="col-12">
         <h4 class="h4">
             發票寄送方式
@@ -148,10 +149,11 @@
     </div>
     <div class="col-12">
         <h4 class="h4">
-            {{ $order->getReceiptSendType() }}
+            {{ $order->getInvoiceSendType() }}
         </h4>
     </div>
-    @if($order->receiptSendType == 'another')
+    @endif
+    @if($order->invoiceSendType == 'another')
     <div class="col-12">
         <h4 class="h4">
             寄送地址
@@ -159,10 +161,11 @@
     </div>
     <div class="col-12">
         <h4 class="h4">
-            {{ $order->receiptZipcode . ' ' . $order->receiptAddress }}
+            {{ $order->invoiceZipcode . ' ' . $order->invoiceAddress }}
         </h4>
     </div>
     @endif
+    <button id="cancel" class="btn btn-primary w-100">取消訂單</button>
 </div>
 <div id="goBack"></div>
 <div id="report">

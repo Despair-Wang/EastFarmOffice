@@ -22,7 +22,6 @@ function submit() {
             action = t.find(".io").prop("checked");
         types.push([goodId, type, number, action]);
     });
-    la.stop();
     $.ajax({
         url: "/api/good/stockChange",
         type: "POST",
@@ -30,11 +29,13 @@ function submit() {
             types: types,
         },
         success(data) {
+            la.stop();
             if (data["state"] == 1) {
                 alert("庫存調整完畢");
                 location.reload();
             } else {
-                alert(data["msg"] + "," + data["data"]);
+                alert(data["msg"]);
+                console.log(data["data"]);
             }
         },
         error(data) {

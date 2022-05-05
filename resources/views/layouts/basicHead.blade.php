@@ -10,7 +10,9 @@ integrity='sha512-0agUJrbt+sO/RcBuV4fyg3MGYU4ajwq2UJNEx6bX8LJW6/keJfuX+LVarFKfWS
 crossorigin='anonymous'></script>
 
 <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/loading.css') }}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" /></link>
 <script src="{{ asset('js/app.js') }}" defer></script>
 <script src="{{ asset('js/pageMove.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/menu.js')}}"></script>
+<script type="text/javascript" src="{{ asset('js/loading.js')}}"></script>
