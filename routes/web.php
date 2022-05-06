@@ -51,11 +51,7 @@ Route::get('/mailTest', function () {
 });
 
 Route::get('/test', function () {
-    $order = GoodOrder::where('id', '13');
-    $user = Auth::id();
-    $order = $order->where('userId', $user);
-    $order = $order->first();
-    return is_null($order);
+    return view('test');
 });
 
 Route::get('/Auth/order/{order}', function (GoodOrder $order) {
@@ -98,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/order-list', [GoodController::class, 'orderList']);
     Route::view('/changePassword', 'user.changePw');
     Route::view('/changeInfo', 'user.changeInfo');
+    Route::get('/favorite-list', [GoodController::class, 'favoriteList']);
 });
 
 Route::middleware(['auth', 'auth.signed:admin'])->group(function () {

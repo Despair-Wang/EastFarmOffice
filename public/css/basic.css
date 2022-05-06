@@ -713,6 +713,26 @@ select:focus {
     text-decoration: none;
 }
 
+#favorite {
+    transition: all 0.2;
+}
+
+@keyframes beBig {
+    0% {
+        transform: scale(1);
+    }
+    90% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.heartBeBig {
+    animation: beBig 0.2s linear;
+}
+
 /* 購物車狀態 */
 
 #cart {
@@ -893,4 +913,16 @@ select:focus {
     .btn {
         display: none;
     }
+}
+
+/* 最愛商品清單畫面 */
+
+.favoriteList > div {
+    border: 1px solid #999;
+    padding: 10px;
+    transition: all 0.5s;
+}
+
+.favoriteList > div:hover {
+    box-shadow: 3px 3px 3px #666;
 }

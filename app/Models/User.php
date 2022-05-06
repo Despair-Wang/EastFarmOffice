@@ -51,6 +51,11 @@ class User extends Authenticatable
 
     public function getRestockNotice()
     {
-        return $this->belongsTo(RestockNotice::class, 'UserId', 'id')->withDefault();
+        return $this->belongsTo(RestockNotice::class, 'userId', 'id')->withDefault();
+    }
+
+    public function getFavoriteGoods()
+    {
+        return $this->hasMany(GoodFavorite::class, 'userId', 'id');
     }
 }

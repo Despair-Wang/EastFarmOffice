@@ -23,6 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/addFavorites', [GoodController::class, 'addFavorites']);
+Route::post('/removeFavorites', [GoodController::class, 'removeFavorites']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('good')->group(function () {
         Route::post('/addCart', [GoodController::class, 'addCart']);

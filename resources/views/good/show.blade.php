@@ -1,5 +1,5 @@
 @extends('layouts.basic')
-@section('title',$good->name);
+@section('title',$good->name)
 @section('content')
     <div class="row">
         <div class="col-12 categoryBox">
@@ -23,7 +23,16 @@
         </div>
         <div class="col-12 col-md-8">
             <div>
-                <h2 class="h2">{{ $good->name }}</h2>
+                <div class="d-flex align-items-center">
+                    <h2 class="h2">{{ $good->name }}
+                        @if($good->checkFavorite())
+                        <i id="favorite" class="curP fa fa-heart ml-2 text-danger" aria-hidden="true"></i>
+                        @else
+                        <i id="favorite" class="curP fa fa-heart-o ml-2" aria-hidden="true"></i>
+                        @endif
+                    </h2>
+                    <span class="ml-2" id="favoriteNotice"></span>
+                </div>
                 <div>
                     @php
                         $total = count($good->getTypes);

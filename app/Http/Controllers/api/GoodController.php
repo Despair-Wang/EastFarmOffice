@@ -8,10 +8,12 @@ use App\Mail\RestockNoticeMail;
 use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\GoodDetail;
+use App\Models\GoodFavorite;
 use App\Models\GoodOrder;
 use App\Models\GoodOrderPayment;
 use App\Models\GoodOrderState;
 use App\Models\GoodStock;
+use App\Models\GoodTag;
 use App\Models\GoodType;
 use App\Models\restockNotice;
 use App\Models\UserAddress;
@@ -912,4 +914,60 @@ class GoodController extends Controller
         $view->with('categories', $categories);
 
     }
+
+    public function addFavorites(Request $request)
+    {
+        if (Auth::check()) {
+            $goodId = $request->goodId;
+            $userId = Auth::id();
+            $params = [
+                'goodId' => $goodId,
+                'userId' => $userId,
+            ];
+            $check = GoodFavorite::Where('goodId', $goodId)->Where('userId', $userId)->get();
+            if (count($check) == 0) {
+                $result = GoodFavorite::create($params);
+                if ($result->id == '') {
+                    return $this->makeJson(0, $result, 'ADD_FAVORITES_ERROR');
+                } else {
+                    return $this->makeJson(1, null, null);
+                }
+            } else {
+                return $this->makeJson(0, null, 'EXIST');
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function removeFavorites(Request $request)
+    {
+        if (Auth::check()) {
+            $result = GoodFavorite::Where('userId', Auth::id())->Where('goodId', $request->goodId)->first()->delete();
+            if (!$result) {
+                return $this->makeJson(0, $result, 'REMOVE_FAVORITES_ERROR');
+            } else {
+                return $this->makeJson(1, null, null);
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function favoriteList()
+    {
+        $goodList = GoodFavorite::Where('userId', Auth::id())->get();
+        return view('good.favoriteList', compact('goodList'));
+    }
+
+    public function tagCreate(Request $request)
+    {
+        $params = ['name' => $request->name];
+        $result = GoodTag::create($params);
+        if ($result->id == '') {
+            return $this->makeJson(0, $result, 'TAG_CREATE_ERROR');
+        }
+        return $this->makeJson(1, null, null);
+    }
+
 }

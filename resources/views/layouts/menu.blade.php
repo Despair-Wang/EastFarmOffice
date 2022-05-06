@@ -61,6 +61,7 @@
                             <a href="{{ url('/dashboard') }}" class="dropdown-item text-dark">進入後台</a>
                         @else
                             <a href="{{ url('/order-list') }}" class="dropdown-item text-dark">訂單一覽</a>
+                            <a href="{{ url('/favorite-list') }}" class="dropdown-item text-dark">我的最愛商品清單</a>
                             <a href="{{ url('/changePassword') }}" class="dropdown-item text-dark">變更密碼</a>
                             <a href="{{ url('/changeInfo') }}" class="dropdown-item text-dark">變更帳號資訊</a>
                         @endif
