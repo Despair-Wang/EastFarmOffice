@@ -6,7 +6,7 @@
         <a href="{{ route('home') }}" class="mainItem">前台首頁</a>
     </div>
     <div class="menuItem">
-        <a class="mainItem">茶花文選</a>
+        <a class="mainItem">文章管理</a>
         <div class="subItem">
             <div>
                 <a href="/post/list">文章一覽</a>
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="menuItem">
-        <a class="mainItem">茶花百科</a>
+        <a class="mainItem">百科管理</a>
         <div class="subItem">
             <div>
                 <a href="">項目一覽</a>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="menuItem">
-        <a class="mainItem">茶花千景</a>
+        <a class="mainItem">相簿管理</a>
         <div class="subItem">
             <div>
                 <a href="/album/list">相簿一覽</a>
@@ -34,12 +34,13 @@
         </div>
     </div>
     <div class="menuItem">
-        <a class="mainItem">產品介紹</a>
+        <a class="mainItem">產品管理</a>
         <div class="subItem">
             <div>
                 <a href="/good/list">產品一覽</a>
                 <a href="/good/category/list">分類一覽</a>
                 <a href="/good/order/list">訂單一覽</a>
+                <a href="/good/tag/list">屬性一覽</a>
             </div>
         </div>
     </div>

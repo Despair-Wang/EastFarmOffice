@@ -2,12 +2,25 @@ var f = new FormData(),
     galleries = new Array(),
     deleteType = new Array(),
     deleteGallery = new Array(),
+    tags = new Array(),
+    deleteTags = new Array(),
     la;
 $(() => {
     var md = new MoveDom();
     la = new LoadAnime();
     deleteTypeInit();
     deleteInit();
+    let tagList = $("#tag > option"),
+        exist = $(".tag");
+    for (let i = 0; i < exist.length; i++) {
+        for (let j = 0; j < tagList.length; j++) {
+            if ($(exist[i]).data("tag-id") == $(tagList[j]).val()) {
+                $(tagList[j]).remove();
+                break;
+            }
+        }
+    }
+    removeTagInit();
     md.setBack("/good/list");
     $("#hot").lc_switch("開啟", "關閉");
 
@@ -66,6 +79,10 @@ $(() => {
 
     $("#addType").click(function () {
         addType();
+    });
+
+    $("#tag").on("change", function () {
+        addTag();
     });
 
     $("#submit").click(function () {
@@ -143,6 +160,41 @@ function addType() {
     deleteTypeInit();
 }
 
+function addTag() {
+    let tag = $("#tag").find(":selected");
+    if (tag.val() == "-") {
+        alert("請選擇一個有效的標籤");
+        return false;
+    }
+    $("#addedTag").append(
+        `<div class="tagBox"><div class="tag" data-tag-id="${tag.val()}">${tag.text()}</div><a class="removeTag">X</a></div>`
+    );
+    tag.remove();
+    $("#tag").find('option[value="-"]').prop("selected", "true");
+    tags.push(tag.val());
+    removeTagInit();
+}
+
+function removeTag(target) {
+    let tb = $(target).parent("div"),
+        t = tb.children(".tag");
+    $("#tag").append(
+        `<option value="${t.data("tag-id")}">${t
+            .text()
+            .replace("X", "")}</option>`
+    );
+    tb.remove();
+    deleteTags.push(t.data("tag-id"));
+}
+
+function removeTagInit() {
+    let x = $(".removeTag");
+    x.off();
+    x.on("click", function (e) {
+        removeTag(e.target);
+    });
+}
+
 function submit() {
     let id = $("#id").val(),
         name = $("#name").val(),
@@ -207,6 +259,8 @@ function submit() {
     f.append("hot", hot);
     f.append("deleteType", deleteType);
     f.append("deleteGallery", deleteGallery);
+    f.append("tags", tags);
+    f.append("deleteTags", deleteTags);
     if (id == "") {
         url = "/api/good/create";
     } else {

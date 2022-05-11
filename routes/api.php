@@ -102,6 +102,9 @@ Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {
         // Route::post('/order', [GoodController::class, 'orderCreate']);
         Route::get('/order/{serial}/{state}', [GoodController::class, 'orderChangeState']);
         Route::post('/order/{serial}/edit', [GoodController::class, 'orderEdit']);
+        Route::post('/tag/{tag}/update', [GoodController::class, 'tagUpdate']);
+        Route::post('/tag/create', [GoodController::class, 'tagCreate']);
+        Route::post('/tag/delete', [GoodController::class, 'tagDelete']);
     });
 });
 

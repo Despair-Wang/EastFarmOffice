@@ -43,6 +43,27 @@
             </select>
         </section>
         <section>
+            <label>商品屬性</label>
+            <div id="addedTag">
+                @isset($tagForGood)
+                    @forelse ($tagForGood as $t)
+                    <div class="tagBox">
+                        <div class="tag" data-tag-id="{{ $t->tagId }}">{{ $t->getTag->name }}</div>
+                        <a class="removeTag">X</a>
+                    </div>
+                    @empty
+                    @endforelse
+                @endisset
+            </div>
+            <select id="tag">
+                <option value="-">請選擇要增加的商品屬性</option>
+                @forelse ($tags as $tag)
+                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                @empty
+                @endforelse
+            </select>
+        </section>
+        <section>
             <label>商品說明</label>
             <div id="caption" contenteditable="true" class="textarea" placeholder="請輸入商品敘述">
                 @isset($good)

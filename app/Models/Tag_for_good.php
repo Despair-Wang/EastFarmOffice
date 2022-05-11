@@ -18,6 +18,6 @@ class Tag_for_good extends Model
 
     public function getTag()
     {
-        return $this->belongsTo(Tag::class, 'tagId', 'id');
+        return $this->belongsTo(GoodTag::class, 'tagId', 'id');
     }
 }

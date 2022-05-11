@@ -33,6 +33,11 @@
                     </h2>
                     <span class="ml-2" id="favoriteNotice"></span>
                 </div>
+                <div style="color:royalblue">
+                    @foreach ($tags as $tag)
+                        <span>#{{ $tag->getTag->name }}&nbsp</span>
+                    @endforeach
+                </div>
                 <div>
                     @php
                         $total = count($good->getTypes);
@@ -75,6 +80,20 @@
         <div class="col-12 p-5">
             <p>{!! $good->caption !!}</p]>
         </div>
+    </div>
+    <hr>
+    <h4 class="h4">您可能會感興趣的</h4>
+    <div class="row">
+        <div class="d-xs-none col-md-1"></div>
+        @forelse ($goodList as $g)
+            <div class="col-sm-12 col-md-2 p-md-2 p-sm-5">
+                <div class="curP" onclick="location.href='{{ url('/o/good') . '/' . $g->getGood->serial }}'">
+                    <img src="{{ $g->getGood->cover }}" alt="">
+                    <h5 class="h5 text-center">{{ $g->getGood->name }}</h5>
+                </div>
+            </div>
+        @empty
+        @endforelse
     </div>
     <div id="goBack"></div>
 @endsection

@@ -16,6 +16,7 @@ use App\Models\GoodStock;
 use App\Models\GoodTag;
 use App\Models\GoodType;
 use App\Models\restockNotice;
+use App\Models\Tag_for_good;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,11 +35,13 @@ class GoodController extends Controller
     public function callGoodEditor($good = null)
     {
         $categories = GoodCategory::Where('state', 1)->get();
+        $tags = GoodTag::get();
         if (is_null($good)) {
-            return view('good.goodEditor', compact('categories'));
+            return view('good.goodEditor', compact('categories', 'tags'));
         } else {
             $good = Good::Where('serial', $good)->first();
-            return view('good.goodEditor', compact('categories', 'good'));
+            $tagForGood = Tag_for_good::Where('goodId', $good->id)->get();
+            return view('good.goodEditor', compact('categories', 'good', 'tags', 'tagForGood'));
         }
     }
 
@@ -46,8 +49,20 @@ class GoodController extends Controller
     {
         try {
             // return $this->makeJson(0, gettype($good->gallery), 'FIRE');
+            if ($request->name == '' || is_null($request->name)) {
+                return $this->makeJson(0, null, 'NO_GOOD_NAME');
+            }
+
+            if ($request->category == '' || is_null($request->category)) {
+                return $this->makeJson(0, null, 'NO_GOOD_CATEGORY');
+            }
+
             $update = false;
             $params = $request->only('name', 'caption', 'category', 'hot');
+
+            if ($request->caption == '' || is_null($request->caption)) {
+                $params['caption'] = '暫無說明';
+            }
 
             if (is_null($good)) {
                 // return $this->makeJson(0, $params, null);
@@ -143,14 +158,35 @@ class GoodController extends Controller
                 }
             }
 
-            // return $this->makeJson(0, ['old' => $old, 'temp' => $temp, 'gallery' => $gallery, 'delete' => $deleteGallery, 'galleries' => $request->galleries], 'HERE');
-
-            // return $this->makeJson(0, $gallery, null);
             $gallery = base64_encode(serialize($gallery));
 
             $result = $good->update(['gallery' => $gallery]);
             if (!$result) {
                 return $this->makeJson(0, $result, 'GALLERY_INSERT_ERROR');
+            }
+            $tags = $request->tags;
+            if (!is_null($tags) && $tags != '') {
+                if ($update) {
+                    $deleteTags = explode(',', $request->deleteTags);
+                    if (!is_null($deleteTags) && $deleteTags != '') {
+                        foreach ($deleteTags as $d) {
+                            $result = Tag_for_Good::Where('id', $d)->first();
+                            if (!is_null($result) && $result != '') {
+                                $result = $result->delete();
+                                if (!$result) {
+                                    return $this->makeJson(0, $result, 'TAG_DELETE_ERROR');
+                                }
+                            }
+                        }
+                    }
+                }
+                $tags = explode(',', $tags);
+                foreach ($tags as $tag) {
+                    $result = Tag_for_good::create(['goodId' => $id, 'tagId' => $tag]);
+                    if (!$result) {
+                        return $this->makeJson(0, $result, 'TAG_CREATE_ERROR');
+                    }
+                }
             }
 
             $count = 0;
@@ -259,7 +295,7 @@ class GoodController extends Controller
             return $this->makeJson(1, null, null);
         }
     }
-
+    // 後台商品一覽頁面
     public function goodList($category = null)
     {
         $goods = Good::Where('state', 1)->orWhere('state', 0);
@@ -269,7 +305,7 @@ class GoodController extends Controller
         $goods = $goods->paginate(12);
         return view('good.editList', compact('goods', 'category'));
     }
-
+    //前台商品一覽頁面
     public function showGoodList($category = null)
     {
         $goods = Good::Where('state', 1);
@@ -283,10 +319,42 @@ class GoodController extends Controller
     public function showGood($serial)
     {
         $good = Good::Where('serial', $serial)->first();
+        $tags = Tag_for_good::Where('goodId', $good->id)->get();
+        $tagList = array();
+        for ($i = 0; $i < count($tags); $i++) {
+            $tagList[$i] = $tags[$i]->tagId;
+        }
+        $list = null;
+        if (count($tagList) > 0) {
+            $list = Tag_for_good::Select('goodId');
+            for ($i = 0; $i < count($tagList); $i++) {
+                if ($i == 0) {
+                    $list = $list->Where('tagId', $tagList[$i])->Where('goodId', '!=', $good->id);
+                } else {
+                    $list = $list->orWhere('tagId', $tagList[$i])->Where('goodId', '!=', $good->id);
+                }
+            }
+            $list = $list->distinct()->get();
+            $index = array();
+            for ($i = 0; $i < count($list); $i++) {
+                $index[$i] = $list[$i];
+            }
+            $goodList = array();
+            if (count($index) > 4) {
+                $index = array_rand($index, 5);
+                for ($i = 0; $i < 5; $i++) {
+                    $goodList[$i] = $list[$index[$i]];
+                }
+            } else {
+                $goodList = $index;
+            }
+        }
+        // return $goodList;
+
         if (is_null($good)) {
             return view('good.unknown');
         } else {
-            return view('good.show', compact('good'));
+            return view('good.show', compact('good', 'tags', 'goodList'));
         }
     }
 
@@ -960,6 +1028,12 @@ class GoodController extends Controller
         return view('good.favoriteList', compact('goodList'));
     }
 
+    public function tagList()
+    {
+        $tags = GoodTag::orderBy('created_at', 'DESC')->paginate(20);
+        return view('good.tagList', compact('tags'));
+    }
+
     public function tagCreate(Request $request)
     {
         $params = ['name' => $request->name];
@@ -970,4 +1044,36 @@ class GoodController extends Controller
         return $this->makeJson(1, null, null);
     }
 
+    public function tagUpdate(GoodTag $tag, Request $request)
+    {
+        $result = $tag->update(['name' => $request->name]);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'TAG_UPDATE_ERROR');
+        }
+        return $this->makeJson(1, null, null);
+    }
+
+    public function tagDelete(Request $request)
+    {
+        $list = $request->deleteList;
+        if (count($list) > 0) {
+            foreach ($list as $l) {
+                $result = GoodTag::Where('id', $l)->first()->delete();
+                if (!$result) {
+                    return $this->makeJson(0, $result, 'TAG_DELETE_ERROR');
+                }
+                $tagForGood = Tag_for_good::Where('tagId', $l)->get();
+                foreach ($tagForGood as $t) {
+                    $result = $t->delete();
+                    if (!$result) {
+                        return $this->makeJson(0, $result, 'TAG_FOR_GOOD_DELETE_ERROR');
+                    }
+                }
+            }
+            return $this->makeJson(1, null, null);
+        } else {
+            return $this->makeJson(0, null, 'NO_TAG_POST');
+        }
+
+    }
 }

@@ -8,11 +8,13 @@ use App\Mail\OrderCompleteMail;
 use App\Models\Album;
 use App\Models\Good;
 use App\Models\GoodOrder;
+use App\Models\GoodTag;
 use App\Models\PediaCategory;
 use App\Models\PediaTag;
 use App\Models\Photo;
 use App\Models\PostCategory;
 use App\Models\PostTag;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -50,9 +52,9 @@ Route::get('/mailTest', function () {
     return (new OrderCompleteMail($user, $serial, $details, $freight, $total, $payment))->render();
 });
 
-Route::get('/test', function () {
-    return view('test');
-});
+Route::post('/test', function (Request $request) {
+    return print_r($request);
+})->name('test');
 
 Route::get('/Auth/order/{order}', function (GoodOrder $order) {
     return view('good.orderShow', compact('order'));
@@ -144,6 +146,9 @@ Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
         Route::get('/category/create', [GoodController::class, 'callCategoryEditor']);
         Route::get('/category/{id}/edit', [GoodController::class, 'callCategoryEditor']);
         Route::get('/category/list', [GoodController::class, 'categoryList']);
+        Route::get('/tag/list', [GoodController::class, 'tagList']);
+        Route::view('/tag/edit', 'good.tagEditor');
+        Route::get('/tag/{tag}/edit', function (GoodTag $tag) {return view('good.tagEditor', compact('tag'));});
         Route::get('/create', [GoodController::class, 'callGoodEditor']);
         Route::get('/{id}/edit', [GoodController::class, 'callGoodEditor']);
         Route::get('/list/{category?}', [GoodController::class, 'goodList']);
@@ -151,6 +156,7 @@ Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
         Route::get('/order/list/{start?}/{end?}/{page?}/{state?}', [GoodController::class, 'orderListAdmin']);
         Route::get('/order/{serial}/edit', [GoodController::class, 'callOrderEditor']);
         Route::get('/order/{serial}', [GoodController::class, 'showOrderAdmin']);
+
     });
 });
 

@@ -179,6 +179,10 @@ select:focus {
     transform: translateX(-10px);
 }
 
+#cart {
+    display: none;
+}
+
 /* 選單樣式 */
 
 .welcomeBar {
