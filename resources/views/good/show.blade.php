@@ -83,11 +83,11 @@
     </div>
     <hr>
     <h4 class="h4">您可能會感興趣的</h4>
-    <div class="row">
+    <div id="recommendList" class="row mx-4 mx-md-0">
         <div class="d-xs-none col-md-1"></div>
         @forelse ($goodList as $g)
-            <div class="col-sm-12 col-md-2 p-md-2 p-sm-5">
-                <div class="curP" onclick="location.href='{{ url('/o/good') . '/' . $g->getGood->serial }}'">
+            <div class="col-sm-12 col-md-2 p-2">
+                <div class="curP p-2" onclick="location.href='{{ url('/o/good') . '/' . $g->getGood->serial }}'">
                     <img src="{{ $g->getGood->cover }}" alt="">
                     <h5 class="h5 text-center">{{ $g->getGood->name }}</h5>
                 </div>

@@ -733,6 +733,14 @@ select:focus {
     animation: beBig 0.2s linear;
 }
 
+#recommendList .curP {
+    transition: all 0.3s linear;
+}
+
+#recommendList .curP:hover {
+    box-shadow: 3px 3px 3px #666;
+}
+
 /* 購物車狀態 */
 
 #cart {
