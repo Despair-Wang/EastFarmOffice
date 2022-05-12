@@ -21,13 +21,13 @@
         </div>
         @foreach ($good->getTypes as $type)
         <div class="row selectItem" data-type="{{ $type->type }}">
-            <div class="col-4">{{ $type->name }}</div>
+            <div class="col-4">{{ $type->name }}<h6 style="font-size:smaller;color:#aaa">&nbsp;(剩餘<span>{{$type->getStock()}})</span></h6></div>
             <div class="col-8">
                 <div class="orderNumber">
                     <div class="curP reduceNum">
                         <i class="fa fa-minus" aria-hidden="true"></i>
                     </div>
-                    <div><input type="number" class="order" value="0"></div>
+                    <div><input type="number" class="order" value="0" max="{{ $type->getStock() }}"></div>
                     <div class="curP addNum">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </div>

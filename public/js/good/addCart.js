@@ -9,11 +9,20 @@ $(() => {
     id = $("#typeSelect").data("good-id");
     serial = $("#typeSelect").data("good-serial");
     md.setBack("/o/good-list");
+    $(".order").on("change", function () {
+        let max = parseInt($(this).attr("max"));
+        if (parseInt($(this).val()) > max) {
+            $(this).val(max);
+        }
+    });
 
     $(".addNum").click(function () {
         let t = $(this).prev().find("input"),
-            number = t.val();
-        number++;
+            number = parseInt(t.val()),
+            max = parseInt(t.attr("max"));
+        if (number < max) {
+            number++;
+        }
         t.val(number);
     });
 

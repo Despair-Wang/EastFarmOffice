@@ -13,6 +13,10 @@
                 <input class="w-100" type="text" id="email" autocomplete="off" value="{{ Auth::user()->email }}">
             </div>
             <div class="col-12">
+                <label>連絡電話</label>
+                <input class="w-100" type="text" id="tel" autocomplete="off" value="{{ Auth::user()->tel }}">
+            </div>
+            <div class="col-12">
                 <button id="submit" class="btn btn-primary w-100 mt-4">更新</button>
             </div>
         </div>

@@ -280,12 +280,74 @@ function submit() {
                 alert("商品建立成功");
                 location.href = `/good/list`;
             } else {
-                console.log(data["msg"]);
+                let msg = "";
+                if (data["msg"] == "NO_GOOD_NAME") {
+                    msg = "請輸入商品名稱";
+                } else if (data["msg"] == "NO_GOOD_CATEGORY") {
+                    msg = "請選擇商品分類";
+                } else {
+                    switch (data["msg"]) {
+                        case "GOOD_CREATE_ERROR":
+                            msg = "商品建立";
+                            break;
+                        case "GOOD_UPDATE_ERROR":
+                            msg = "商品更新";
+                            break;
+                        case "OLD_COVER_DELETE_ERROR":
+                            msg = "舊商品封面刪除";
+                            break;
+                        case "GOOD_COVER_SAVE_ERROR":
+                            msg = "商品封面圖建立";
+                            break;
+                        case "GOOD_COVER_INSERT_ERROR":
+                            msg = "商品封面圖儲存";
+                            break;
+                        case "DELETE_OLD_IMAGE_ERROR":
+                            msg = "畫廊舊圖刪除";
+                            break;
+                        case "GALLERY_SAVE_ERROR":
+                            msg = "畫廊建立";
+                            break;
+                        case "GALLERY_INSERT_ERROR":
+                            msg = "畫廊儲存";
+                            break;
+                        case "TAG_DELETE_ERROR":
+                            msg = "商品屬性刪除";
+                            break;
+                        case "TAG_CREATE_ERROR":
+                            msg = "商品屬性建立";
+                            break;
+                        case "GOOD_TYPE_CREATE_ERROR":
+                            msg = "新商品款式建立";
+                            break;
+                        case "GOOD_STOCK_CREATE_ERROR":
+                            msg = "新商品庫存建立";
+                            break;
+                        case "OLD_TYPE_DELETE_ERROR":
+                            msg = "舊款式刪除";
+                            break;
+                        case "OLD_TYPE_STOCK_DELETE_ERROR":
+                            msg = "舊款式庫存刪除";
+                            break;
+                        case "TYPE_CREATE_ERROR":
+                            msg = "既有商品款式建立";
+                            break;
+                        case "STOCK_CREATE_ERROR":
+                            msg = "既有商品庫存建立";
+                            break;
+                        case "GOOD_TYPE_UPDATE_ERROR":
+                            msg = "商品款式更新";
+                            break;
+                    }
+                    msg += "時發生錯誤，請聯絡網路管理員";
+                }
+                alert(msg);
                 console.log(data["data"]);
             }
         },
         error: function (data) {
             la.stop();
+            alert("CODE ERROR: " + data);
             console.log(data);
         },
     });

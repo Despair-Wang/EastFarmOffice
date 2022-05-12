@@ -75,15 +75,23 @@ class CustomUserController extends Controller
             return $this->makeJson(0, null, 'PLEASE_LOGIN');
         }
         $user = User::Where('id', Auth::id())->first();
-
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        ]);
+        if ($request->email == $user->email) {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'tel' => ['required', 'string', 'starts_with:0', 'min:9', 'max:10'],
+            ]);
+        } else {
+            $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'tel' => ['required', 'string', 'starts_with:0', 'min:9', 'max:10'],
+            ]);
+        }
 
         $result = $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'tel' => $request->tel,
         ]);
 
         if (!$result) {

@@ -15,9 +15,9 @@ class OrderAddPayInformation extends Migration
     {
         Schema::table('good_orders', function (Blueprint $table) {
             $table->string('payName', 50)->nullable()->after('remark');
-            $table->string('payTime', 50)->after('payName');
-            $table->string('payAccount', 5)->after('payTime');
-            $table->integer('payAmount')->after('payAccount');
+            $table->string('payTime', 50)->default('not_yet')->after('payName');
+            $table->string('payAccount', 5)->default('00000')->after('payTime');
+            $table->integer('payAmount')->default('0')->after('payAccount');
         });
     }
 

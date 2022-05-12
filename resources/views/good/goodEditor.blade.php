@@ -123,14 +123,16 @@
             <div id="uploadArea">
                 <div id="photoShowArea" class="row w-100">
                     @isset($good)
-                        @foreach ($good->gallery as $g)
-                        <div class="col-6 col-md-3 mb-3 img">
-                            <div>
-                                <i class="fa fa-times del" aria-hidden="true"></i>
-                                <img src="{{ $g }}">
+                        @if(gettype($good->gallery) == 'array')
+                            @foreach ($good->gallery as $g)
+                            <div class="col-6 col-md-3 mb-3 img">
+                                <div>
+                                    <i class="fa fa-times del" aria-hidden="true"></i>
+                                    <img src="{{ $g }}">
+                                </div>
                             </div>
-                        </div>
-                        @endforeach
+                            @endforeach
+                        @endif
                     @endisset
                 </div>
             </div>

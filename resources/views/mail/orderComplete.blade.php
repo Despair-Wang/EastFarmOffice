@@ -8,7 +8,7 @@
     }
 </style>
 <div style="background-color:#edf2f7;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding-top:70px;padding-bottom: 50px;">
-    <div>
+    <div style="margin:auto;">
         <h2 style="font-size:1.1rem;font-weight: bold;text-align: center">{{ config('app.name') }}</h2>
         <div style="background-color:white;padding:30px;color:#666;width:570px">
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Mail\OrderCompleteMail;
@@ -15,7 +15,7 @@ use App\Models\GoodOrderState;
 use App\Models\GoodStock;
 use App\Models\GoodTag;
 use App\Models\GoodType;
-use App\Models\restockNotice;
+use App\Models\RestockNotice;
 use App\Models\Tag_for_good;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
@@ -89,9 +89,13 @@ class GoodController extends Controller
 
             if (!is_null($request->cover)) {
                 if ($update) {
-                    $result = Storage::delete(str_replace('storage', 'public', $good->cover));
-                    if (!$result) {
-                        return $this->makeJson(0, $result, 'OLD_COVER_DELETE_ERROR');
+                    $targetCover = str_replace('storage', 'public', $good->cover);
+                    if (Storage::exists($targetCover)) {
+                        $result = Storage::delete($targetCover);
+                        if (!$result) {
+                            return $this->makeJson(0, $result, 'OLD_COVER_DELETE_ERROR');
+                        }
+
                     }
                 }
                 $file = str_replace('data:image/png;base64,', '', $request->cover);
@@ -113,32 +117,33 @@ class GoodController extends Controller
             } else {
                 $gallery = array(); //建立空的圖片陣列
             }
-            if (!is_null($deleteGallery) && $deleteGallery != "") {
-                //假刪除圖片的陣列不為null
-                $deleteGallery = explode(',', $request->deleteGallery); //將資料轉為陣列
-                $temp = array();
-                $old = $good->gallery; //獲得舊資料
-                for ($i = 0; $i < count($old); $i++) {
-                    $needSave = true;
-                    for ($j = 0; $j < count($deleteGallery); $j++) {
-                        if ($old[$i] == $deleteGallery[$j]) { //若是現有的圖片與刪除對象名稱相同時
-                            $de = str_replace('storage', 'public', $deleteGallery[$j]); //更改為實際儲存路徑
-                            if (Storage::exists($de)) { //若該檔案存在時刪除該檔案
-                                $result = Storage::delete($de);
-                                if (!$result) {
-                                    return $this->makeJson(0, $result, 'DELETE_OLD_IMAGE_ERROR');
+            if ($update) {
+                if (!is_null($deleteGallery) && $deleteGallery != "") {
+                    //假刪除圖片的陣列不為null
+                    $deleteGallery = explode(',', $request->deleteGallery); //將資料轉為陣列
+                    $temp = array();
+                    $old = $good->gallery; //獲得舊資料
+                    for ($i = 0; $i < count($old); $i++) {
+                        $needSave = true;
+                        for ($j = 0; $j < count($deleteGallery); $j++) {
+                            if ($old[$i] == $deleteGallery[$j]) { //若是現有的圖片與刪除對象名稱相同時
+                                $de = str_replace('storage', 'public', $deleteGallery[$j]); //更改為實際儲存路徑
+                                if (Storage::exists($de)) { //若該檔案存在時刪除該檔案
+                                    $result = Storage::delete($de);
+                                    if (!$result) {
+                                        return $this->makeJson(0, $result, 'DELETE_OLD_IMAGE_ERROR');
+                                    }
                                 }
+                                $needSave = false;
+                                break; //跳離目前的迴圈
                             }
-                            $needSave = false;
-                            break; //跳離目前的迴圈
+                        }
+                        if ($needSave) {
+                            array_push($temp, $old[$i]);
                         }
                     }
-                    if ($needSave) {
-                        array_push($temp, $old[$i]);
-                    }
-
+                    $gallery = $temp;
                 }
-                $gallery = $temp;
             }
 
             $galleries = $request->galleries;
@@ -287,8 +292,15 @@ class GoodController extends Controller
 
     public function goodDelete($id)
     {
-        $id = Good::Where('serial', $id)->first();
-        $result = $id->delete();
+        $good = Good::Where('serial', $id)->first();
+        $tags = Tag_for_good::Where('goodId', $good->id)->get();
+        foreach ($tags as $t) {
+            $result = $t->delete();
+            if (!$result) {
+                return $this->makeJson(0, $result, 'GOOD_TAG_ERROR');
+            }
+        }
+        $result = $good->delete();
         if (!$result) {
             return $this->makeJson(0, $result, 'GOOD_DELETE_ERROR');
         } else {
@@ -325,6 +337,7 @@ class GoodController extends Controller
             $tagList[$i] = $tags[$i]->tagId;
         }
         $list = null;
+        $goodList = array();
         if (count($tagList) > 0) {
             $list = Tag_for_good::Select('goodId');
             for ($i = 0; $i < count($tagList); $i++) {
@@ -339,7 +352,6 @@ class GoodController extends Controller
             for ($i = 0; $i < count($list); $i++) {
                 $index[$i] = $list[$i];
             }
-            $goodList = array();
             if (count($index) > 4) {
                 $index = array_rand($index, 5);
                 for ($i = 0; $i < 5; $i++) {
@@ -826,6 +838,14 @@ class GoodController extends Controller
             if ($result->id == '') {
                 return $this->makeJson(0, $result, 'DETAIL_CREATE_ERROR');
             }
+            $stockChange = GoodStock::create([
+                'goodId' => $d[0],
+                'goodType' => $d[1],
+                'export' => $d[4],
+            ]);
+            if ($stockChange->id == '') {
+                return $this->makeJson(0, $stockChange, 'STOCK_CHANGE_ERROR');
+            }
         }
         $result = $good->update(['total' => $total]);
         if (!$result) {
@@ -872,7 +892,18 @@ class GoodController extends Controller
             if (is_null($result)) {
                 return $this->makeJson(0, null, 'ORDER_NOT_FOUND');
             } else {
+                $id = $result->id;
                 $result = $result->update(['state' => 0]);
+                $details = GoodDetail::Where('orderId', $id)->get();
+                if (count($details) > 0) {
+                    foreach ($details as $d) {
+                        $result = GoodStock::create([
+                            'goodId' => $d->goodId,
+                            'goodType' => $d->type,
+                            'import' => $d->quantity,
+                        ]);
+                    }
+                }
                 if (!$result) {
                     return $this->makeJson(0, $result, 'ORDER_CANCEL_ERROR');
                 } else {
@@ -963,9 +994,12 @@ class GoodController extends Controller
     {
         $params = $request->only('goodId');
         $params['userId'] = Auth::id();
-        $result = RestockNotice::create($params);
-        if ($result->id == '') {
-            return $this->makeJson(0, $result, 'SET_RESTOCK_NOTICE_ERROR');
+        $check = RestockNotice::Where('goodId', $request->goodId)->Where('userId', Auth::id())->get();
+        if (is_null($check)) {
+            $result = RestockNotice::create($params);
+            if ($result->id == '') {
+                return $this->makeJson(0, $result, 'SET_RESTOCK_NOTICE_ERROR');
+            }
         }
         return $this->makeJson(1, null, null);
     }

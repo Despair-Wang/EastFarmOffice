@@ -9,9 +9,12 @@
             <div id="mediaArea">
                 <div id="mediaBox">
                     <img class="onTop" src="{{ $good->cover }}">
-                    @foreach ($good->gallery as $gallery)
-                    <img src="{{ $gallery }}">
-                    @endforeach
+                    @if(gettype($good->gallery) == 'array')
+                        @forelse ($good->gallery as $gallery)
+                        <img src="{{ $gallery }}">
+                        @empty
+                        @endforelse
+                    @endif
                 </div>
                 <div id="ctrlRight">
                     <i class="fa fa-chevron-right curP" aria-hidden="true"></i>
@@ -85,15 +88,20 @@
     <h4 class="h4">您可能會感興趣的</h4>
     <div id="recommendList" class="row mx-4 mx-md-0">
         <div class="d-xs-none col-md-1"></div>
-        @forelse ($goodList as $g)
+        @if(count($goodList) > 0)
+            @forelse ($goodList as $g)
+            @php
+                $g = $g->getGood;
+            @endphp
             <div class="col-sm-12 col-md-2 p-2">
-                <div class="curP p-2" onclick="location.href='{{ url('/o/good') . '/' . $g->getGood->serial }}'">
-                    <img src="{{ $g->getGood->cover }}" alt="">
-                    <h5 class="h5 text-center">{{ $g->getGood->name }}</h5>
+                <div class="curP p-2" onclick="location.href='{{ url('/o/good') . '/' . $g['serial'] }}'">
+                    <img src="{{ $g['cover'] }}" alt="">
+                    <h5 class="h5 text-center">{{ $g['name'] }}</h5>
                 </div>
             </div>
-        @empty
-        @endforelse
+            @empty
+            @endforelse
+        @endif
     </div>
     <div id="goBack"></div>
 @endsection

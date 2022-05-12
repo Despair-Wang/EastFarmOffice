@@ -17,7 +17,7 @@ class OrderAddInvoiceSetting extends Migration
             $table->string('invoiceType', 50)->after('freight');
             $table->string('taxNumber', 50)->nullable()->after('invoiceType');
             $table->string('invoiceSendType', 50)->nullable()->after('taxNumber');
-            $table->integer('invoiceZipcode', 50)->nullable()->after('invoiceSendType');
+            $table->integer('invoiceZipcode')->nullable()->after('invoiceSendType');
             $table->string('invoiceAddress', 50)->nullable()->after('invoiceZipcode');
         });
     }

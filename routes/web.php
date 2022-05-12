@@ -35,6 +35,8 @@ Route::get('/testArea', function () {
     return view('home');
 })->name('home');
 
+Route::view('/home', 'home');
+
 Route::view('/welcome', 'welcome');
 
 Route::get('loginTest', function () {
