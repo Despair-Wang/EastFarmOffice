@@ -45,7 +45,7 @@
                 font-size: 2.5rem;
                 font-weight: 600;
                 color: brown;
-                font-family: 'Varela Round', sans-serif;
+                font-family: sans-serif;
             }
         </style>
     </head>

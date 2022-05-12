@@ -661,21 +661,37 @@ class GoodController extends Controller
     {
         $id = $request->id;
         $orders = $request->orders;
+        $update = false;
         $user = 'good' . Auth::id();
         if (Cache::has($user)) {
             $orderParams = Cache::get($user);
+            $update = true;
         } else {
             $orderParams = array();
         }
         foreach ($orders as $order) {
-            $number = $order[1];
+            $exist = false;
+            $number = intval($order[1]);
             if ($number > 0) {
-                $type = $order[0];
-                $name = (Good::Where('id', $id)->first())['name'];
-                $data = GoodType::Select('name', 'price')->Where('goodId', $id)->Where('type', $type)->first();
-                $typeName = $data['name'];
-                $price = intval($data['price']);
-                array_push($orderParams, [$id, $type, $name, $typeName, $number, $price]);
+                if ($update) {
+                    foreach ($orderParams as $key => $old) {
+                        if ($old[0] == $id && $old[1] == $order[0]) {
+                            $oldQuantity = intval($old[4]);
+                            $orderParams[$key][4] = $oldQuantity + $number;
+                            // $old['3'] .= $number; //流程關鍵點
+                            $exist = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$exist) {
+                    $type = $order[0];
+                    $name = (Good::Where('id', $id)->first())['name'];
+                    $data = GoodType::Select('name', 'price')->Where('goodId', $id)->Where('type', $type)->first();
+                    $typeName = $data['name'];
+                    $price = intval($data['price']);
+                    array_push($orderParams, [$id, $type, $name, $typeName, $number, $price]);
+                }
             }
         }
         $result = Cache::put($user, $orderParams);
@@ -826,6 +842,8 @@ class GoodController extends Controller
         $serial = $good->serial;
         // $createTime = substr($good->created_at, 0, 18);
         $details = Cache::get('good' . Auth::id());
+        $createdDetails = array();
+        $createdStocks = array();
         foreach ($details as $d) {
             $temp = array();
             $temp['orderId'] = $id;
@@ -834,17 +852,38 @@ class GoodController extends Controller
             $temp['quantity'] = $d[4];
             $temp['amount'] = $d[5];
             $total += intval($d[4]) * intval($d[5]);
-            $result = GoodDetail::create($temp);
-            if ($result->id == '') {
-                return $this->makeJson(0, $result, 'DETAIL_CREATE_ERROR');
-            }
-            $stockChange = GoodStock::create([
-                'goodId' => $d[0],
-                'goodType' => $d[1],
-                'export' => $d[4],
-            ]);
-            if ($stockChange->id == '') {
-                return $this->makeJson(0, $stockChange, 'STOCK_CHANGE_ERROR');
+            $stockCheck = (GoodStock::Where('goodId', $d[0])->Where('goodType', $d[1])->orderBy('updated_at', 'desc')->limit(1)->first())['stock'];
+            if ($stockCheck == 0) {
+                $result = $good->delete();
+                for ($i = 0; $i < count($createdDetails); $i++) {
+                    $result = GoodDetail::Where('id', $createdDetails[$i])->first()->delete();
+                    $result = GoodStock::Where('id', $createdStocks[$i])->first()->delete();
+                }
+                return $this->makeJson(0, $d[2] . '-' . $d[3], 'STOCK_IS_ZERO');
+            } else if ($stockCheck < $d[4]) {
+                $result = $good->delete();
+                for ($i = 0; $i < count($createdDetails); $i++) {
+                    $result = GoodDetail::Where('id', $createdDetails[$i])->first()->delete();
+                    $result = GoodStock::Where('id', $createdStocks[$i])->first()->delete();
+                }
+                return $this->makeJson(0, $d[2] . '-' . $d[3], 'MORE_THAN_STOCK');
+            } else {
+                $result = GoodDetail::create($temp);
+                if ($result->id == '') {
+                    return $this->makeJson(0, $result, 'DETAIL_CREATE_ERROR');
+                } else {
+                    array_push($createdDetails, $result->id);
+                }
+                $stockChange = GoodStock::create([
+                    'goodId' => $d[0],
+                    'goodType' => $d[1],
+                    'export' => $d[4],
+                ]);
+                if ($stockChange->id == '') {
+                    return $this->makeJson(0, $stockChange, 'STOCK_CHANGE_ERROR');
+                } else {
+                    array_push($createdStocks, $stockChange->id);
+                }
             }
         }
         $result = $good->update(['total' => $total]);

@@ -216,6 +216,14 @@ $(() => {
                             case "NO_ADDRESS":
                                 msg = "請選擇一個收件地址";
                                 break;
+                            case "STOCK_IS_ZERO":
+                                msg = data["data"] + "的庫存已經是0了";
+                                break;
+                            case "MORE_THAN_STOCK":
+                                msg =
+                                    data["data"] +
+                                    "的購買數量已經超過庫存，請重新選購";
+                                break;
                         }
                         alert(msg);
                         console.log(data["data"]);
