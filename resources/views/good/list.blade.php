@@ -14,4 +14,5 @@
             暫無商品
         @endforelse
     </div>
+    {!! $goods->links() !!}
 @endsection

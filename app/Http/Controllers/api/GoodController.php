@@ -322,9 +322,15 @@ class GoodController extends Controller
     {
         $goods = Good::Where('state', 1);
         if (!is_null($category)) {
+            $sub = GoodCategory::Where('sub', $category)->get();
             $goods = $goods->Where('category', $category);
+            if (count($sub) > 0) {
+                foreach ($sub as $s) {
+                    $goods = $goods->orWhere('category', $s['id']);
+                }
+            }
         }
-        $goods = $goods->paginate(12);
+        $goods = $goods->paginate(6);
         return view('good.list', compact('goods', 'category'));
     }
 
