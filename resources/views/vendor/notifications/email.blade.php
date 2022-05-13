@@ -58,4 +58,5 @@
 ) <span class="break-all">[{{ $displayableActionUrl }}]({{ $actionUrl }})</span>
 @endslot
 @endisset
+<p>@lang('mail.Notice')</p>
 @endcomponent

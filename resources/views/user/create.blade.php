@@ -12,6 +12,10 @@
             <input type="text" id="email" autocomplete="off">
         </div>
         <div class="col-12">
+            <label>電話</label>
+            <input type="text" id="tel" autocomplete="off">
+        </div>
+        <div class="col-12">
             <label>密碼</label>
             <input class="w-100" type="password" id="password" autocomplete="new-password">
             <span class="showPassword"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>

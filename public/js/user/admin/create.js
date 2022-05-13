@@ -16,6 +16,7 @@ $(() => {
     $("#submit").click(function () {
         let name = $("#name").val(),
             email = $("#email").val(),
+            tel = $("#tel").val(),
             password = $("#password").val(),
             check = $("#confirmPassword").val();
         if (name == "") {
@@ -40,6 +41,7 @@ $(() => {
             data: {
                 name: name,
                 email: email,
+                tel: tel,
                 password: password,
                 password_confirmation: check,
             },
@@ -49,7 +51,8 @@ $(() => {
                     alert("管理者建立成功");
                     reset();
                 } else {
-                    alert(data["msg"] + "," + data["data"]);
+                    alert(data["msg"]);
+                    console.log(data["data"]);
                 }
             },
             error(data) {
@@ -64,6 +67,7 @@ $(() => {
 function reset() {
     $("#name").val("");
     $("#email").val("");
+    $("#tel").val("");
     $("#password").val("");
     $("#confirmPassword").val("");
 }

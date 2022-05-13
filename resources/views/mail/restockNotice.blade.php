@@ -35,5 +35,7 @@
                 @lang('mail.Regards')
             </p>
         </div>
+        <hr>
+        <p>@lang('mail.Notice')</p>
     </div>
 </div>

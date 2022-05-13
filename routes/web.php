@@ -14,7 +14,6 @@ use App\Models\PediaTag;
 use App\Models\Photo;
 use App\Models\PostCategory;
 use App\Models\PostTag;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -54,9 +53,7 @@ Route::get('/mailTest', function () {
     return (new OrderCompleteMail($user, $serial, $details, $freight, $total, $payment))->render();
 });
 
-Route::post('/test', function (Request $request) {
-    return print_r($request);
-})->name('test');
+Route::view('/test', 'test')->name('test');
 
 Route::get('/Auth/order/{order}', function (GoodOrder $order) {
     return view('good.orderShow', compact('order'));

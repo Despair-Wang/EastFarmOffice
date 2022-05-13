@@ -2,10 +2,15 @@ $(() => {
     var la = new LoadAnime();
     $("#submit").click(function () {
         let name = $("#name").val(),
+            tel = $("#tel").val(),
             email = $("#email").val();
         if (name == "") {
             alert("請輸入姓名");
             return false;
+        }
+
+        if (tel == "") {
+            tel = "000000000";
         }
 
         if (email == "") {
@@ -19,6 +24,7 @@ $(() => {
             data: {
                 name: name,
                 email: email,
+                tel: tel,
             },
             success(data) {
                 la.stop();

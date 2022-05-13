@@ -3,7 +3,7 @@
         <p>Tel:(03)511-0098</p>
     </div>
     <div class="col-12 col-lg-4">
-        <Address>Address:新竹縣竹東鎮和江街370-3號</Address>
+        <Address>Address:新竹縣竹東鎮和江街370-3號2F</Address>
     </div>
     <div class="col-12 col-lg-4">
 
