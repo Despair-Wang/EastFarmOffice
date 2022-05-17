@@ -19,9 +19,10 @@
         <a class="mainItem">百科管理</a>
         <div class="subItem">
             <div>
-                <a href="">項目一覽</a>
-                <a href="">分類一覽</a>
-                <a href="">標籤一覽</a>
+                <a href="/pedia/list">項目一覽</a>
+                <a href="/pedia/category/list">分類一覽</a>
+                <a href="/pedia/tag/list">屬性一覽</a>
+                <a href="/pedia/type/list">屬性分類一覽</a>
             </div>
         </div>
     </div>

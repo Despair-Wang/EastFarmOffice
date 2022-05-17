@@ -10,7 +10,6 @@ use App\Models\Good;
 use App\Models\GoodOrder;
 use App\Models\GoodTag;
 use App\Models\PediaCategory;
-use App\Models\PediaTag;
 use App\Models\Photo;
 use App\Models\PostCategory;
 use App\Models\PostTag;
@@ -130,16 +129,22 @@ Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
     });
 
     Route::prefix('pedia')->group(function () {
+        Route::get('/list', [PediaController::class, 'itemListBackend']);
         Route::view('/category/edit', 'pedia.cateEditor'); //呼叫建立百科分類的頁面
-        Route::view('/tag/edit', 'pedia.tagEditor'); //呼叫建立百科標籤的頁面
+        Route::get('/tag/list', [PediaController::class, 'tagList']);
+        Route::get('/tag/edit', [PediaController::class, 'callTagEditor']); //呼叫建立百科標籤的頁面
+        Route::get('/category/list', [PediaController::class, 'categoryList']);
         Route::get('/category/{cate}/edit', function (PediaCategory $cate) {return view('pedia.cateEditor', compact('cate'));}); //呼叫分類編輯頁面並傳入指定分類的資料
-        Route::get('/tag/{tag}/edit', function (PediaTag $tag) {return view('pedia.tagEditor', compact('tag'));}); //呼叫標籤編輯頁面並傳入指定標籤的資料
+        Route::get('/tag/{tag}/edit', [PediaController::class, 'callTagEditor']); //呼叫標籤編輯頁面並傳入指定標籤的資料
+        Route::get('/type/list', [PediaController::class, 'typeList']);
+        Route::view('/type/edit', 'pedia.typeEditor');
+        Route::get('/type/{type}/edit', [PediaController::class, 'callTypeEditor']);
         Route::get('/edit', [PediaController::class, 'callItemEditor']); //呼叫新建百科項目的頁面
         Route::get('/{id}/preview', [PediaController::class, 'preview']); //呼叫項目預覽及內容增減頁面
-        Route::get('/{fatherId}/item/edit/{id?}', [PediaController::class, 'callItemEditor']); //項目修改
-        Route::get('/{fatherId}/content/edit/{id?}', [PediaController::class, 'callContentEditor']); //項目內容編輯
-        Route::get('/{fatherId}/gallery/edit/', [PediaController::class, 'callGalleryEditor']); //畫廊編輯頁面
-        Route::get('/{id}/{action}', [PediaController::class, 'itemShow']); //呼叫指定百科項目的編輯頁面
+        Route::get('/item/{id}/edit', [PediaController::class, 'callItemEditor']); //項目修改
+        Route::get('/content/{fatherId}/edit/{id?}', [PediaController::class, 'callContentEditor']); //項目內容編輯
+        Route::get('/gallery/{fatherId}/edit', [PediaController::class, 'callGalleryEditor']); //畫廊編輯頁面
+        // Route::get('/{id}/{action}', [PediaController::class, 'itemShow']); //呼叫指定百科項目的編輯頁面
     });
     Route::prefix('good')->group(function () {
         Route::get('/category/create', [GoodController::class, 'callCategoryEditor']);

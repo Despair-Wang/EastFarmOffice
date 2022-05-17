@@ -8,7 +8,7 @@
                 <h3 class="h3">項目名稱</h3>
                 <input type="text" id="name"
                 @isset($item)
-                 value="{{ $item->title }}"
+                 value="{{ $item->name }}"
                 @endisset
                 >
             </div>
@@ -87,7 +87,8 @@
 @endsection
 @section('customJsBottom')
     <script>
-        var f = new FormData();
+        var f = new FormData(),
+            deleteList = new Array();
         $(() => {
             $.ajaxSetup({
                 headers: {
@@ -145,9 +146,9 @@
         function createItem() {
             let name = $('#name').val(),
                 category = $('#category').find(':selected').val(),
-                tags = new Array(),
                 id = $('#itemId').val(),
-                oldImage = $('#oldImage').val();
+                oldImage = $('#oldImage').val(),
+                tags = new Array();
             tag = $('#addedTag').find('.tag'),
                 url = '';
             tag.each(function() {
@@ -156,8 +157,8 @@
             f.append('name', name);
             f.append('category', category);
             f.append('oldImage', oldImage);
-            tags = JSON.stringify(tags);
-            f.append('tags', tags);
+            f.append('tags', JSON.stringify(tags));
+            f.append('deleteList',JSON.stringify(deleteList));
             if(id == ''){
                 url = '/api/pedia/create';
             }else{
@@ -207,9 +208,11 @@
 
         function removeTag(target) {
             let tb = $(target).parent('div'),
-                t = tb.children('.tag');
-            $('#tag').append(`<option value="${t.data('tag-id')}">${t.text().replace('X','')}</option>`);
+                t = tb.children('.tag'),
+                id = t.data('tag-id');
+            $('#tag').append(`<option value="${id}">${t.text().replace('X','')}</option>`);
             tb.remove();
+            deleteList.push(id);
         }
     </script>
 @endsection

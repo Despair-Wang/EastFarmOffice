@@ -77,13 +77,14 @@ Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {
 
     Route::prefix('pedia')->group(function () {
         Route::post('/content/create', [PediaController::class, 'contentCreate']); //
+        Route::post('/content/{id}/update', [PediaController::class, 'contentCreate']); //
         Route::post('/gallery/create', [PediaController::class, 'galleryCreate']);
         Route::get('/gallery/{id}/delete', [PediaController::class, 'galleryDelete']);
         Route::post('/{target}/create', [PediaController::class, 'attrCreate']); //傳送資料至分類／標籤建立函式，建立對象由網址中的變數來控制
         Route::post('/{target}/{id}/update', [PediaController::class, 'attrUpdate']); //傳送資料至分類／標籤更新函式，更新對象由網址中的變數來控制
         Route::post('/{target}/delete', [PediaController::class, 'Freeze']); //傳送要凍結的分類／標籤／項目之陣列，凍結之對象由網址中的變數來控制
         Route::post('/create', [PediaController::class, 'itemCreate']); //傳送資料建立新的百科項目
-        Route::post('/{oldId}/update', [PediaController::class, 'itemCreate']); //傳送資料更新舊的百科項目
+        Route::post('/{item}/update', [PediaController::class, 'itemCreate']); //傳送資料更新舊的百科項目
         Route::post('/createRemark', [PediaController::class, 'createRemark']); //建立百科項目的註釋
     });
 

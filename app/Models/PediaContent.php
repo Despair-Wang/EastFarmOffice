@@ -16,12 +16,12 @@ class PediaContent extends Model
         return $this->belongsToMany(PediaItem::class, 'itemId', 'fatherId');
     }
 
-    public function getRemark()
+    public function getRemarks()
     {
         return unserialize(base64_decode($this->remark));
     }
 
-    public function getGallery()
+    public function getGalleries()
     {
         return unserialize(base64_decode($this->gallery));
     }

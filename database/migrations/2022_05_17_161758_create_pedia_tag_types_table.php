@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePediaItemsTable extends Migration
+class CreatePediaTagTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreatePediaItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pedia_items', function (Blueprint $table) {
+        Schema::create('pedia_tag_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('category');
-            $table->string('image')->default('/assets/pedia/noImage.png');
-            $table->integer('version')->default(0);
-            $table->integer('fatherId')->nullable();
+            $table->string('name', 50);
             $table->integer('state')->default(1);
             $table->timestamps();
         });
@@ -32,6 +28,6 @@ class CreatePediaItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pedia_items');
+        Schema::dropIfExists('pedia_tag_types');
     }
 }

@@ -1,63 +1,91 @@
 @extends('layouts.basic')
 @section('title','標題')
 @section('content')
-<input type="file" name="" id="upload">
-<button id="call" class="btn btn-primary">call</button>
-<div id="output"></div>
+<style>
+
+    .picframe{
+    height:300px;
+    width:300px;
+    background:lemonchiffon;
+    position: relative;
+    }
+
+    .picframe > div{
+        display: inline-block;
+    }
+
+    .fa-xmark{
+        position: absolute;
+        top: 25px;
+        right: 8px;
+        z-index: 100;
+        background-color: #ffffff;
+        padding: 5px 7px 2px;
+        color: #000;
+        cursor: pointer;
+        font-size: 23px;
+        line-height: 10px;
+        border-radius: 50%;
+    }
+
+    .del {
+        background-color:red;
+        font-size: 2.5rem;
+    }
+
+</style>
+<div class="row">
+<div class="col-4 p-2">
+    <div class="picframe" data-index="0">
+        <i class="fa fa-times del curP" onclick="del(this)" aria-hidden="true"></i>
+    </div>
+</div>
+<div class="col-4 p-2">
+    <div class="picframe">
+        <i class="fa fa-times del curP" onclick="del(this)" aria-hidden="true"></i>
+    </div>
+</div>
+<div class="col-4 p-2">
+    <div class="picframe">
+        <i class="fa fa-times del curP" onclick="del(this)" aria-hidden="true"></i>
+    </div>
+</div>
+</div>
+
 @endsection
 @section('customJsBottom')
 <script>
-    $(()=>{
-        var gallery = new Array();
-        $('#upload').on('change', function(){
-            readURL(this);
+    var gallery = ['a','b','c'];
+    // deleteInit();
+    $('.fa-times').hide();
+    $('.picframe').mouseover(function(e){
+        let target = $(this).children('.fa-times');
+        target.show();
+        target.mouseout(function(e){
+            $(this).hide();
         })
-
-        $('#call').click(function(){
-            console.log(gallery);
-            gallery.splice('pic0');
-            // delete gallery['pic0'];
-            console.log(gallery);
+        $('.picframe').mouseout(function(e){
+            target = $(this).children('.fa-times').hide();
         })
-
-        function readURL(input){
-            if (input.files && input.files.length >= 0) {
-                for(var i = 0; i < input.files.length; i++){
-                    let index = 'pic' + i;
-                    read_file(input.files[i],index);
-                    var url = window.URL.createObjectURL(input.files[i]);
-                    var img = $(`
-                    <div class="picframe"  data-index='${i}'>
-                        <img width='300' height='200' class='p-2 img-fluid' src="${url}">
-                    </div>`)
-                $("#output").append(img);
-                    console.log('完成第',i)
-                    // console.log("length:",input.files.length);
-                }
-            }else{
-                var noPictures = $("<p>目前沒有圖片</p>");
-                $("#output").append(noPictures);
-            }
-        }
-
-        function read_file(input,index){
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                gallery[index] = e.target.result;
-            }
-            reader.readAsDataURL(input);
-        }
-
-        function deleteInit(){
-            $(".del").unbind("click");
-            $(".del").bind("click", function () {
-            let target = $(this).parents(".picframe"),
-                index = target.data("index");
-                delete gallery[index];
-            target.remove();
-         });
-
-        }
     })
+
+    // function deleteInit(){
+    //     $('.del').unbind('click');
+    //     $('.del').bind('click',function(){
+    //         let t = $(this).parents('.picframe');
+    //         console.log(t);
+    //         t.remove();
+    //     });
+    // }
+
+    function del(e){
+        let target = $(e).parents('.picframe');
+        target.remove();
+        index = target.data("index");
+        console.log(gallery);
+        delete gallery[index];
+        console.log(gallery);
+    }
 </script>
+
 @endsection

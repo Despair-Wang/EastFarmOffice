@@ -26,9 +26,9 @@ class PediaItem extends Model
         return str_replace('public', 'storage', $image);
     }
 
-    public function getCategoryAttribute($category)
+    public function getCategoryName()
     {
-        return PediaCategory::find($category)->get()->first()->name;
+        return PediaCategory::Where('id', $this->category)->first()->name;
     }
 
     public function getContents()

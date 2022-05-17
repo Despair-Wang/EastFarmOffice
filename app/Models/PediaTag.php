@@ -15,4 +15,9 @@ class PediaTag extends Model
     {
         return $this->hasMany(Tag_for_pedia::class, 'tagId', 'id');
     }
+
+    public function getType()
+    {
+        return $this->hasOne(PediaTagType::class, 'id', 'typeId')->withDefault();
+    }
 }

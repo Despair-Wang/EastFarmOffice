@@ -58,6 +58,7 @@
             <button class="btn btn-outline-primary" id="reset">重寫</button>
         </div>
     </section>
+    <div id="goBack"></div>
 @endsection
 @section('customJsBottom')
     <script>
@@ -66,7 +67,8 @@
         $(() => {
             galleryImgUpload();
             addGallery();
-
+            var md = new MoveDom();
+            md.setBack(`/pedia/${fatherId}/preview`);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
@@ -160,7 +162,8 @@
 
         function galleryCreate() {
             let target = $('.gallery'),
-                galleries = Array();
+                galleries = Array(),
+                dataEmpty = false;
             target.each(function() {
                 let file = $(this).find('.galleryUpload').val(),
                     url = $(this).find('.UrlUpload').val(),
@@ -168,6 +171,7 @@
                     main = '';
                 if (file == "" && url == "") {
                     alert('請選擇上傳檔案或給予連結')
+                    dataEmpty = true;
                     return false;
                 }
                 if (url == "") {
@@ -177,12 +181,16 @@
                 }
                 if (caption == '') {
                     alert('請填寫照片說明')
+                    dataEmpty = true;
                     return false;
                 }
 
                 let temp = ([main, caption]);
                 galleries.push(temp);
             })
+            if(dataEmpty){
+                return false;
+            }
             f.append('galleries', galleries);
             f.append('fatherId', fatherId);
             $.ajax({
