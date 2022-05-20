@@ -73,13 +73,16 @@ Route::prefix('o')->group(function () {
     Route::get('/post/category/{id}', [PostController::class, 'showByCategory']); //呼叫指定分類的文章列表，完全開放
     Route::get('/post/tag/{id}', [PostController::class, 'showByTag']); //呼叫包含指定標籤的文章列表，完全開放
     Route::get('/post/{id}', [PostController::class, 'show']); //呼叫指定文章頁面，完全開放
-    Route::get('/pedia/{id}', [PediaController::class, 'itemShow']); //呼叫指定百科項目頁面，完全開放
+    // Route::get('/pedia/{id}', [PediaController::class, 'itemShow']); //呼叫指定百科項目頁面，完全開放
     // Route::get('/album-list', [AlbumController::class, 'showAlbumList']); //顯示相簿列表，可加入年或年月搜尋
     // Route::get('/album-list/{year}', [AlbumController::class, 'showAlbumList']); //顯示相簿列表，可加入年或年月搜尋
     Route::get('/album-list/{year?}/{month?}', [AlbumController::class, 'showAlbumList']); //顯示相簿列表，可加入年或年月搜尋
     Route::get('/album/{album}/photos', [AlbumController::class, 'showPhotos']); //顯示指定相簿，全開放
     Route::get('/good-list/{category?}', [GoodController::class, 'showGoodList']); //
     Route::get('/good/{serial}', [GoodController::class, 'showGood']);
+    Route::get('/pedia-list', [PediaController::class, 'showPediaList']);
+    Route::post('/pedia-list/filter', [PediaController::class, 'showPediaList']);
+    Route::get('/pedia/{name}', [PediaController::class, 'show']);
 });
 
 Route::middleware(['auth'])->group(function () {

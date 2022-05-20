@@ -1,6 +1,6 @@
 @extends('layouts.backend')
-@section('title', '預覽')
-@section('h1', '預覽')
+@section('title', $item->name . '-預覽')
+@section('h1', $item->name . '-預覽')
 @section('content')
     <input type="hidden" id="id" value="{{ $item->fatherId }}">
     <section class="pediaEditor">
@@ -11,15 +11,16 @@
                 </div>
                 <div class="col-12 col-md-9">
                     <h2 class="h2">名稱：{{ $item->name }}</h2>
-                    <h3 class="h3">分類：{{$item->getCategoryName()}}</h3>
+                    <h5 class="h5">分類：{{$item->getCategoryName()}}</h5>
                     <div class="addedTag">
                     @forelse ($types as $type)
-                        <div class="typeBox">
-                            <h4 class="h4">{{ $type->name }}</h4>
+                        <div>
+                            <h5 class="h5">{{ $type->name }}：
                             @forelse ($type->getTagForItem($item->id) as $tag)
-                                <h5 class="h5">{{ $tag->name }}</h5>
+                                <a class="mr-2" href="#">{{ $tag->name }}</a>
                             @empty
                             @endforelse
+                            </h5>
                         </div>
                     @empty
                     @endforelse

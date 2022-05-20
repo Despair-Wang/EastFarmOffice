@@ -177,6 +177,17 @@
                         let fatherId = result['data']['fatherId'];
                         location.href = `/pedia/${fatherId}/preview`;
                     } else {
+                        switch (result['msg'])) {
+                            case 'PEDIA_NAME_IS_EXISTS':
+                                alert('該百科項目名稱已經存在，請前往編輯現有項目')
+                                break;
+                            case 'CREATE_ERROR':
+                                alert('百科項目建立失敗')
+                                break;
+                            case 'UPDATE_ERROR':
+                                alert('百科項目更新失敗')
+                                break;
+                        }
                         console.log(result['msg']);
                         console.log(result['data']);
                     }

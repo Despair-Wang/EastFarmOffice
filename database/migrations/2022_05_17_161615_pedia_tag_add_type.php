@@ -14,7 +14,7 @@ class PediaTagAddType extends Migration
     public function up()
     {
         Schema::table('pedia_tags', function (Blueprint $table) {
-            $table->integer('typeId');
+            $table->integer('typeId')->after('id');
         });
     }
 

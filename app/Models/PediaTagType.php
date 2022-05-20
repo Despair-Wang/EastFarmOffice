@@ -15,4 +15,9 @@ class PediaTagType extends Model
     {
         return Tag_for_pedia::Join('pedia_tags', 'tag_for_pedias.tagId', '=', 'pedia_tags.id')->Where('pedia_tags.typeId', $this->id)->Where('tag_for_pedias.itemId', $item)->get();
     }
+
+    public function getTags()
+    {
+        return $this->hasMany(PediaTag::class, 'typeId', 'id');
+    }
 }

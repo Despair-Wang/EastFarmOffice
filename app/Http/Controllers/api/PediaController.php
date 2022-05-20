@@ -306,6 +306,9 @@ class PediaController extends Controller
             //     }
             // }
             if (is_null($item)) {
+                if (count(PediaItem::Where('name', $request->name)->get()) > 0) {
+                    return $this->makeJson(0, null, 'PEDIA_NAME_IS_EXISTS');
+                }
                 $result = PediaItem::create($params);
                 if ($result->id == '') {
                     return $this->makeJson(0, $result, 'CREATE_ERROR');
@@ -621,5 +624,39 @@ class PediaController extends Controller
     {
         $items = PediaItem::Where('state', 1)->orderBy('created_at', 'DESC')->get();
         return view('pedia.listBackend', compact('items'));
+    }
+
+    public function showPediaList(Request $request)
+    {
+        $pedia = PediaItem::Where('pedia_items.state', 1);
+        if ($request->has('filter')) {
+            $filter = explode(',', $request->get('filter'));
+            // return $filter;
+            $pedia = $pedia->join('tag_for_pedias', 'pedia_items.id', '=', 'tag_for_pedias.itemId');
+            foreach ($filter as $tag) {
+                if ($tag != 'all') {
+                    $pedia = $pedia->Where('tag_for_pedias.tagId', $tag);
+                }
+            }
+            $pedia = $pedia->get();
+            return array($filter, $pedia);
+        }
+        $pedia = $pedia->get();
+
+        $types = PediaTagType::Where('state', 1)->get();
+        return view('pedia.list', compact('pedia', 'types'));
+    }
+
+    public function show($name)
+    {
+        $item = PediaItem::Where('name', $name)->Where('state', 1)->first();
+        $types = PediaTagType::Where('state', 1)->get();
+        $contents = $item->getContents();
+        if ($contents->count() > 0) {
+            $contents = $contents->Where('state', 1)->get();
+        }
+        $galleries = PediaGallery::Where('itemId', $item->id)->orderBy('sort', 'asc')->get();
+
+        return view('pedia.show', compact('item', 'types', 'contents', 'galleries'));
     }
 }

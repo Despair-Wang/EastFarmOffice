@@ -563,6 +563,7 @@ select:focus {
     width: 36px;
     height: 0;
     border: 2px solid white;
+    background: white;
     border-radius: 20px;
     transform: translateX(-10px);
 }
@@ -933,4 +934,50 @@ select:focus {
 
 .favoriteList > div:hover {
     box-shadow: 3px 3px 3px #666;
+}
+
+/* 前台百科項目一覽頁面 */
+
+.pediaItem:hover {
+    transition: all 0.5s;
+}
+.pediaItem:hover {
+    box-shadow: 3px 3px 7px #666;
+}
+
+.pediaItem h5 {
+    border-left: 3px solid;
+}
+
+/* 前台百科項目檢視頁面 */
+
+.galleryItem {
+    display: grid;
+    grid-template-columns: 1fr 25px;
+    grid-template-rows: 25px 1fr 20px;
+    height: 100%;
+}
+
+.galleryItem > div {
+    grid-row: 2/3;
+    grid-column: 1/3;
+    display: flex;
+    align-items: center;
+}
+
+.galleryItem > h6 {
+    grid-row: 3/4;
+    grid-column: 1/3;
+    text-align: center;
+}
+
+.galleryItem > .del {
+    font-size: 1.5rem;
+    grid-row: 1/2;
+    grid-column: 2/3;
+    text-align: center;
+}
+
+.border-left-6 {
+    border-left: 6px solid;
 }
