@@ -14,7 +14,13 @@
                     </div>
                     <div class="editArea col-3">
                         <a class="btn btn-primary px-3 mr-2" href="{{ '/pedia/type/' . $type->id . '/edit' }}">編輯</a>
-                        <a class="postDelete btn btn-primary px-3" href="">刪除</a>
+                        @if($type->state == 1)
+                        <a class="btn btn-primary px-3 mr-2 freeze">
+                        凍結</a>
+                        @elseif($type->state == 2)
+                        <a class="btn btn-primary px-3 mr-2 recover">啟用</a>
+                        @endif
+                        <a class="postDelete btn btn-primary px-3">刪除</a>
                     </div>
                     <div class="col-1 multDelBox">
                         <input type="checkbox" class="multDelete">

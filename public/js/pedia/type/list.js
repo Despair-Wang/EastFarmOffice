@@ -5,6 +5,8 @@ $(() => {
         deleteTags = new Array();
     md.setNew("/pedia/type/edit");
 
+    $(".recover").parents(".editPostItem").addClass("beGray");
+
     $(".postDelete").click(function (e) {
         e.preventDefault();
         let id = $(this).parents(".editPostItem").data("post-id");
@@ -21,6 +23,52 @@ $(() => {
             }
         });
         submit();
+    });
+
+    $(".freeze").click(function () {
+        la.run();
+        let id = $(this).parents(".editPostItem").data("post-id");
+        $.ajax({
+            url: `/api/pedia/type/freeze/${id}`,
+            type: "GET",
+            success(data) {
+                la.stop();
+                if (data["state"] == 1) {
+                    alert("分類已凍結");
+                    location.reload();
+                } else {
+                    console.log(data["msg"]);
+                    console.log(data["data"]);
+                }
+            },
+            error(data) {
+                la.stop();
+                console.log(data);
+            },
+        });
+    });
+
+    $(".recover").click(function () {
+        la.run();
+        let id = $(this).parents(".editPostItem").data("post-id");
+        $.ajax({
+            url: `/api/pedia/type/recover/${id}`,
+            type: "GET",
+            success(data) {
+                la.stop();
+                if (data["state"] == 1) {
+                    alert("分類已啟用");
+                    location.reload();
+                } else {
+                    console.log(data["msg"]);
+                    console.log(data["data"]);
+                }
+            },
+            error(data) {
+                la.stop();
+                console.log(data);
+            },
+        });
     });
 
     function submit() {

@@ -135,7 +135,7 @@ class PediaController extends Controller
 
     public function typeList()
     {
-        $types = PediaTagType::Where('state', 1)->paginate(15);
+        $types = PediaTagType::Where('state', 1)->orWhere('state', 2)->paginate(15);
         return view('pedia.typeList', compact('types'));
     }
 
@@ -212,6 +212,9 @@ class PediaController extends Controller
                 case 'item':
                     $result = PediaItem::Where('id', $id)->first()->update($params);
                     break;
+                case 'type':
+                    $result = PediaTagType::Where('id', $id)->first()->update($params);
+                    break;
                 default:
                     return $this->makeJson(0, null, 'UNKNOWN_FREEZE_TYPE');
                     break;
@@ -225,6 +228,43 @@ class PediaController extends Controller
             return $this->makeJson(1, null, null);
         } else {
             return $this->makeJson(0, $errorMessage, 'DELETE_ERROR:' . $errorCount);
+        }
+
+    }
+
+    public function Recover($target, Request $request)
+    {
+        $params['state'] = 1; //將狀態設定為啟用
+        $errorCount = 0; //錯誤計次
+        $errorMessage = array(); //錯誤訊息陣列
+        $data = $request->data; //取出要刪除的ID陣列
+        foreach ($data as $id) {
+            switch ($target) { //根據傳入的對象選擇更新對象
+                case 'category':
+                    $result = PediaCategory::Where('id', $id)->first()->update($params);
+                    break;
+                case 'tag':
+                    $result = PediaTag::Where('id', $id)->first()->update($params);
+                    break;
+                case 'item':
+                    $result = PediaItem::Where('id', $id)->first()->update($params);
+                    break;
+                case 'type':
+                    $result = PediaTagType::Where('id', $id)->first()->update($params);
+                    break;
+                default:
+                    return $this->makeJson(0, null, 'UNKNOWN_RECOVER_TYPE');
+                    break;
+            }
+            if (!$result) { //錯誤統計
+                $errorMessage[$errorCount] = $result;
+                $errorCount++;
+            }
+        }
+        if ($errorCount == 0) {
+            return $this->makeJson(1, null, null);
+        } else {
+            return $this->makeJson(0, $errorMessage, 'RECOVER_ERROR:' . $errorCount);
         }
 
     }
@@ -259,6 +299,20 @@ class PediaController extends Controller
         } else {
             return $this->makeJson(0, $errorMessage, 'DELETE_ERROR:' . $errorCount);
         }
+    }
+
+    public function typeShowChange($action, PediaTagType $id)
+    {
+        $result = "";
+        if ($action == 'freeze') {
+            $result = $id->update(['state' => 2]);
+        } else if ($action == 'recover') {
+            $result = $id->update(['state' => 1]);
+        }
+        if (!$result) {
+            return $this->makeJson(0, $result, 'CHANGE_ERROR');
+        }
+        return $this->makeJson(1, null, null);
     }
 
     private function ItemDestroy($id)

@@ -83,6 +83,7 @@ Route::middleware(['auth:sanctum', 'auth.signed:admin'])->group(function () {
         Route::post('/{target}/create', [PediaController::class, 'attrCreate']); //傳送資料至分類／標籤建立函式，建立對象由網址中的變數來控制
         Route::post('/{target}/{id}/update', [PediaController::class, 'attrUpdate']); //傳送資料至分類／標籤更新函式，更新對象由網址中的變數來控制
         Route::post('/{target}/delete', [PediaController::class, 'Freeze']); //傳送要凍結的分類／標籤／項目之陣列，凍結之對象由網址中的變數來控制
+        Route::get('/type/{action}/{id}', [PediaController::class, 'typeShowChange']);
         Route::post('/create', [PediaController::class, 'itemCreate']); //傳送資料建立新的百科項目
         Route::post('/{item}/update', [PediaController::class, 'itemCreate']); //傳送資料更新舊的百科項目
         Route::get('/{item}/delete', [PediaController::class, 'itemFreeze']); //凍結百科項目
