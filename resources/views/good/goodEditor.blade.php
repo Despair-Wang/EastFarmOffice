@@ -11,7 +11,7 @@
             <label>商品名稱</label>
             <input type="text" id="name"
             @isset($good)
-             value="{{ $good->name }}"
+            value="{{ $good->name }}"
             @endisset
             >
         </section>

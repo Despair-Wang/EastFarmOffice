@@ -14,7 +14,7 @@
         <a href="{{ url('/o/post-list') }}">茶花文選</a>
     </div>
     <div class="menuItem">
-        <a>茶花百科</a>
+        <a href="{{ url('/o/pedia-list') }}">茶花百科</a>
     </div>
     <div class="menuItem">
         <a href="{{ url('/o/album-list') }}">茶花千景</a>

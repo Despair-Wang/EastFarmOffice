@@ -2,7 +2,7 @@
 @section('title', $item->name . '-預覽')
 @section('h1', $item->name . '-預覽')
 @section('content')
-    <input type="hidden" id="id" value="{{ $item->fatherId }}">
+    <input type="hidden" id="id" value="{{ $item->id }}">
     <section class="pediaEditor">
         <div id="itemDisplay">
             <div class="row">
@@ -47,17 +47,19 @@
                     @endif
                 </ul>
                 <div class="row">
-                    @forelse ($content->getGalleries() as $g)
-                        <div class="col-6 col-md-3 p-2">
-                            <div class="border border-primary p-3 galleryItem">
-                                <div>
-                                    <img src="{{ asset($g[0]) }}" alt="">
+                    @if($content->getGalleries() != "")
+                        @forelse ($content->getGalleries() as $g)
+                            <div class="col-6 col-md-3 p-2">
+                                <div class="border border-primary p-3 galleryItem">
+                                    <div>
+                                        <img src="{{ asset($g[0]) }}" alt="">
+                                    </div>
+                                    <h6 class="h6">{{ $g[1] }}</h6>
                                 </div>
-                                <h6 class="h6">{{ $g[1] }}</h6>
                             </div>
-                        </div>
-                    @empty
-                    @endforelse
+                        @empty
+                        @endforelse
+                    @endif
                 </div>
                 <div class="ali-r">
                     <a class="btn btn-outline-primary my-3" href="{{ url('pedia/content/' . $item->id . '/edit/' . $content->id) }}" >編輯</a>
@@ -91,38 +93,15 @@
     <section>
         <div class="ali-r">
             <button class="btn btn-outline-primary" id="complete">確定</button>
+            @if ($item->state == 1)
             <button class="btn btn-outline-primary" id="delete">刪除</button>
+            @else
+            <button class="btn btn-outline-primary" id="recover">復原</button>
+            @endif
         </div>
     </section>
     <div id="goBack"></div>
 @endsection
 @section('customJsBottom')
-    <script>
-        $(()=>{
-          let id = $('#id').val(),
-            md = new MoveDom();
-            md.setBack('/pedia/list');
-          $('#editItem').click(function(){
-              location.href=`/pedia/item/${id}/edit`;
-          })
-
-          $('#addContent').click(function(){
-            let sort = $('.pediaContent').length + 1;
-            location.href=`/pedia/content/${id}/edit?sort=${sort}`;
-          })
-
-          $('#addGallery').click(function(){
-            location.href=`/pedia/gallery/${id}/edit`;
-          })
-
-          $('#complete').click(function(){
-              location.href='/pedia/list';
-          })
-
-          $('#delete').click(function(){
-              //
-          })
-
-        })
-    </script>
+<script type="text/javascript" src="{{ asset('js/pedia/listBackend.js')}}"></script>
 @endsection

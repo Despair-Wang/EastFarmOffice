@@ -33,11 +33,11 @@ class PediaItem extends Model
 
     public function getContents()
     {
-        return $this->hasMany(PediaContent::class, 'itemId', 'fatherId');
+        return $this->hasMany(PediaContent::class, 'itemId', 'id');
     }
 
     public function getGalleries()
     {
-        return $this->hasMany(PediaGallery::class, 'itemId', 'fatherId');
+        return $this->hasMany(PediaGallery::class, 'itemId', 'id');
     }
 }

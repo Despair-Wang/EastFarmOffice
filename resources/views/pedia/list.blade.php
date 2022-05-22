@@ -6,11 +6,12 @@
     @forelse ($types as $type)
         <div class="filter" data-id="{{ $type->id }}">
             <h4 class="h4 d-inline-block pr-3">{{ $type->name }}</h4>
-            <input id="type{{ $type->id }}-0" class="d-none" type="radio" name="{{ $type->id }}" value="all" checked>
-            <label class="btn btn-success filterBtn" for="type{{ $type->id }}">所有</label>
+            <input id="type{{ $type->id }}" class="d-none" type="radio" name="{{ $type->id }}" value="all-{{ $type->id }}" checked="true">
+            <label class="btn btn-outline-success filterBtn" for="type{{ $type->id }}">所有</label>
             @forelse ($type->getTags as $tag)
                 <input id="tag{{ $tag->id }}" class="d-none" type="radio" name="{{ $type->id }}" value="{{ $tag->id }}">
-                <label class="btn btn-outline-success filterBtn" for="tag{{ $tag->id }}">{{ $tag->name }}</label>
+                <label class="btn btn-outline-success filterBtn"
+                for="tag{{ $tag->id }}">{{ $tag->name }}</label>
             @empty
             @endforelse
         </div>
@@ -48,33 +49,9 @@
 </div>
 <form action="/o/pedia-list/filter" method="post" id="filterForm">
     @csrf
-    <input type="hidden" name="filter">
+    <input type="hidden" name="filter" value="{{ $filter }}">
 </form>
 @endsection
 @section('customJsBottom')
-    <script>
-    $(()=>{
-        $('.filter > input').change(function(){
-            $(this).parent().find('.btn-success').toggleClass('btn-success btn-outline-success');
-            $(this).next().toggleClass('btn-outline-success btn-success');
-            filter();
-        })
-
-        $('.pediaItem').click(function(){
-            let name = $(this).data('name');
-            location.href = `/o/pedia/${name}`;
-        })
-    })
-
-    function filter(){
-        let filter = new Array();
-        $('.filter').each(function(){
-            let value = $(this).find('input:checked').val();
-            filter.push(value);
-            })
-        $('input[name="filter"]').val(filter);
-        $('#filterForm').submit();
-    }
-
-    </script>
+<script type="text/javascript" src="{{ asset('js/pedia/list.js') }}"></script>
 @endsection

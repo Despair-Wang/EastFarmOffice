@@ -1,9 +1,3 @@
-$.ajaxSetup({
-    headers: {
-        "X-CSRF-TOKEN": $('meta[name="csrf_token"]').attr("content"),
-    },
-});
-
 $(() => {
     let id = $("#post").data("postid");
     $("#rewrite").click(function () {

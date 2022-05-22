@@ -3,33 +3,14 @@
 @section('h1', '百科項目－編輯')
 @section('content')
     <section class="pediaEditor">
-        <div id="itemEditor">
-            <div>
+        <div id="itemEditor" class="row">
+            <div class="col-12 col-md-6">
                 <h3 class="h3">項目名稱</h3>
                 <input type="text" id="name"
                 @isset($item)
-                 value="{{ $item->name }}"
+                value="{{ $item->name }}"
                 @endisset
                 >
-            </div>
-            <div>
-                <h3 class="h3">項目代表圖片</h3>
-                <div>
-                    <img style="width:300px"
-                    @isset($item)
-                        src="{{ $item->image }}"
-                    @endisset
-                    >
-                </div>
-                <button class="btn btn-primary" id="deleteImage">刪除圖片</button>
-                <input type="file" id="image">
-                <input type="hidden" id="oldImage"
-                    @isset($item)
-                        value="{{ $item->image }}"
-                    @endisset
-                >
-            </div>
-            <div>
                 <h3 class="h3">項目分類</h3>
                 <select id="category">
                     <option value="-">請選擇一個分類</option>
@@ -45,8 +26,6 @@
                         <option value="-">無分類</option>
                     @endforelse
                 </select>
-            </div>
-            <div>
                 <h3 class="h3">項目標籤</h3>
                 <select id="tag">
                     <option value="-">請選擇一個標籤</option>
@@ -68,7 +47,23 @@
                 @endisset
                 </div>
             </div>
-            <div class='ali-r'>
+            <div class="col-12 col-md-6">
+                <h3 class="h3">項目代表圖片</h3>
+                <div id="showCover">
+                @isset($item)
+                    <img src="{{ $item->image }}">
+                @endisset
+                </div>
+                {{-- <button class="btn btn-primary" id="deleteImage">刪除圖片</button> --}}
+                <input type="file" id="cover" class="my-3">
+                <input type="hidden" id="coverUpload">
+                <input type="hidden" id="oldImage"
+                    @isset($item)
+                        value="{{ $item->image }}"
+                    @endisset
+                >
+            </div>
+            <div class='col-12'>
                 <input type="hidden" id="itemId"
                 @isset($item)
                     value="{{ $item['id'] }}"
@@ -79,151 +74,36 @@
                     value="{{ $item['fatherId'] }}"
                 @endisset
                 >
-                <button class="btn btn-primary" id="createItem">儲存</button>
-                <button class="btn btn-primary" id="resetItem">重寫</button>
+                <button class="btn btn-primary w-100 my-3" id="createItem">儲存</button>
+                <button class="btn btn-primary w-100" id="resetItem">重寫</button>
             </div>
         </div>
     </section>
+    <div id="oldImg_frame">
+        <div class="row">
+            <div class="col-12">
+                <div id="oldImg">
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="d-flex justify-content-center align-self-center">
+                    <label id="crop_img" class="btn btn-outline-light w-auto mr-3">
+                        <i class="fa fa-scissors"></i>&emsp;剪裁圖片
+                    </label>
+                    <label id="cancel" class="btn btn-outline-light w-auto">
+                        取消
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="goBack"></div>
+@endsection
+@section('customJs')
+    <link rel="stylesheet" href="{{ asset('css/croppie.css') }}">
 @endsection
 @section('customJsBottom')
-    <script>
-        var f = new FormData(),
-            deleteList = new Array();
-        $(() => {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
-                }
-            })
-
-            $('#tag').on('change', () => {
-                addTag();
-            })
-
-            $('#image').change(function(e) {
-                let file = e.target.files[0];
-                if (file['type'].indexOf('image') >= 0) {
-                    let url = window.URL.createObjectURL(file);
-                    $(this).parent('div').find('img').attr('src', url);
-                    if (f.has('image')) {
-                        f.delete('image')
-                    }
-                    f.append('image', file);
-                } else {
-                    alert('非圖片格式或格式太前衛');
-                }
-            })
-
-            $('#createItem').click(function() {
-                createItem();
-            })
-
-            $('#deleteImage').click(function() {
-                f.delete('image');
-                f.delete('oldImage');
-                $('#oldImage').val('');
-                $('#image').val('');
-                $('#image').parent('div').find('img').attr('src','');
-            })
-        })
-
-        function tagInit(){
-            let taglist = $('#tag > option'),
-                t = $('.tag');
-            // console.log(t);
-            for (let i = 0; i < t.length; i++) {
-                for (let j = 0; j < taglist.length; j++) {
-                    if (taglist[j].value == t[i].dataset.tag-id) {
-                        taglist[j].remove();
-                    }
-                }
-            }
-            $('.removeTag').click(function(e) {
-                removeTag(e.target)
-            });
-        }
-
-        function createItem() {
-            let name = $('#name').val(),
-                category = $('#category').find(':selected').val(),
-                id = $('#itemId').val(),
-                oldImage = $('#oldImage').val(),
-                tags = new Array();
-            tag = $('#addedTag').find('.tag'),
-                url = '';
-            tag.each(function() {
-                tags.push($(this).data('tag-id'));
-            })
-            f.append('name', name);
-            f.append('category', category);
-            f.append('oldImage', oldImage);
-            f.append('tags', JSON.stringify(tags));
-            f.append('deleteList',JSON.stringify(deleteList));
-            if(id == ''){
-                url = '/api/pedia/create';
-            }else{
-                url = `/api/pedia/${id}/update`;
-            }
-            $.ajax({
-                url: url,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: f,
-                success(result) {
-                    if (result['state'] == 1) {
-                        alert('建立成功');
-                        let fatherId = result['data']['fatherId'];
-                        location.href = `/pedia/${fatherId}/preview`;
-                    } else {
-                        switch (result['msg'])) {
-                            case 'PEDIA_NAME_IS_EXISTS':
-                                alert('該百科項目名稱已經存在，請前往編輯現有項目')
-                                break;
-                            case 'CREATE_ERROR':
-                                alert('百科項目建立失敗')
-                                break;
-                            case 'UPDATE_ERROR':
-                                alert('百科項目更新失敗')
-                                break;
-                        }
-                        console.log(result['msg']);
-                        console.log(result['data']);
-                    }
-                },
-                error(result) {
-                    console.log(result);
-                }
-            })
-        }
-
-        function addTag() {
-            let tag = $('#tag').find(':selected');
-            if (tag.val() == "-") {
-                alert('請選擇一個有效的標籤');
-                return false;
-            }
-            $('#addedTag').append(
-                `<div class="tagBox"><div class="tag" data-tag-id="${tag.val()}">${tag.text()}</div><a class="removeTag">X</a></div>`
-            )
-            tag.remove();
-            $('#tag').find('option[value="-"]').prop('selected', 'true');
-            let x = $('.removeTag');
-            x.off();
-            x.on('click', function(e) {
-                // console.log(e);
-                removeTag(e.target);
-            });
-        }
-
-        function removeTag(target) {
-            let tb = $(target).parent('div'),
-                t = tb.children('.tag'),
-                id = t.data('tag-id');
-            $('#tag').append(`<option value="${id}">${t.text().replace('X','')}</option>`);
-            tb.remove();
-            deleteList.push(id);
-        }
-    </script>
+    <script src="{{ asset('js/croppie.js') }}"></script>
+    <script src="{{ asset('js/crop_img.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pedia/edit.js') }}"></script>
 @endsection

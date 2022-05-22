@@ -35,6 +35,10 @@
 
 </style>
 <div class="row">
+@php
+    echo "mother fucker";
+    echo ((unserialize(base64_decode('YjowOw=='))) == "");
+@endphp
 <div class="col-4 p-2">
     <div class="picframe" data-index="0">
         <i class="fa fa-times del curP" onclick="del(this)" aria-hidden="true"></i>

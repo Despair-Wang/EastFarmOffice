@@ -13,6 +13,7 @@ use App\Models\PediaTagType;
 use App\Models\Tag_for_pedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PediaController extends Controller
@@ -104,7 +105,10 @@ class PediaController extends Controller
 
     public function preview($id)
     {
-        $item = PediaItem::Where('id', $id)->Where('state', 1)->first();
+        $item = PediaItem::Where('id', $id)->first();
+        if (is_null($item)) {
+            return redirect('/dashboard');
+        }
         $types = PediaTagType::Where('state', 1)->get();
         $contents = $item->getContents();
         if ($contents->count() > 0) {
@@ -325,11 +329,17 @@ class PediaController extends Controller
             //建立&儲存形象圖片
             $oldImage = $request->oldImage;
             if ($request->has('image')) {
-                $image = $request->image;
-                $imageName = str_replace('tmp', $image->extension(), $image->getFilename());
+                // $image = $request->image;
+                // $imageName = str_replace('tmp', $image->extension(), $image->getFilename());
                 $patch = '/public/pedia/' . $id;
 
-                $result = Storage::putFileAs($patch, $image, $imageName);
+                // $result = Storage::putFileAs($patch, $image, $imageName);
+                $file = str_replace('data:image/png;base64,', '', $request->image);
+                $file = str_replace(' ', '+', $file);
+                $file = base64_decode($file);
+                $imageName = uniqid('cover', false) . '.png';
+                $result = Storage::put($patch . '/' . $imageName, $file);
+
                 if (!$result) {
                     return $this->makeJson(0, $result, 'INDEX_SAVE_ERROR');
                 }
@@ -369,13 +379,13 @@ class PediaController extends Controller
                 }
             }
 
-            return $this->makeJson(1, $item, 'PEDIA_ITEM_CREATE_SUCCESS');
+            return $this->makeJson(1, $id, 'PEDIA_ITEM_CREATE_SUCCESS');
         } catch (\Exception $e) {
             return $this->makeJson(0, ['msg' => $e->getMessage(), 'line' => $e->getLine()], 'CODE_ERROR');
         }
     }
 
-    public function contentCreate(PediaContent $id, Request $request)
+    public function contentCreate(PediaContent $id = null, Request $request)
     {
         // return $this->makeJson(0, $request->deleteImage, null);
         try {
@@ -509,6 +519,25 @@ class PediaController extends Controller
         }
     }
 
+    public function itemFreeze(PediaItem $item)
+    {
+        $result = $item->update(['state' => 0]);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'DELETE_ERROR');
+        }
+        return $this->makeJson(1, null, null);
+    }
+
+    public function itemRecover(PediaItem $item)
+    {
+        $result = $item->update(['state' => 1]);
+        if (!$result) {
+            return $this->makeJson(0, $result, 'RECOVER_ERROR');
+        }
+        return $this->makeJson(1, null, null);
+
+    }
+
     public function itemCreate_Older(Request $request)
     {
         $params = $request->only(['name', 'category']); //只取出項目的名稱與分類
@@ -622,29 +651,53 @@ class PediaController extends Controller
 
     public function itemListBackend()
     {
-        $items = PediaItem::Where('state', 1)->orderBy('created_at', 'DESC')->get();
-        return view('pedia.listBackend', compact('items'));
+        $items = PediaItem::Where('state', 1)->orderBy('created_at', 'DESC')->paginate(8);
+        $type = '啟用';
+        return view('pedia.listBackend', compact('items', 'type'));
+    }
+
+    public function itemFreezeList()
+    {
+        $items = PediaItem::Where('state', 0)->orderBy('created_at', 'DESC')->paginate(8);
+        $type = '刪除';
+        return view('pedia.listBackend', compact('items', 'type'));
     }
 
     public function showPediaList(Request $request)
     {
-        $pedia = PediaItem::Where('pedia_items.state', 1);
-        if ($request->has('filter')) {
-            $filter = explode(',', $request->get('filter'));
-            // return $filter;
-            $pedia = $pedia->join('tag_for_pedias', 'pedia_items.id', '=', 'tag_for_pedias.itemId');
-            foreach ($filter as $tag) {
-                if ($tag != 'all') {
-                    $pedia = $pedia->Where('tag_for_pedias.tagId', $tag);
+        $count = 0;
+        $pedia = PediaItem::Select('*');
+        $filter = "";
+        $check = $request->filter;
+        if (!is_null($request->filter)) {
+            // $filter = "";
+            $target = Tag_for_pedia::Select(DB::raw('COUNT(*) AS count,tag_for_pedias.itemId AS itemId'))->join('pedia_items', 'tag_for_pedias.itemId', '=', 'pedia_items.id');
+            foreach (explode(',', $request->filter) as $tag) {
+                if (substr($tag, 0, 3) != 'all') {
+                    if ($count > 0) {
+                        $target = $target->orWhere('tag_for_pedias.tagId', $tag);
+                        $count++;
+                    } else {
+                        $target = $target->Where('tag_for_pedias.tagId', $tag);
+                        $count++;
+                    }
+                    // $temp .= "(" . $tag . ")";
                 }
+                $filter .= $tag . ',';
             }
-            $pedia = $pedia->get();
-            return array($filter, $pedia);
+            $target = $target->GroupBy('tag_for_pedias.itemId');
+            if ($count > 0) {
+                $pedia = $pedia->JoinSub($target, 'target', function ($join) {
+                    $join->on('pedia_items.id', '=', 'target.itemId');
+                })->Where('target.count', $count);
+            }
+            $filter = substr($filter, 0, strlen($filter) - 1);
         }
-        $pedia = $pedia->get();
+        $pedia = $pedia->Where('pedia_items.state', 1)->get();
 
         $types = PediaTagType::Where('state', 1)->get();
-        return view('pedia.list', compact('pedia', 'types'));
+        // $filter = json_encode($filter);
+        return view('pedia.list', compact('pedia', 'types', 'filter', 'check'));
     }
 
     public function show($name)

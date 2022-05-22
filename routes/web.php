@@ -133,6 +133,7 @@ Route::middleware(['auth', 'auth.signed:admin'])->group(function () {
 
     Route::prefix('pedia')->group(function () {
         Route::get('/list', [PediaController::class, 'itemListBackend']);
+        Route::get('/deleteList', [PediaController::class, 'itemFreezeList']);
         Route::view('/category/edit', 'pedia.cateEditor'); //呼叫建立百科分類的頁面
         Route::get('/tag/list', [PediaController::class, 'tagList']);
         Route::get('/tag/edit', [PediaController::class, 'callTagEditor']); //呼叫建立百科標籤的頁面

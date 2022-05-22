@@ -949,6 +949,15 @@ select:focus {
     border-left: 3px solid;
 }
 
+.pediaItem img {
+    min-height: 148px;
+    width: auto;
+}
+
+.pediaItem > .row > .col-5 {
+    overflow: hidden;
+}
+
 /* 前台百科項目檢視頁面 */
 
 .galleryItem {

@@ -701,22 +701,22 @@ select:focus {
     display: block;
 }
 
-.addRemarkBox {
+#addRemarkBox {
     width: 0;
     display: flex;
     overflow: hidden;
     transition: all 0.5s;
 }
-.addRemarkBox.show {
+#addRemarkBox.show {
     width: 100%;
     transition: all 0.5s;
 }
 
-.addRemarkBox > .btn {
+#addRemarkBox > .btn {
     white-space: nowrap;
 }
 
-.addRemarkBox > select {
+#addRemarkBox > select {
     margin-right: 7px;
 }
 

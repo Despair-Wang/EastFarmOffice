@@ -42,17 +42,19 @@
                 @endif
             </ul>
             <div class="row">
-                @forelse ($content->getGalleries() as $g)
-                    <div class="col-6 col-md-3 p-2">
-                        <div class="border border-primary p-3 galleryItem">
-                            <div>
-                                <img src="{{ asset($g[0]) }}" alt="">
+                @if($content->getGalleries() != "")
+                    @forelse ($content->getGalleries() as $g)
+                        <div class="col-6 col-md-3 p-2">
+                            <div class="border border-primary p-3 galleryItem">
+                                <div>
+                                    <img src="{{ asset($g[0]) }}" alt="">
+                                </div>
+                                <h6 class="h6">{{ $g[1] }}</h6>
                             </div>
-                            <h6 class="h6">{{ $g[1] }}</h6>
                         </div>
-                    </div>
-                @empty
-                @endforelse
+                    @empty
+                    @endforelse
+                @endif
             </div>
         </div>
         <hr class="my-3 border-primary">
